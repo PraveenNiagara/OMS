@@ -1,0 +1,70 @@
+# =============================================================================
+# SIMCOM SDK - .gitignore
+# =============================================================================
+
+# Build output directory (generated files, binaries, object files)
+out/
+
+# Large compiled firmware/binary artifacts
+*.axf
+*.elf
+*.bin
+*.a
+*.o
+*.d
+
+# Large toolchain archives (>100MB - GitHub file size limit)
+tools/linux/cross_tool.tar.bz2
+tools/win32/cross_tool.zip
+
+# Build system files
+*.ninja_log
+*.ninja_deps
+build.ninja
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# Zip/archive build packages
+burn.zip
+burn_factory.zip
+burn_factory_source.zip
+burn_source.zip
+
+# OS-specific files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor/IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Compiled Python files
+__pycache__/
+*.pyc
+
+# User requested exclusions
+d16.txt
+d17.txt
+d18.txt
+d19.txt
+d20.txt
+d21.txt
+d22.txt
+GNUmake.exe
+main_task_bckup.c
+main_task_compile_no_live.c
+main_task_working.c
+makeDepend.mak
+Makefile
+niagra_Nov6.rar
+niagra_nov525_15.36_bef_thread.rar
+niagra_nov525.rar
+niagra_try.rar
+niagra_working_nov425.rar
+old_fw_Makefile
+

@@ -1,0 +1,1038 @@
+{
+  "name": "ASR_CRANEM_EVB",
+  "version": "0.5",
+  "fota": ["system"],
+  "keyAlg": "rsa",
+  "hashAlg": "sha256",
+  "secureBoot": false,
+  "firmwareGenerator": {
+    "name": "crane",
+    "call-max-download-size": "60KiB",
+    "flash-max-download-size": "1MiB",
+    "use-lzma-compression": true
+  },
+  "variants": [
+    {
+      "name": "CRANEM_A0_08MB",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_UC6228",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_UC6228",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_UC6228",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+        "name": "CRANEM_A0_SINGLE_SIM_08MB_CC1161W",
+        "product": "arom-tiny",
+        "version-bootrom": "2020.07.30",
+        "template": "ASR1603_SINGLE_SIM_TEMPLATE_CC1161W",
+        "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_CC1161W",
+        "flashes": [
+          {
+            "name": "qspi",
+            "port": "QSPI",
+            "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+          }
+        ]
+      },
+    {
+      "name": "CRANEM_A0_08MB_BT",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_BT",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_BT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_BT_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_BT_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_BT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_BT_UC6228",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_BT_UC6228",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_BT_UC6228",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_NVM",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_NVM",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_CZJ_TTS_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_CZJ_TTS_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_BT_WWKJ_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_BT_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_BT_WWKJ_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_UC6228_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_UC6228_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+        "name": "CRANEM_A0_08MB_NVM_OPENSDK",
+        "product": "arom-tiny",
+        "version-bootrom": "2020.07.30",
+        "template": "ASR1603_TEMPLATE_08MB_NVM_OPENSDK",
+        "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_OPENSDK",
+        "flashes": [
+          {
+            "name": "qspi",
+            "port": "QSPI",
+            "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+          }
+        ]
+      },
+    {
+      "name": "CRANEM_A0_08MB_APP_512K_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_APP_512KB_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_JWZD_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_JWZD_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_XYZL_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_XYZL_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_WALNUT_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_WALNUT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_ZJ_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_ZJ_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_ASR5311_08MB",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_ASR5311_TEMPLATE",
+      "layout": "ASR1603_ASR5311_FLASH_LAYOUT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_08MB_UCVSIM",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_08MB_UCVSIM",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_08MB_UCVSIM",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_UC6228",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_UC6228",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_UC6228",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+        "name": "CRANEM_A0_16MB_NVM",
+        "product": "arom-tiny",
+        "version-bootrom": "2020.07.30",
+        "template": "ASR1603_TEMPLATE_16MB_NVM",
+        "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB",
+        "flashes": [
+          {
+            "name": "qspi",
+            "port": "QSPI",
+            "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+          }
+        ]
+      },
+    {
+      "name": "CRANEM_A0_16MB_BT",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+	  "name": "CRANEM_A0_16MB_BT_UC6228",
+	  "product": "arom-tiny",
+	  "version-bootrom": "2020.07.30",
+	  "template": "ASR1603_TEMPLATE_16MB_BT_UC6228",
+	  "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_UC6228",
+	  "flashes": [
+	    {
+	      "name": "qspi",
+	      "port": "QSPI",
+	      "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_UC6228_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_UC6228_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_NVM",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_NVM",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_NVM_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_NVM_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_NVM_RU_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_NVM_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_RU_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_ASR5311_RU_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_ASR5311_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_ASR5311_RU_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_ASR5311",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_ASR5311",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_ASR5311",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_ASR5311_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_ASR5311_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_ASR5311_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_UC6228_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_UC6228_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+        "name": "CRANEM_A0_16MB_NVM_OPENSDK",
+        "product": "arom-tiny",
+        "version-bootrom": "2020.07.30",
+        "template": "ASR1603_TEMPLATE_16MB_NVM_OPENSDK",
+        "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_OPENSDK",
+        "flashes": [
+          {
+            "name": "qspi",
+            "port": "QSPI",
+            "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+          }
+        ]
+      },
+    {
+      "name": "CRANEM_A0_16MB_TOPFLY_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_TOPFLY_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_TOPFLY_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_UCVSIM",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_UCVSIM",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_UCVSIM",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_ONOMONDO",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_NVM",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_NVM_ONOMONDO",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_NVM",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_BT_UC6228_ONOMONDO_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_BT_UC6228_NVM_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_BT_UC6228_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_16MB_ONOMONDO_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_TEMPLATE_16MB_NVM_OPENSDK",
+      "layout": "ASR1603_SINGLE_FLASH_LAYOUT_16MB_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_16MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_SZZX",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_SZZX",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_GDZX",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_GDZX",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_TTS",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_TTS",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_LARGENVM",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_LARGENVM",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_ULTRASTAR",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_ULTRASTAR",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_ENPLUS",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_ENPLUS",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_CT",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_CT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_LP_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_APP_256K_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_TTS_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_TTS_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_CSWS_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_CSWS_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_SZRL_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_SZRL_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_CWXT_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_CWXT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+        "name": "CRANEM_A0_SINGLE_SIM_08MB_PMDTU_OPENSDK",
+        "product": "arom-tiny",
+        "version-bootrom": "2020.07.30",
+        "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+        "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_PMDTU_OPENSDK",
+        "flashes": [
+          {
+            "name": "qspi",
+            "port": "QSPI",
+            "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+          }
+        ]
+      },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_PMDTU_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_UC6228_PMDTU_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_CWXT_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_CWXT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_CZJ_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_CZJ_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_UC6228_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_BWS_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_UC6228_OPENSDK_BWS",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_LARGENVM_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_UC6228_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_VOLTE_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_VOLTE_JWZD_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_OPENSDK_JWZD",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_WWKJ_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_WWKJ_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_XTL_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_XTL_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_VOLTE_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_UC6228_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_UC6228_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_VOLTE_NODYLDR_OPENSDK",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_OPENSDK",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_OPENSDK",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_UC6228",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_UC6228",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_08MB_UC6228_LARGENVM",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE_UC6228",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT_UC6228_LARGENVM",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_SMS_08MB",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_SMS_FLASH_LAYOUT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_VOLTE_08MB",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_VOLTE_FLASH_LAYOUT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    },
+    {
+      "name": "CRANEM_A0_SINGLE_SIM_CSSMS_08MB",
+      "product": "arom-tiny",
+      "version-bootrom": "2020.07.30",
+      "template": "ASR1603_SINGLE_SIM_TEMPLATE",
+      "layout": "ASR1603_SINGLE_SIM_FLASH_LAYOUT",
+      "flashes": [
+        {
+          "name": "qspi",
+          "port": "QSPI",
+          "flash": "QSPI_NOR_8MB_B64KB_S4KB_P256"
+        }
+      ]
+    }
+  ]
+}

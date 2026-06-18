@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.10)
+AUX_SOURCE_DIRECTORY(. PRJ_SRC_LIST)
+list(APPEND PRJ_SRC_LIST
+"main_task.c"
+"fota.c"
+#"smshandling.c"
+"MQTT"
+"app_utility"
+"livedata.c"
+)
+add_library(niagra STATIC ${PRJ_SRC_LIST})
+target_include_directories(niagra PUBLIC
+    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc
+    ${CMAKE_SOURCE_DIR}/sc_lib/${SCMODULE}/inc
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/GPIO
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/token
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/utils
+    ${CMAKE_SOURCE_DIR}/niagra/
+    ${CMAKE_SOURCE_DIR}/config
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/mbedtls
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/mbedtls/include
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/mbedtls/include/mbedtls
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/mbedtls/include/psa
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/mbedtls/library
+    ${CMAKE_SOURCE_DIR}/sc_lib/inc/mbedtls/asros
+    ${CMAKE_SOURCE_DIR}/public_libs/cjson  
+    ${CMAKE_SOURCE_DIR}/sc_demo/V1/inc
+)
+SET(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
