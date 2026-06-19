@@ -255,13 +255,13 @@ struct ConfigMaker
 struct Constant
 {
 	unsigned char Sno,Object;
-	uint32_t FlowRate;
+	float FlowRate;//uint32_t FlowRate;
 	float LiterPerPluse,Pressure;
 };
 struct zone
 {
 	unsigned char Sno,ValveNo[4],MainValve,IrrigationMethod,Duration[3],ProgramNo;
-	uint32_t FlowRate;
+	float FlowRate;//uint32_t FlowRate;
 	
 	
 };

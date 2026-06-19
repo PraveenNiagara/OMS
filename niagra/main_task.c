@@ -2993,11 +2993,11 @@ sprintf(filename,"c:/ecoset.txt");
                 }		
 			else
 				{
-		memset(textBuf,0,50);
+		memset(textBuf,0x00,50);
 		ret = sAPI_fseek(file_hdl, 0 , FS_SEEK_BEGIN);
 		sprintf(buf,"c:/ecoset.txt FileSeek()=%d: \r\n",ret);
 		sAPI_UartPrintf(buf);
-		memset(strBuf,0,140);  //70
+		memset(strBuf,0x00,140);  //70
 		 readedlen = sAPI_fread((unsigned char *)strBuf,140, 1, file_hdl);
                 if(readedlen <= 0)
                 {
@@ -3023,15 +3023,15 @@ sprintf(filename,"c:/ecoset.txt");
 				Pch = strtok( NULL, "," );
 			}
 
-			for(int i=0,Tp=1;i<(StrTokStrVer-2);i++)
+			for(int i=0,Tp=1;Tp<(StrTokStrVer-2);i++)
 			{
 				nConstant[i].Sno=myatoi(StrTokStr1[Tp++]);
 				nConstant[i].Object=myatoi(StrTokStr1[Tp++]);
-				nConstant[i].FlowRate=myatoi(StrTokStr1[Tp++]);
+				nConstant[i].FlowRate=myatof(StrTokStr1[Tp++]);
 				nConstant[i].LiterPerPluse=myatof(StrTokStr1[Tp++]);
 				nConstant[i].Pressure=myatof(StrTokStr1[Tp++]);
 				
-				sprintf(Buffer1,"EcoConstant[%d]: %d,%d,%d,%d,%d\n\r",i,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+				sprintf(Buffer1,"EcoConstant[%d]: %d,%d,%f,%f,%f\n\r",i,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
 				sAPI_UartPrintf(Buffer1);
 			}
 			NoOfConstant=myatoi(StrTokStr1[StrTokStrVer-2]);
@@ -3140,7 +3140,7 @@ sprintf(textBuf,"Ecoset,");
 for(int i=0;i<NoOfConstant;i++)
 {
 	//sprintf(textBuf,"%s%02d,%02d,%04d,\n\r",textBuf,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate);
-		sprintf(textBuf,"%s%02d,%02d,%01d,%.01f,%.01f,",textBuf,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+		sprintf(textBuf,"%s%02d,%02d,%.01f,%.01f,%.01f,",textBuf,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
 }
 sprintf(textBuf,"%s%02d,\n\r",textBuf,NoOfConstant);
 	// sprintf(textBuf,"Ecoset,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%.01f,%.01f,%01d,%02d,%02d,%02d,\n\r",
@@ -3228,8 +3228,8 @@ void ReadtnkconfigFile(void)
 		{
 			nConfig[Tp/4].Sno = myatoi(StrTokStr1[Tp]);
 			nConfig[Tp/4].Object = myatoi(StrTokStr1[Tp+1]);
-			nConfig[Tp/4].Input_No = myatoi(StrTokStr1[Tp+2]);
-			nConfig[Tp/4].Output_No = myatoi(StrTokStr1[Tp+3]);
+			nConfig[Tp/4].Output_No = myatoi(StrTokStr1[Tp+2]);
+			nConfig[Tp/4].Input_No = myatoi(StrTokStr1[Tp+3]);
 			sprintf(buf,"nConfig[%d]=%d,%d,%d,%d\n\r",Tp/4,nConfig[Tp/4].Sno,nConfig[Tp/4].Object,nConfig[Tp/4].Input_No,nConfig[Tp/4].Output_No);
 			sAPI_UartPrintf(buf);
 		}
@@ -5945,53 +5945,68 @@ void sAPP_Timer1(void *data)
 				nProgramProcess.ValveON = 1;
 			}
 			#endif
+			sprintf(Buff,"\nNoOfObject: %d",NoOfObject);
+			sAPI_UartPrintf(Buff);
 			for(int i=0;i<NoOfObject;i++)
 			{
 				if(nConfig[i].Object==13)
 				{
-					if(RecValveOnOff.ValveStausFlag==SendValveOnOff.ValveStausFlag && RecValveOnOff.ValveStausFlag==2)
+					unsigned char Temp=0;
+					if(RecValveOnOff.ValveStausFlag==2)
 					{
+						
+						sprintf(Buff,"nConfig[%d] %d %d %d\n",i,nConfig[i].Output_No-1,RecValveOnOff.ValveNo,(1<<(nConfig[i].Output_No-1 )) & RecValveOnOff.ValveNo);
+						sAPI_UartPrintf(Buff);\
 						if(RecValveOnOff.ValveNo == SendValveOnOff.ValveNo)
-						{
-							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
-							{
-								nConfig[i].Status=1;
-							}
+						{	
+							Temp=(1<<(nConfig[i].Output_No - 1 ));
+							if((Temp & RecValveOnOff.ValveNo))	
+							nConfig[i].Status=1;
+							else
+							nConfig[i].Status=0;
 						}
 						else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
 						{
-							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
-							{
-								nConfig[i].Status=0;
-							}
+							Temp=(1<<(nConfig[i].Output_No-1 ));
+							if((Temp & RecValveOnOff.ValveNo))	
+							nConfig[i].Status=1;
+							else
+							nConfig[i].Status=0;
 						}
-						nProgramProcess.ValveON = 0;
+						//nProgramProcess.ValveON = 0;
 						sprintf(Buff,"\nRec:%d %d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo);
 						sAPI_UartPrintf(Buff);
-						sprintf(Buff,"--Send:%d \n",SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo);
+						sprintf(Buff,"--Send:%d %d\n",SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo);
+						sAPI_UartPrintf(Buff);
+						sprintf(Buff,"nConfig[%d].Status:%d\n",i,nConfig[i].Status);
 						sAPI_UartPrintf(Buff);
 
 					}
-					else if(RecValveOnOff.ValveStausFlag!=SendValveOnOff.ValveStausFlag)
+					else
 					{
+						sprintf(Buff,"nConfig[%d] %d %d %d\n",i,nConfig[i].Output_No,RecValveOnOff.ValveNo,nConfig[i].Output_No & RecValveOnOff.ValveNo);
+						sAPI_UartPrintf(Buff);
 						if(RecValveOnOff.ValveNo == SendValveOnOff.ValveNo)
-						{
-							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
-							{
-								nConfig[i].Status=0;
-							}
+						{	
+							Temp=(1<<(nConfig[i].Output_No-1 ));
+							if((Temp & RecValveOnOff.ValveNo))	
+							nConfig[i].Status=0;
+							else
+							nConfig[i].Status=1;
 						}
 						else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
 						{
-							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
-							{
-								nConfig[i].Status=0;
-							}
+							Temp=(1<<(nConfig[i].Output_No-1 ));
+							if((Temp & RecValveOnOff.ValveNo))	
+							nConfig[i].Status=1;
+							else
+							nConfig[i].Status=0;
 						}
-						nProgramProcess.ValveON = 1;
+						
+						//nProgramProcess.ValveON = 1;
 						sprintf(Buff,"\nRec:%d %d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo);
 						sAPI_UartPrintf(Buff);
-						sprintf(Buff,"--Send:%d \n",SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo);
+						sprintf(Buff,"--Send:%d %d\n",SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo);
 						sAPI_UartPrintf(Buff);
 					}
 				}
@@ -17324,7 +17339,9 @@ void wifi_process_function()
 				}
 				else if(nConstant[i-1].Object==13 || nConstant[i-1].Object==45)
 				{
-					nConstant[i-1].FlowRate=myatoi(StrTokStr2[2]);
+					sprintf(Buff,"FLow :%s",StrTokStr2[2]);
+					sAPI_UartPrintf(Buff);
+					nConstant[i-1].FlowRate=myatof(StrTokStr2[2]);
 					nConstant[i-1].LiterPerPluse=0;
 					nConstant[i-1].Pressure=0;
 				}
@@ -17338,7 +17355,7 @@ void wifi_process_function()
 			NoOfConstant=i-1;
 			for(i=0;i<NoOfConstant;i++)
 			{
-				sprintf(Buffer1,"Constant before write:%d,%d,%d,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+				sprintf(Buffer1,"Constant before write:%d,%d,%f,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
 				sAPI_UartPrintf(Buffer1);
 			}
 			WriteEcosetFile();
@@ -17346,7 +17363,7 @@ void wifi_process_function()
 			NoOfConstant;
 			for(i=0;i<NoOfConstant;i++)
 			{
-				sprintf(Buffer1,"Constant after read:%d,%d,%d,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+				sprintf(Buffer1,"Constant after read:%d,%d,%f,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
 				sAPI_UartPrintf(Buffer1);
 			}
 			send_tankconfiguaration(PhoneNumber);
