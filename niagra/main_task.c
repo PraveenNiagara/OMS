@@ -149,7 +149,10 @@ unsigned char Node_buf[300],Rec_buf[32];
 unsigned char Rec_len1=0,Rec_len2=0,Rec_Key=0;
 struct ValveOnOff
 {
-	unsigned char ValveStausFlag,ValveNo;
+	unsigned char ValveStausFlag,ValveNo,MainValveStatus,ControlFLag,SolarVolt;
+	float Pressure1,Pressure2,Pressure3,Flow,BatVolt;
+	int ADC1,ADC2,ADC3;
+	uint32_t Cummulative;
 };
 struct ValveOnOff SendValveOnOff,RecValveOnOff;
 
@@ -3126,13 +3129,13 @@ void WriteEcosetFile()
 	sprintf(textBuf,"FileOpenEx Create (%s,%08x)=%d\r\n", pfile, FS_CREATE,ret);
 	sAPI_UartPrintf(textBuf);
 
-	memset(textBuf,0,100);  //55
+	memset(textBuf,0x00,100);  //55
 	ret = sAPI_fseek(file_hdl, 0 , FS_SEEK_BEGIN);
 	sprintf(textBuf,"FileSeek()=%d: \r\n",ret);
 	sAPI_UartPrintf(textBuf);
 
 
-   memset(textBuf,0,140);	//50
+   memset(textBuf,0x00,140);	//50
 sprintf(textBuf,"Ecoset,");
 for(int i=0;i<NoOfConstant;i++)
 {
@@ -5892,6 +5895,56 @@ void sAPP_Timer1(void *data)
 			} 
 
 			sAPI_UartPrintf("%s enter to main %d!!\n"); // dg_nsdk
+			#if 0
+			if(RecValveOnOff.ValveStausFlag==SendValveOnOff.ValveStausFlag && RecValveOnOff.ValveStausFlag==2)
+			{
+				if(RecValveOnOff.ValveNo == SendValveOnOff.ValveNo)
+				{
+					for(int i=0;i<NoOfObject;i++)
+					{
+						if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+						{
+							nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=1;
+						}
+					}
+				}
+				else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
+				{
+					for(int i=0;i<NoOfObject;i++)
+					{
+						if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+						{
+							nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=0;
+						}
+					}
+				}
+				nProgramProcess.ValveON = 0;
+			}
+			else
+			{
+				if(RecValveOnOff.ValveNo == SendValveOnOff.ValveNo)
+				{
+					for(int i=0;i<NoOfObject;i++)
+					{
+						if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+						{
+							nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=0;
+						}
+					}
+				}
+				else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
+				{
+					for(int i=0;i<NoOfObject;i++)
+					{
+						if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+						{
+							nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=0;
+						}
+					}
+				}
+				nProgramProcess.ValveON = 1;
+			}
+			#endif
 			for(int i=0;i<NoOfObject;i++)
 			{
 				if(nConfig[i].Object==13)
@@ -5900,50 +5953,58 @@ void sAPP_Timer1(void *data)
 					{
 						if(RecValveOnOff.ValveNo == SendValveOnOff.ValveNo)
 						{
-							ZoneOnFlag=0;
-							if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
 							{
-								nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=1;
+								nConfig[i].Status=1;
 							}
 						}
 						else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
 						{
-							ZoneOnFlag=1;
-							if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
 							{
-								nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=0;
+								nConfig[i].Status=0;
 							}
 						}
 						nProgramProcess.ValveON = 0;
+						sprintf(Buff,"\nRec:%d %d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo);
+						sAPI_UartPrintf(Buff);
+						sprintf(Buff,"--Send:%d \n",SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo);
+						sAPI_UartPrintf(Buff);
+
 					}
 					else if(RecValveOnOff.ValveStausFlag!=SendValveOnOff.ValveStausFlag)
 					{
 						if(RecValveOnOff.ValveNo == SendValveOnOff.ValveNo)
 						{
-							ZoneOnFlag=0;
-							if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
 							{
-								nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=0;
+								nConfig[i].Status=0;
 							}
 						}
 						else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
 						{
-							ZoneOnFlag=1;
-							if((nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Output_No & SendValveOnOff.ValveNo))	
+							if((nConfig[i].Output_No & SendValveOnOff.ValveNo))	
 							{
-								nConfig[nProgram.nZone[ProgramNo-1].ValveNo[i]-1].Status=0;
+								nConfig[i].Status=0;
 							}
 						}
 						nProgramProcess.ValveON = 1;
+						sprintf(Buff,"\nRec:%d %d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo);
+						sAPI_UartPrintf(Buff);
+						sprintf(Buff,"--Send:%d \n",SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo);
+						sAPI_UartPrintf(Buff);
 					}
 				}
 				if(nConfig[i].Object==45)
 				{
-					
+					nConfig[i].Status=RecValveOnOff.MainValveStatus;
 				}
 
 				if(nConfig[i].Object==26)
 				{
+					RecValveOnOff.ADC1;
+					RecValveOnOff.ADC2;
+					RecValveOnOff.ADC3;
 					
 				}
 
@@ -14082,7 +14143,7 @@ else if(s_nMSettings.m_settings_count==10)
 							sprintf(getbuff1,"{\r\n\"cC\":\"%s\",\r\n\"cM\":{",IMEI);
 
 							/***** Device details *****/
-							sprintf(getbuff1,"%s\r\n\"2401\": \"%0.2f,%0.2f\",",getbuff1,s_nOMSfeedback[0].Voltage,s_nOMSfeedback[0].Current);
+							sprintf(getbuff1,"%s\r\n\"2401\": \"%0.2f,%d\",",getbuff1,RecValveOnOff.BatVolt,RecValveOnOff.SolarVolt);
 							sprintf(getbuff1,"%s\r\n\"2402\": \"",getbuff1);//,s_nOMSfeedback[0].MainValvenofbk);
 							for(i=0;i<=8;i++)
 							{
@@ -14092,7 +14153,7 @@ else if(s_nMSettings.m_settings_count==10)
 								}
 								else if(nConfig[i].Object==45)
 								{
-									sprintf(getbuff3,"%s;%d.%03d,%d",getbuff3,nConfig[i].Object,nConfig[i].Sno,nConfig[i].Status);
+									sprintf(getbuff3,"%s;%d.%03d,%d",getbuff3,nConfig[i].Object,nConfig[i].Sno,RecValveOnOff.ControlFLag,nConfig[i].Status);
 								}
 							}
 							sprintf(getbuff2, "\",\r\n\"2403\":\"24.001,%3.1f;24.002,%3.1f;22.001,%3.1f\",\r\n\"2404\":\"\",",s_nOMSfeedback[0].Pressure, s_nOMSfeedback[1].Pressure,s_nOMSfeedback[0].LPS); // ,%3.1f,%3.1f
@@ -17252,8 +17313,9 @@ void wifi_process_function()
 				Pch1 = strtok( NULL, "," );
 				}
 				
-					nConstant[i-1].Sno=myatoi(StrTokStr2[0]);
-					nConstant[i-1].Object=myatoi(StrTokStr2[1]);
+					
+					nConstant[i-1].Object=myatoi(StrTokStr2[0]);
+					nConstant[i-1].Sno=myatoi(StrTokStr2[1]);
 				if(nConstant[i-1].Object==26)
 				{
 					nConstant[i-1].FlowRate=0;
@@ -19190,9 +19252,61 @@ while(1)
 								payload_buf[i-2]=uart_read_buf[i];
 							}
 							payload_buf[DLC-2]=0;
-							RecValveOnOff.ValveStausFlag=payload_buf[3];
-							RecValveOnOff.ValveNo=payload_buf[4];
-							sprintf(buf,"ValveStausFlag:%d,ValveNo:%d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo);
+							RecValveOnOff.ValveStausFlag=payload_buf[2];
+							RecValveOnOff.ValveNo=payload_buf[3];
+							RecValveOnOff.BatVolt=payload_buf[4]/10;
+							RecValveOnOff.SolarVolt=payload_buf[5];
+							
+							if(payload_buf[6]==1)
+							{
+								RecValveOnOff.ADC1=0;
+							}
+							else if(payload_buf[6]==2)
+							{
+								RecValveOnOff.ADC1=0;
+								RecValveOnOff.ADC1=payload_buf[8];
+							}
+							else
+							{
+								RecValveOnOff.ADC1=0;
+								RecValveOnOff.ADC1=payload_buf[7]*256;
+								RecValveOnOff.ADC1+=payload_buf[8];
+							}
+							if(payload_buf[9]==1)
+							{
+								RecValveOnOff.ADC2=0;
+							}
+							else if(payload_buf[9]==2)
+							{
+								RecValveOnOff.ADC2=0;
+								RecValveOnOff.ADC2=payload_buf[11];
+							}
+							else
+							{
+								RecValveOnOff.ADC2=0;
+								RecValveOnOff.ADC2=payload_buf[10]*256;
+								RecValveOnOff.ADC2+=payload_buf[11];
+							}
+							if(payload_buf[12]==1)
+							{
+								RecValveOnOff.ADC3=0;
+							}
+							else if(payload_buf[12]==2)
+							{
+								RecValveOnOff.ADC3=0;
+								RecValveOnOff.ADC3=payload_buf[14];
+							}
+							else
+							{
+								RecValveOnOff.ADC3=0;
+								RecValveOnOff.ADC3=payload_buf[13]*256;
+								RecValveOnOff.ADC3+=payload_buf[14];
+							}
+							RecValveOnOff.ControlFLag=payload_buf[15];
+							RecValveOnOff.MainValveStatus=payload_buf[16];
+
+							
+							sprintf(buf,"ValveStausFlag:%d,ValveNo:%d,SolarVolt:%d,BatVolt:%f,ADC1:%d,ADC2:%d,ADC3:%d,ControlFLag:%d,MainValveStatus:%d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo,RecValveOnOff.SolarVolt,RecValveOnOff.BatVolt,RecValveOnOff.ADC1,RecValveOnOff.ADC2,RecValveOnOff.ADC3,RecValveOnOff.ControlFLag,RecValveOnOff.MainValveStatus);
 							sAPI_UartPrintf(buf);
 						}
 						if(uart_read_buf[0] == '$' && uart_read_buf[1] == 'i' && uart_read_buf[2] == 'M')
@@ -19214,7 +19328,7 @@ while(1)
 							my_eeprom_ID[3]=myatoi(StrTokStr1[4]);
 							my_eeprom_ID[4]=myatoi(StrTokStr1[5]);
 							my_eeprom_ID[5]=myatoi(StrTokStr1[6]);
-							IMEI_req_flag=1;	
+								
 							uart_data_comm_flag=0;
 						//sprintf(buf,"$<BCK>\n\r");
 							//sAPI_UartWrite(SC_UART,(UINT8*)buf,strlen(buf));
@@ -19241,6 +19355,7 @@ while(1)
 						//	Resend_IMEI_count++;
 							if(Resend_IMEI_count>=2)
 							{
+								IMEI_req_flag=1;
 							Resend_IMEI_flag=0;
 							Resend_IMEI_count=0;
 							sprintf(IMEI,"%02X%02X%02X%02X%02X%02X",my_eeprom_ID[0],my_eeprom_ID[1],my_eeprom_ID[2],my_eeprom_ID[3],my_eeprom_ID[4],my_eeprom_ID[5]);	
@@ -19258,6 +19373,7 @@ while(1)
 						}
 						else 
 						{
+							IMEI_req_flag=1;
 						Resend_IMEI_flag=0;
 						Resend_IMEI_count=0;
 						sprintf(buf,"\n\r  Resend_IMEI_flag %d Resend_IMEI_count %d line %d \n\r",Resend_IMEI_flag,Resend_IMEI_count,__LINE__);
