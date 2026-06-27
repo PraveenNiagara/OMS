@@ -31,9 +31,9 @@
 
 #define UART_RX_PROCESS_TASK_STACK_SIZE (1024 * 2) /* UART proc*/ //(1024 * 6)
 
-#define FlowBased 1
-#define TimeBased 2
-#define PressureBased 2
+#define FlowBased 2
+#define TimeBased 1
+#define PressureBased 1
 
 #define UART_RX_BUFFER_SIZE  128 //200 // RX buffer can not more than 2048
 #define UART_TX_BUFFER_SIZE 200
@@ -51,13 +51,16 @@ static sTaskRef NetlightProcesser;
 sMsgQRef simcomUI_msgq;
 sMsgQRef uart2_msgq;
 int zone[10][10][10];
+float programBuf[20][5];
 struct ConfigMaker nConfig[10];
 struct Constant nConstant[10];
+struct calibration ncalibration[3];
 struct Program nProgram;
 struct ProgramProcess nProgramProcess;
 //struct zone nZone[4];
 struct OMSfeedback s_nOMSfeedback[10];
-int NoOfConstant,NoOfObject,NoOfZone,NoOfProgram,ProgramNo;
+int NoOfConstant,NoOfObject,NoOfZone,NoOfProgram,NoOfCalibration,ProgramNo,Current_min,Pre_min;
+char Checkrtc=0;
 char ZoneOnFlag=0,ProgramFlag_1=0,ProgramFlag_2=0,ValveOnFlag=0,DelayTime=0,Timer=0,ValvenOnNo=0,ValvenOnRef=0,MainValveFlag=0,MainValveNo=0,ProgramStartFlag_1=0,ProgramStartFlag_2=0;
 // #define NETLIGHT SC_MODULE_GPIO_09
 
@@ -85,10 +88,12 @@ void WritectsetFile(void);
 
 void UartCBFunc1(SC_Uart_Port_Number portNumber, void *para);
 void SmSCallback(BOOL result);
+long days_from_civil(int y, int m, int d);
 extern void timerRoutine1(UINT32);
 extern void sTask_MainProcesser(void *data);
 extern void sAPP_Timer1(void *data);
 extern void sTask_CallProcesser(void);
+
 
 UINT8 IMEI[16] = {0x00};
 
@@ -149,8 +154,8 @@ unsigned char Node_buf[300],Rec_buf[32];
 unsigned char Rec_len1=0,Rec_len2=0,Rec_Key=0;
 struct ValveOnOff
 {
-	unsigned char ValveStausFlag,ValveNo,MainValveStatus,ControlFLag,SolarVolt;
-	float Pressure1,Pressure2,Pressure3,Flow,BatVolt;
+	unsigned char ValveStausFlag,ValveNo,MainValveStatus,ControlFLag,SolarVolt,Switch;
+	float Pressure1,Pressure2,Pressure3,LPS,BatVolt;
 	int ADC1,ADC2,ADC3;
 	uint32_t Cummulative;
 };
@@ -388,7 +393,7 @@ unsigned long creg_reg_count = 0;
 volatile long int No_comm_prev_secs = 0;
 const long int data_sec = 86390;
 volatile long int seconds_data = 0;
-volatile long int l_currentSec = 0, Time_Counter = 0, Time_Counter1 = 0, Time_Counter2 = 0, prev_sec = 0;
+volatile long int l_currentSec = 0, Time_Counter = 0, Time_Counter1 = 0, Time_Counter2 = 0, prev_sec = 0,prev_sec1=0,RtcSec = 0;
 INT16 Ten_mins_sec_timer;
 
 float BATPER = 0.0;
@@ -3029,9 +3034,9 @@ sprintf(filename,"c:/ecoset.txt");
 				nConstant[i].Object=myatoi(StrTokStr1[Tp++]);
 				nConstant[i].FlowRate=myatof(StrTokStr1[Tp++]);
 				nConstant[i].LiterPerPluse=myatof(StrTokStr1[Tp++]);
-				nConstant[i].Pressure=myatof(StrTokStr1[Tp++]);
 				
-				sprintf(Buffer1,"EcoConstant[%d]: %d,%d,%f,%f,%f\n\r",i,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+				
+				sprintf(Buffer1,"EcoConstant[%d]: %d,%d,%f,%f,%f\n\r",i,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse);
 				sAPI_UartPrintf(Buffer1);
 			}
 			NoOfConstant=myatoi(StrTokStr1[StrTokStrVer-2]);
@@ -3140,7 +3145,7 @@ sprintf(textBuf,"Ecoset,");
 for(int i=0;i<NoOfConstant;i++)
 {
 	//sprintf(textBuf,"%s%02d,%02d,%04d,\n\r",textBuf,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate);
-		sprintf(textBuf,"%s%02d,%02d,%.01f,%.01f,%.01f,",textBuf,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+		sprintf(textBuf,"%s%02d,%02d,%.01f,%.01f,%.01f,",textBuf,nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse);
 }
 sprintf(textBuf,"%s%02d,\n\r",textBuf,NoOfConstant);
 	// sprintf(textBuf,"Ecoset,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%.01f,%.01f,%01d,%02d,%02d,%02d,\n\r",
@@ -3428,8 +3433,8 @@ void ReadvolsetFile(void)
 			StrTokStrVer++;
 			Pch = strtok(NULL, ",");
 		}
-		NoOfZone=myatoi(StrTokStr1[1]);
-		for(int i=0,Tp=2;i<=NoOfZone;i++)
+		nProgram.NoofZones=myatoi(StrTokStr1[1]);
+		for(int i=0,Tp=2;i<=nProgram.NoofZones;i++)
 		{
 			nProgram.nZone[i].Sno=myatoi(StrTokStr1[Tp++]);
 			nProgram.nZone[i].ValveNo[0]=myatoi(StrTokStr1[Tp++]);
@@ -3515,8 +3520,8 @@ void WritevolsetFile(void)
 	memset(textBuf, 0, 100); // 50
 	sprintf(buf, " before write PrvAutoMobileKey is %d", PrvAutoMobileKey);
 	sAPI_UartPrintf(buf);
-	sprintf(textBuf,"Zone,%d,",NoOfZone);
-	for(int i=0;i<NoOfZone;i++)
+	sprintf(textBuf,"Zone,%d,",nProgram.NoofZones);
+	for(int i=0;i<nProgram.NoofZones;i++)
 		sprintf(textBuf,"%s%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,",textBuf,nProgram.nZone[i].Sno,nProgram.nZone[i].ValveNo[0],nProgram.nZone[i].ValveNo[1],nProgram.nZone[i].ValveNo[2],nProgram.nZone[i].ValveNo[3],nProgram.nZone[i].MainValve,nProgram.nZone[i].IrrigationMethod,nProgram.nZone[i].FlowRate,nProgram.nZone[i].Duration[0],nProgram.nZone[i].Duration[1],nProgram.nZone[i].Duration[2],nProgram.nZone[i].ProgramNo);
 	sAPI_UartPrintf(textBuf);
 	
@@ -3546,7 +3551,7 @@ void WritevolsetFile(void)
 	}
 }
 
-void ReadcursetFile(unsigned char f_pumpno)
+void ReadProsetFile()
 {
 
 	//	char StrTokStr[30][20];   // dg_changed from [30][20]
@@ -3559,7 +3564,7 @@ void ReadcursetFile(unsigned char f_pumpno)
 	unsigned char filename[30], l_pumpno_tx = 0;
 	memset(pfile, 0, 200);
 
-	sprintf(filename, "c:/cset%d.txt", f_pumpno);
+	sprintf(filename, "c:/Proset.txt");
 	strcpy((char *)pfile, (char *)filename);
 
 	//	strcpy((char *)pfile,(char*)"c:/vset.txt");
@@ -3569,14 +3574,14 @@ void ReadcursetFile(unsigned char f_pumpno)
 	if (file_hdl == NULL)
 	{
 		//    sAPI_UartPrintf("sAPI_fopen err :c:/cset%d.txt",f_pumpno);
-		sprintf(buf, "sAPI_fopen err :c:/cset%d.txt", f_pumpno);
+		sprintf(buf, "sAPI_fopen err :c:/Proset.txt");
 		sAPI_UartPrintf(buf);
 	}
 	else
 	{
 		memset(textBuf, 0, 50);
 		ret = sAPI_fseek(file_hdl, 0, FS_SEEK_BEGIN);
-		sprintf(buf, "c:/cset%d.txt FileSeek()=%d: \r\n", f_pumpno, ret);
+		sprintf(buf, "c:/Proset.txt FileSeek()=%d: \r\n", ret);
 		sAPI_UartPrintf(buf);
 		memset(strBuf, 0, 100); // 70
 		readedlen = sAPI_fread((unsigned char *)strBuf, 100, 1, file_hdl);
@@ -3592,7 +3597,7 @@ void ReadcursetFile(unsigned char f_pumpno)
 		}
 		else
 		{
-			sprintf(buf, "c:/cset%d.txt FileRead()=%d: readedlen=%d, strBuf=%s\r\n", f_pumpno, ret, readedlen, strBuf);
+			sprintf(buf, "c:/Proset.txt FileRead()=%d: readedlen=%d, strBuf=%s\r\n", ret, readedlen, strBuf);
 			sAPI_UartPrintf(buf);
 			Pch = strtok((char *)strBuf, (char *)",");
 			StrTokStrVer = 0;
@@ -3603,19 +3608,10 @@ void ReadcursetFile(unsigned char f_pumpno)
 				Pch = strtok(NULL, ",");
 			}
 
-			// for(Tp=0;Tp<=StrTokStrVer;Tp++)
-			//{
-			//	sprintf(buf,"\n\rSt=%s  pos=%d\n\r",StrTokStr[Tp],Tp);
-			//  sAPI_UartPrintf(buf);
-
-			//}
-
-			l_pumpno_tx = f_pumpno - 1;
-			nProgram.Sno=1;
-			nProgram.DelayBtwZone[0]=(int)myatoi(StrTokStr1[1]);
-			nProgram.DelayBtwZone[1]=(int)myatoi(StrTokStr1[2]);
-			nProgram.DelayBtwZone[2]=(int)myatoi(StrTokStr1[3]);
-			nProgram.ScaleFact=myatoi(StrTokStr1[4]);
+			nProgram.Sno=(int)myatoi(StrTokStr1[1]);
+			nProgram.DelayBtwZone[0]=(int)myatoi(StrTokStr1[2]);
+			nProgram.DelayBtwZone[1]=(int)myatoi(StrTokStr1[3]);
+			nProgram.ScaleFact=myatof(StrTokStr1[4]);
 			nProgram.Schedule=(int)myatoi(StrTokStr1[5]);
 			nProgram.StartDate[0]=(int)myatoi(StrTokStr1[6]);
 			nProgram.StartDate[1]=(int)myatoi(StrTokStr1[7]);
@@ -3626,81 +3622,36 @@ void ReadcursetFile(unsigned char f_pumpno)
 			nProgram.EndDate[2]=(int)myatoi(StrTokStr1[12]);
 			nProgram.Rtc[0]=(int)myatoi(StrTokStr1[13]);
 			nProgram.Rtc[1]=(int)myatoi(StrTokStr1[14]);
-			nProgram.Rtc[2]=(int)myatoi(StrTokStr1[15]);
-			nProgram.Alaram=(int)myatoi(StrTokStr1[16]);
+			nProgram.Alaram[0]=(int)myatoi(StrTokStr1[15]);
+			nProgram.Alaram[1]=(int)myatoi(StrTokStr1[16]);
 			nProgram.ProgramNo=l_pumpno_tx+1;
 
-			 sprintf(Buffer1,"Read Program,%d,%d,%d,%d,%f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n\r",nProgram.Sno,nProgram.DelayBtwZone[0],nProgram.DelayBtwZone[1],nProgram.DelayBtwZone[2],nProgram.ScaleFact,nProgram.Schedule,nProgram.StartDate[0],nProgram.StartDate[1],nProgram.StartDate[2],nProgram.DayCount,nProgram.EndDate[0],nProgram.EndDate[1],nProgram.EndDate[2],nProgram.Rtc[0],nProgram.Rtc[1],nProgram.Rtc[2],nProgram.Alaram,nProgram.ProgramNo);
+			 sprintf(Buffer1,"Read Program,%d,%d,%d,%0.1f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n\r",nProgram.Sno,nProgram.DelayBtwZone[0],nProgram.DelayBtwZone[1],nProgram.ScaleFact,nProgram.Schedule,nProgram.StartDate[0],nProgram.StartDate[1],nProgram.StartDate[2],nProgram.DayCount,nProgram.EndDate[0],nProgram.EndDate[1],nProgram.EndDate[2],nProgram.Rtc[0],nProgram.Rtc[1],nProgram.Alaram[0],nProgram.Alaram[1],nProgram.ProgramNo);
             sAPI_UartPrintf(Buffer1);
-			// s_nMSettings.m_DrScOnOf[l_pumpno_tx] = myatoi(StrTokStr1[1]);
-			// s_nTimerSettings.m_DrScHr[l_pumpno_tx] = myatoi(StrTokStr1[2]);
-			// s_nTimerSettings.m_DrScMin[l_pumpno_tx] = myatoi(StrTokStr1[3]);
-			// s_nTimerSettings.m_DrScSec[l_pumpno_tx] = myatoi(StrTokStr1[4]);
-			// temp_DrAmpsII = myatoi(StrTokStr1[5]);
-			// temp_DrAmpsIII = myatoi(StrTokStr1[6]);
-			// s_nMSettings.m_DrReOnOf[l_pumpno_tx] = myatoi(StrTokStr1[7]);
-			// s_nTimerSettings.m_DrReHr[l_pumpno_tx] = myatoi(StrTokStr1[8]);
-			// s_nTimerSettings.m_DrReMin[l_pumpno_tx] = myatoi(StrTokStr1[9]);
-			// s_nTimerSettings.m_DrReSec[l_pumpno_tx] = myatoi(StrTokStr1[10]);
-			// s_nMSettings.m_DrOccurOnOff[l_pumpno_tx] = myatoi(StrTokStr1[11]);
-			// s_nTimerSettings.m_DrOccurTimHr[l_pumpno_tx] = myatoi(StrTokStr1[12]);
-			// s_nTimerSettings.m_DrOccurTimMin[l_pumpno_tx] = myatoi(StrTokStr1[13]);
-			// s_nTimerSettings.m_DrOccurTimSec[l_pumpno_tx] = myatoi(StrTokStr1[14]);
-			// a_occurance_count[l_pumpno_tx] = myatoi(StrTokStr1[15]);
-
-			// s_nMSettings.m_OlOnOff[l_pumpno_tx] = myatoi(StrTokStr1[16]);
-			// s_nTimerSettings.m_OlScanHr[l_pumpno_tx] = myatoi(StrTokStr1[17]);
-			// s_nTimerSettings.m_OlScanMin[l_pumpno_tx] = myatoi(StrTokStr1[18]);
-			// s_nTimerSettings.m_OlScanSec[l_pumpno_tx] = myatoi(StrTokStr1[19]);
-			// temp_OlAmpsII = myatoi(StrTokStr1[20]);
-			// temp_OlAmpsIII = myatoi(StrTokStr1[21]);
-			// //	s_nMSettings.m_Drrestartpoweronof[l_pumpno_tx]=myatoi(StrTokStr1[22]);
-			// s_nMSettings.m_OlRstVolOnoff[l_pumpno_tx] = myatoi(StrTokStr1[23]);
-			// s_nTimerSettings.m_AutoRstOn[l_pumpno_tx] = myatoi(StrTokStr1[24]);
-			// s_nMSettings.m_AutoDrRunRstIIOnOff[pumpno_tx] = myatoi(StrTokStr1[25]);
-			// //	s_nMSettings.m_AutoOlDrRstIIOnOff[pumpno_tx]=myatoi(StrTokStr1[26]);
-
-			// s_nTimerSettings.m_DrAmpsII[l_pumpno_tx] = temp_DrAmpsII * 0.01;
-			// s_nTimerSettings.m_DrAmpsIII[l_pumpno_tx] = temp_DrAmpsIII * 0.01;
-			// s_nTimerSettings.m_OlAmpsII[l_pumpno_tx] = temp_OlAmpsII * 0.01;
-			// s_nTimerSettings.m_OlAmpsIII[l_pumpno_tx] = temp_OlAmpsIII * 0.01;
-
-			sprintf(buf, " s_nMSettings.m_DrScOnOf[%d] =%d\r\n", l_pumpno_tx, s_nMSettings.m_DrScOnOf[l_pumpno_tx]);
-			sAPI_UartPrintf(buf);
-			sprintf(buf, "\n\r read f_pumpno>>:%d l_pumpno_tx %d s_nMSettings.m_DrScOnOf[%d]:%d\n\r", f_pumpno, l_pumpno_tx, l_pumpno_tx, s_nMSettings.m_DrScOnOf[l_pumpno_tx]);
-			sAPI_UartPrintf(buf);
+			
 		}
 		ret = sAPI_fclose(file_hdl);
 		if (ret != 0)
 		{
 			//  sAPI_UartPrintf("c:/cset%d.txt sAPI_fclose err",f_pumpno);
-			sprintf(buf, "c:/cset%d.txt sAPI_fclose err ret=%d: \r\n", f_pumpno, ret);
+			sprintf(buf, "c:/Proset.txt sAPI_fclose err ret=%d: \r\n", ret);
 			sAPI_UartPrintf(buf);
 		}
 		else
 		{
 			file_hdl = NULL;
 		}
-		/* if(nMSettings.ndebugonof==1)
-		{
-			sprintf(buf,"$R,S,%d,%d,%02d,%02d,%02d,%0.2f,%0.2f,%d,%02d,%02d,%02d,%d,%02d,%02d,%02d,%d,n\r",
-									 l_pumpno_tx,s_nMSettings.m_DrScOnOf[l_pumpno_tx],s_nTimerSettings.m_DrScHr[l_pumpno_tx],s_nTimerSettings.m_DrScMin[l_pumpno_tx],s_nTimerSettings.m_DrScSec[l_pumpno_tx],
-									 s_nTimerSettings.m_DrAmpsII[l_pumpno_tx],s_nTimerSettings.m_DrAmpsIII[l_pumpno_tx],s_nMSettings.m_DrReOnOf[l_pumpno_tx],s_nTimerSettings.m_DrReHr[l_pumpno_tx],
-									 s_nTimerSettings.m_DrReMin[l_pumpno_tx],s_nTimerSettings.m_DrReSec[l_pumpno_tx],s_nMSettings.m_DrOccurOnOff[l_pumpno_tx],s_nTimerSettings.m_DrOccurTimHr[l_pumpno_tx],
-									 s_nTimerSettings.m_DrOccurTimMin[l_pumpno_tx],s_nTimerSettings.m_DrOccurTimSec[l_pumpno_tx],a_occurance_count[l_pumpno_tx]);
-									 sAPI_UartPrintf(buf);
-		} */
 	}
 }
 
-void WritecursetFile(unsigned char f_pumpno)
+void WriteProsetFile()
 {
 	INT32 ret;
-	UINT32 writeedlen, temp_DrAmpsII, temp_DrAmpsIII, temp_OlAmpsII, temp_OlAmpsIII;
+	UINT32 writeedlen;
 	SCFILE *file_hdl = NULL;
-	unsigned char filename[100], l_pumpno_tx;
+	unsigned char filename[100];
 
-	sprintf(filename, "c:/cset%d.txt", f_pumpno);
+	sprintf(filename, "c:/Proset.txt");
 	strcpy((char *)pfile, (char *)filename);
 
 	file_hdl = sAPI_fopen((UINT8 *)pfile, "wb");
@@ -3718,26 +3669,10 @@ void WritecursetFile(unsigned char f_pumpno)
 	sAPI_UartPrintf(textBuf);
 
 	memset(textBuf, 0, 100); // 50
-	sprintf(buf, " before write PrvAutoMobileKey is %d", PrvAutoMobileKey);
-	sAPI_UartPrintf(buf);
 
-	l_pumpno_tx = f_pumpno - 1;
-	sprintf(buf, "\n\r write f_pumpno>>:%d l_pumpno_tx %d s_nMSettings.m_DrScOnOf[%d]:%d\n\r", f_pumpno, l_pumpno_tx, l_pumpno_tx, s_nMSettings.m_DrScOnOf[l_pumpno_tx]);
-	sAPI_UartPrintf(buf);
-	 sprintf(textBuf,"Program,%d,%d,%d,%d,%0.1f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n\r",nProgram.Sno,nProgram.DelayBtwZone[0],nProgram.DelayBtwZone[1],nProgram.DelayBtwZone[2],nProgram.ScaleFact,nProgram.Schedule,nProgram.StartDate[0],nProgram.StartDate[1],nProgram.StartDate[2],nProgram.DayCount,nProgram.EndDate[0],nProgram.EndDate[1],nProgram.EndDate[2],nProgram.Rtc[0],nProgram.Rtc[1],nProgram.Rtc[2],nProgram.Alaram,nProgram.ProgramNo);
+	
+	 sprintf(textBuf,"Program,%d,%d,%d,%0.1f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,\n\r",nProgram.Sno,nProgram.DelayBtwZone[0],nProgram.DelayBtwZone[1],nProgram.ScaleFact,nProgram.Schedule,nProgram.StartDate[0],nProgram.StartDate[1],nProgram.StartDate[2],nProgram.DayCount,nProgram.EndDate[0],nProgram.EndDate[1],nProgram.EndDate[2],nProgram.Rtc[0],nProgram.Rtc[1],nProgram.Alaram[0],nProgram.Alaram[1],nProgram.ProgramNo);
             sAPI_UartPrintf(textBuf);
-	// temp_DrAmpsII = s_nTimerSettings.m_DrAmpsII[l_pumpno_tx] * 100;
-	// temp_DrAmpsIII = s_nTimerSettings.m_DrAmpsIII[l_pumpno_tx] * 100;
-	// temp_OlAmpsII = s_nTimerSettings.m_OlAmpsII[l_pumpno_tx] * 100;
-	// temp_OlAmpsIII = s_nTimerSettings.m_OlAmpsIII[l_pumpno_tx] * 100;
-
-	// sprintf(textBuf, "tnkset,%01d,%02d,%02d,%02d,%05d,%05d,%01d,%02d,%02d,%02d,%1d,%02d,%02d,%02d,%02d,%1d,%02d,%02d,%02d,%05d,%05d,%01d,%01d,%01d,%01d,%01d,\n\r",
-	// 		s_nMSettings.m_DrScOnOf[l_pumpno_tx], s_nTimerSettings.m_DrScHr[l_pumpno_tx], s_nTimerSettings.m_DrScMin[l_pumpno_tx], s_nTimerSettings.m_DrScSec[l_pumpno_tx], temp_DrAmpsII, temp_DrAmpsIII,
-	// 		s_nMSettings.m_DrReOnOf[l_pumpno_tx], s_nTimerSettings.m_DrReHr[l_pumpno_tx], s_nTimerSettings.m_DrReMin[l_pumpno_tx], s_nTimerSettings.m_DrReSec[l_pumpno_tx],
-	// 		s_nMSettings.m_DrOccurOnOff[l_pumpno_tx], s_nTimerSettings.m_DrOccurTimHr[l_pumpno_tx], s_nTimerSettings.m_DrOccurTimMin[l_pumpno_tx], s_nTimerSettings.m_DrOccurTimSec[l_pumpno_tx], a_occurance_count[l_pumpno_tx],
-	// 		s_nMSettings.m_OlOnOff[l_pumpno_tx], s_nTimerSettings.m_OlScanHr[l_pumpno_tx], s_nTimerSettings.m_OlScanMin[l_pumpno_tx], s_nTimerSettings.m_OlScanSec[l_pumpno_tx], temp_OlAmpsII, temp_OlAmpsIII,
-	// 		s_nMSettings.m_Drrestartpoweronof[l_pumpno_tx], s_nMSettings.m_OlRstVolOnoff[l_pumpno_tx], s_nTimerSettings.m_AutoRstOn[l_pumpno_tx], s_nMSettings.m_AutoDrRunRstIIOnOff[l_pumpno_tx], s_nMSettings.m_AutoOlDrRstIIOnOff[l_pumpno_tx]);
-	// sAPI_UartPrintf(textBuf);
 
 	writeedlen = sAPI_fwrite((UINT8 *)textBuf, strlen((char *)textBuf), 1, file_hdl);
 	if (writeedlen != strlen((char *)textBuf))
@@ -3745,7 +3680,7 @@ void WritecursetFile(unsigned char f_pumpno)
 		sprintf(buf, "sAPI_fwrite err write length: %d\r\n", writeedlen);
 		sAPI_UartPrintf(buf);
 	}
-	sprintf(textBuf, "FileWrite{%s},writeedlen=%d  s_nMSettings.m_DrScOnOf[%d] =%d\r\n", pfile, writeedlen, l_pumpno_tx, s_nMSettings.m_DrScOnOf[l_pumpno_tx]);
+	sprintf(textBuf, "FileWrite{%s},writeedlen=%d  \r\n", pfile, writeedlen);
 	sAPI_UartPrintf(textBuf);
 
 	ret = sAPI_fclose(file_hdl);
@@ -3761,6 +3696,7 @@ void WritecursetFile(unsigned char f_pumpno)
 
 void WritedelsetFile(unsigned char f_pumpno)
 {
+	#if 1
 	INT32 ret;
 	UINT32 writeedlen, temp_DrAmpsII, temp_DrAmpsIII, temp_OlAmpsII, temp_OlAmpsIII;
 	SCFILE *file_hdl = NULL;
@@ -3786,19 +3722,23 @@ void WritedelsetFile(unsigned char f_pumpno)
 	memset(textBuf, 0, 100); // 50
 	sprintf(buf, " before write PrvAutoMobileKey is %d", PrvAutoMobileKey);
 	sAPI_UartPrintf(buf);
+	sprintf(textBuf,"Calib");
+	for (int i = 0; i < NoOfCalibration; i++)
+		sprintf(textBuf, "%s%d,%d,%0.1f,%0.1f,\n\r",textBuf,ncalibration[i].Sno,ncalibration[i].Object,ncalibration[i].CalibratedValue,ncalibration[i].Factor);
+	sprintf(textBuf, "%s%02d,\n\r", textBuf,NoOfCalibration);
+	
+	// l_pumpno_tx = f_pumpno - 1;
+	// temp_DrAmpsII = s_nTimerSettings.m_DrAmpsII[l_pumpno_tx] * 100;
+	// temp_DrAmpsIII = s_nTimerSettings.m_DrAmpsIII[l_pumpno_tx] * 100;
+	// temp_OlAmpsII = s_nTimerSettings.m_OlAmpsII[l_pumpno_tx] * 100;
+	// temp_OlAmpsIII = s_nTimerSettings.m_OlAmpsIII[l_pumpno_tx] * 100;
 
-	l_pumpno_tx = f_pumpno - 1;
-	temp_DrAmpsII = s_nTimerSettings.m_DrAmpsII[l_pumpno_tx] * 100;
-	temp_DrAmpsIII = s_nTimerSettings.m_DrAmpsIII[l_pumpno_tx] * 100;
-	temp_OlAmpsII = s_nTimerSettings.m_OlAmpsII[l_pumpno_tx] * 100;
-	temp_OlAmpsIII = s_nTimerSettings.m_OlAmpsIII[l_pumpno_tx] * 100;
-
-	sprintf(textBuf, "tnkset,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%02d,%02d,%02d,%1d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,\n\r",
-			s_nTimerSettings.m_POnHr[l_pumpno_tx], s_nTimerSettings.m_POnMin[l_pumpno_tx], s_nTimerSettings.m_POnSec[l_pumpno_tx], s_nMSettings.m_PoScrDlOnOff[l_pumpno_tx], s_nTimerSettings.m_PoScrDlHr[l_pumpno_tx], s_nTimerSettings.m_PoScrDlMin[l_pumpno_tx], s_nTimerSettings.m_PoScrDlSec[l_pumpno_tx],
-			s_nTimerSettings.m_SDHr[l_pumpno_tx], s_nTimerSettings.m_SDMin[l_pumpno_tx], s_nTimerSettings.m_SDSec[l_pumpno_tx], s_nMSettings.m_SfbOnOff[l_pumpno_tx], s_nTimerSettings.m_SfbHr[l_pumpno_tx], s_nTimerSettings.m_SfbMin[l_pumpno_tx], s_nTimerSettings.m_SfbSec[l_pumpno_tx],
-			s_nMSettings.m_CycLicOnOf[l_pumpno_tx], s_nTimerSettings.m_CycLicOnHr[l_pumpno_tx], s_nTimerSettings.m_CycLicOnMin[l_pumpno_tx], s_nTimerSettings.m_CycLicOnSec[l_pumpno_tx], s_nTimerSettings.m_CycLicOfHr[l_pumpno_tx], s_nTimerSettings.m_CycLicOfMin[l_pumpno_tx], s_nTimerSettings.m_CycLicOfSec[l_pumpno_tx],
-			s_nMSettings.m_MaxRnOnOf[l_pumpno_tx], s_nTimerSettings.m_MaxRnHr[l_pumpno_tx], s_nTimerSettings.m_MaxRnMin[l_pumpno_tx], s_nTimerSettings.m_MaxRnSec[l_pumpno_tx]);
-	sAPI_UartPrintf(textBuf);
+	// sprintf(textBuf, "tnkset,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%02d,%02d,%02d,%1d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,%02d,%02d,%02d,%01d,%02d,%02d,%02d,\n\r",
+	// 		s_nTimerSettings.m_POnHr[l_pumpno_tx], s_nTimerSettings.m_POnMin[l_pumpno_tx], s_nTimerSettings.m_POnSec[l_pumpno_tx], s_nMSettings.m_PoScrDlOnOff[l_pumpno_tx], s_nTimerSettings.m_PoScrDlHr[l_pumpno_tx], s_nTimerSettings.m_PoScrDlMin[l_pumpno_tx], s_nTimerSettings.m_PoScrDlSec[l_pumpno_tx],
+	// 		s_nTimerSettings.m_SDHr[l_pumpno_tx], s_nTimerSettings.m_SDMin[l_pumpno_tx], s_nTimerSettings.m_SDSec[l_pumpno_tx], s_nMSettings.m_SfbOnOff[l_pumpno_tx], s_nTimerSettings.m_SfbHr[l_pumpno_tx], s_nTimerSettings.m_SfbMin[l_pumpno_tx], s_nTimerSettings.m_SfbSec[l_pumpno_tx],
+	// 		s_nMSettings.m_CycLicOnOf[l_pumpno_tx], s_nTimerSettings.m_CycLicOnHr[l_pumpno_tx], s_nTimerSettings.m_CycLicOnMin[l_pumpno_tx], s_nTimerSettings.m_CycLicOnSec[l_pumpno_tx], s_nTimerSettings.m_CycLicOfHr[l_pumpno_tx], s_nTimerSettings.m_CycLicOfMin[l_pumpno_tx], s_nTimerSettings.m_CycLicOfSec[l_pumpno_tx],
+	// 		s_nMSettings.m_MaxRnOnOf[l_pumpno_tx], s_nTimerSettings.m_MaxRnHr[l_pumpno_tx], s_nTimerSettings.m_MaxRnMin[l_pumpno_tx], s_nTimerSettings.m_MaxRnSec[l_pumpno_tx]);
+	// sAPI_UartPrintf(textBuf);
 
 	writeedlen = sAPI_fwrite((UINT8 *)textBuf, strlen((char *)textBuf), 1, file_hdl);
 	if (writeedlen != strlen((char *)textBuf))
@@ -3818,11 +3758,12 @@ void WritedelsetFile(unsigned char f_pumpno)
 	{
 		file_hdl = NULL;
 	}
+	#endif
 }
 
 void ReaddelsetFile(unsigned char f_pumpno)
 {
-
+	#if 1
 	//	char StrTokStr[30][20];   // dg_changed from [30][20]
 	int StrTokStrVer = 0;
 	char *Pch = NULL;
@@ -3882,33 +3823,20 @@ void ReaddelsetFile(unsigned char f_pumpno)
 			//  sAPI_UartPrintf(buf);
 
 			//}
-			l_pumpno_tx = f_pumpno - 1;
-			s_nTimerSettings.m_POnHr[l_pumpno_tx] = myatoi(StrTokStr1[1]);
-			s_nTimerSettings.m_POnMin[l_pumpno_tx] = myatoi(StrTokStr1[2]);
-			s_nTimerSettings.m_POnSec[l_pumpno_tx] = myatoi(StrTokStr1[3]);
-			s_nMSettings.m_PoScrDlOnOff[l_pumpno_tx] = myatoi(StrTokStr1[4]);
-			s_nTimerSettings.m_PoScrDlHr[l_pumpno_tx] = myatoi(StrTokStr1[5]);
-			s_nTimerSettings.m_PoScrDlMin[l_pumpno_tx] = myatoi(StrTokStr1[6]);
-			s_nTimerSettings.m_PoScrDlSec[l_pumpno_tx] = myatoi(StrTokStr1[7]);
-			s_nTimerSettings.m_SDHr[l_pumpno_tx] = myatoi(StrTokStr1[8]);
-			s_nTimerSettings.m_SDMin[l_pumpno_tx] = myatoi(StrTokStr1[9]);
-			s_nTimerSettings.m_SDSec[l_pumpno_tx] = myatoi(StrTokStr1[10]);
-			s_nMSettings.m_SfbOnOff[l_pumpno_tx] = myatoi(StrTokStr1[11]);
-			s_nTimerSettings.m_SfbHr[l_pumpno_tx] = myatoi(StrTokStr1[12]);
-			s_nTimerSettings.m_SfbMin[l_pumpno_tx] = myatoi(StrTokStr1[13]);
-			s_nTimerSettings.m_SfbSec[l_pumpno_tx] = myatoi(StrTokStr1[14]);
-			s_nMSettings.m_CycLicOnOf[l_pumpno_tx] = myatoi(StrTokStr1[15]);
-			s_nTimerSettings.m_CycLicOnHr[l_pumpno_tx] = myatoi(StrTokStr1[16]);
-			s_nTimerSettings.m_CycLicOnMin[l_pumpno_tx] = myatoi(StrTokStr1[17]);
-			s_nTimerSettings.m_CycLicOnSec[l_pumpno_tx] = myatoi(StrTokStr1[18]);
-			s_nTimerSettings.m_CycLicOfHr[l_pumpno_tx] = myatoi(StrTokStr1[19]);
-			s_nTimerSettings.m_CycLicOfMin[l_pumpno_tx] = myatoi(StrTokStr1[20]);
-			s_nTimerSettings.m_CycLicOfSec[l_pumpno_tx] = myatoi(StrTokStr1[21]);
-			s_nMSettings.m_MaxRnOnOf[l_pumpno_tx] = myatoi(StrTokStr1[22]);
-			s_nTimerSettings.m_MaxRnHr[l_pumpno_tx] = myatoi(StrTokStr1[23]);
-			s_nTimerSettings.m_MaxRnMin[l_pumpno_tx] = myatoi(StrTokStr1[24]);
-			s_nTimerSettings.m_MaxRnSec[l_pumpno_tx] = myatoi(StrTokStr1[25]);
+			for(Tp=1;Tp<StrTokStrVer-2;Tp=Tp+4)
+		{
+			ncalibration[Tp/4].Sno = myatoi(StrTokStr1[Tp]);
+			ncalibration[Tp/4].Object = myatoi(StrTokStr1[Tp+1]);
+			ncalibration[Tp/4].CalibratedValue = myatof(StrTokStr1[Tp+2]);
+			ncalibration[Tp/4].Factor = myatof(StrTokStr1[Tp+3]);
+			sprintf(buf,"ncalibration[%d]=%d,%d,%0.1f,%0.1f\n\r",Tp/4,ncalibration[Tp/4].Sno,ncalibration[Tp/4].Object,ncalibration[Tp/4].CalibratedValue,ncalibration[Tp/4].Factor);
+			sAPI_UartPrintf(buf);
+		}
+			
 
+			
+			// sprintf(Buffer1,"+CAL,%d,%d,%d,%0.1f,%0.1f\r\n",ncalibration.Sno,ncalibration.Object,ncalibration.CalibratedValue,ncalibration.Factor);
+			// sAPI_UartPrintf(Buffer1);
 			/* if(nMSettings.ndebugonof==1)
 				{
 					sprintf(buf,"$S,S,%d,%02d,%02d,%02d,%d,%02d,%02d,%02d,%02d,%02d,%02d,%d,%02d,%02d,%02d,%d,%02d,%02d,%02d,%02d,%02d,%02d,\n\r",
@@ -3933,9 +3861,10 @@ void ReaddelsetFile(unsigned char f_pumpno)
 			file_hdl = NULL;
 		}
 	}
+	#endif
 }
 
-void ReadRTCsetFile(unsigned char f_pumpno)
+void ReadRansetFile()
 {
 
 	//	char StrTokStr[30][20];   // dg_changed from [30][20]
@@ -3948,7 +3877,7 @@ void ReadRTCsetFile(unsigned char f_pumpno)
 	unsigned char filename[100], l_pumpno_tx;
 	memset(pfile, 0, 200);
 
-	sprintf(filename, "c:/rtcset%d.txt", f_pumpno);
+	sprintf(filename, "c:/Ranset.txt");
 	strcpy((char *)pfile, (char *)filename);
 
 	//	strcpy((char *)pfile,(char*)"c:/vset.txt");
@@ -3957,14 +3886,14 @@ void ReadRTCsetFile(unsigned char f_pumpno)
 	if (file_hdl == NULL)
 	{
 		//   sAPI_UartPrintf("sAPI_fopen err :c:/rtcset%d.txt",f_pumpno);
-		sprintf(buf, "sAPI_fopen err :c:/rtcset%d.txt", f_pumpno);
+		sprintf(buf, "sAPI_fopen err :c:/Ranset.txt");
 		sAPI_UartPrintf(buf);
 	}
 	else
 	{
 		memset(textBuf, 0, 50);
 		ret = sAPI_fseek(file_hdl, 0, FS_SEEK_BEGIN);
-		sprintf(buf, "c:/rtcset%d.txt FileSeek()=%d: \r\n", f_pumpno, ret);
+		sprintf(buf, "c:/Ranset.txt FileSeek()=%d: \r\n", ret);
 		sAPI_UartPrintf(buf);
 		memset(strBuf, 0, 140); // 70
 		readedlen = sAPI_fread((unsigned char *)strBuf, 140, 1, file_hdl);
@@ -3980,7 +3909,7 @@ void ReadRTCsetFile(unsigned char f_pumpno)
 		}
 		else
 		{
-			sprintf(buf, "c:/rtcset%d.txt FileRead()=%d: readedlen=%d, strBuf=%s\r\n", f_pumpno, ret, readedlen, strBuf);
+			sprintf(buf, "c:/Ranset.txt FileRead()=%d: readedlen=%d, strBuf=%s\r\n", ret, readedlen, strBuf);
 			sAPI_UartPrintf(buf);
 			Pch = strtok((char *)strBuf, (char *)",");
 			StrTokStrVer = 0;
@@ -3997,44 +3926,16 @@ void ReadRTCsetFile(unsigned char f_pumpno)
 			//  sAPI_UartPrintf(buf);
 
 			//}
-			l_pumpno_tx = f_pumpno - 1;
-			s_nMSettings.m_RTCOnOf[l_pumpno_tx] = myatoi(StrTokStr1[1]);
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][1] = myatoi(StrTokStr1[2]);
-			s_nTimerSettings.m_RTCONMin[l_pumpno_tx][1] = myatoi(StrTokStr1[3]);
-			s_nTimerSettings.m_RTCONSec[l_pumpno_tx][1] = myatoi(StrTokStr1[4]);
-			s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][1] = myatoi(StrTokStr1[5]);
-			s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][1] = myatoi(StrTokStr1[6]);
-			s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][1] = myatoi(StrTokStr1[7]);
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][2] = myatoi(StrTokStr1[8]);
-			s_nTimerSettings.m_RTCONMin[l_pumpno_tx][2] = myatoi(StrTokStr1[9]);
-			s_nTimerSettings.m_RTCONSec[l_pumpno_tx][2] = myatoi(StrTokStr1[10]);
-			s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][2] = myatoi(StrTokStr1[11]);
-			s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][2] = myatoi(StrTokStr1[12]);
-			s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][2] = myatoi(StrTokStr1[13]);
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][3] = myatoi(StrTokStr1[14]);
-			s_nTimerSettings.m_RTCONMin[l_pumpno_tx][3] = myatoi(StrTokStr1[15]);
-			s_nTimerSettings.m_RTCONSec[l_pumpno_tx][3] = myatoi(StrTokStr1[16]);
-			s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][3] = myatoi(StrTokStr1[17]);
-			s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][3] = myatoi(StrTokStr1[18]);
-			s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][3] = myatoi(StrTokStr1[19]);
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][4] = myatoi(StrTokStr1[20]);
-			s_nTimerSettings.m_RTCONMin[l_pumpno_tx][4] = myatoi(StrTokStr1[21]);
-			s_nTimerSettings.m_RTCONSec[l_pumpno_tx][4] = myatoi(StrTokStr1[22]);
-			s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][4] = myatoi(StrTokStr1[23]);
-			s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][4] = myatoi(StrTokStr1[24]);
-			s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][4] = myatoi(StrTokStr1[25]);
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][5] = myatoi(StrTokStr1[26]);
-			s_nTimerSettings.m_RTCONMin[l_pumpno_tx][5] = myatoi(StrTokStr1[27]);
-			s_nTimerSettings.m_RTCONSec[l_pumpno_tx][5] = myatoi(StrTokStr1[28]);
-			s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][5] = myatoi(StrTokStr1[29]);
-			s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][5] = myatoi(StrTokStr1[30]);
-			s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][5] = myatoi(StrTokStr1[31]);
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][6] = myatoi(StrTokStr1[32]);
-			s_nTimerSettings.m_RTCONMin[l_pumpno_tx][6] = myatoi(StrTokStr1[33]);
-			s_nTimerSettings.m_RTCONSec[l_pumpno_tx][6] = myatoi(StrTokStr1[34]);
-			s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][6] = myatoi(StrTokStr1[35]);
-			s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][6] = myatoi(StrTokStr1[36]);
-			s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][6] = myatoi(StrTokStr1[37]);
+			nProgramProcess.ProgramEnable=atoi(StrTokStr1[1]);
+			nProgramProcess.RtcRunFlag=atoi(StrTokStr1[2]);
+			nProgramProcess.Status=atoi(StrTokStr1[3]);
+			nProgramProcess.ZoneNo=atoi(StrTokStr1[4]);
+			nProgramProcess.RemaningSec=atoi(StrTokStr1[5]);
+			nProgramProcess.Sno=atoi(StrTokStr1[6]);
+			nProgramProcess.RemainingFlow=atoi(StrTokStr1[7]);
+			sprintf(Buffer1,"c:/Ranset.txt FileRead()=%d: readedlen=%d, nProgramProcess.ProgramEnable=%d:nProgramProcess.RtcRunFlag=%d:nProgramProcess.Status=%d:nProgramProcess.ZoneNo=%d:nProgramProcess.RemaningSec=%d:nProgramProcess.RemainingFlow=%d\r\n", ret, readedlen,nProgramProcess.ProgramEnable,nProgramProcess.RtcRunFlag,nProgramProcess.Status,nProgramProcess.ZoneNo,nProgramProcess.RemaningSec,nProgramProcess.RemainingFlow);
+			sAPI_UartPrintf(Buffer1);
+		
 
 			/* sprintf(buf,"$T,S,%d,%d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,\n\r",
 											l_pumpno_tx,s_nMSettings.m_RTCOnOf[l_pumpno_tx],s_nTimerSettings.m_RTCONHr[l_pumpno_tx][1],s_nTimerSettings.m_RTCONMin[l_pumpno_tx][1],s_nTimerSettings.m_RTCONSec[l_pumpno_tx][1],
@@ -4048,7 +3949,7 @@ void ReadRTCsetFile(unsigned char f_pumpno)
 		if (ret != 0)
 		{
 			//   sAPI_UartPrintf("c:/rtcset%d.txt sAPI_fclose err",f_pumpno);
-			sprintf(buf, "c:/rtcset%d.txt sAPI_fclose err", f_pumpno);
+			sprintf(buf, "c:/RanSet.txt sAPI_fclose err");
 			sAPI_UartPrintf(buf);
 		}
 		else
@@ -4058,14 +3959,14 @@ void ReadRTCsetFile(unsigned char f_pumpno)
 	}
 }
 
-void WriteRTCsetFile(unsigned char f_pumpno)
+void WriteRansetFile()
 {
 	INT32 ret;
 	UINT32 writeedlen;
 	SCFILE *file_hdl = NULL;
-	unsigned char filename[100], l_pumpno_tx;
+	unsigned char filename[100];
 
-	sprintf(filename, "c:/rtcset%d.txt", f_pumpno);
+	sprintf(filename, "c:/Ranset.txt");
 	strcpy((char *)pfile, (char *)filename);
 
 	file_hdl = sAPI_fopen((UINT8 *)pfile, "wb");
@@ -4083,17 +3984,16 @@ void WriteRTCsetFile(unsigned char f_pumpno)
 	sAPI_UartPrintf(textBuf);
 
 	memset(textBuf, 0, 140); // 50
-
-	l_pumpno_tx = f_pumpno - 1;
-
-	sprintf(textBuf, "tnkset,%01d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,\n\r",
-			s_nMSettings.m_RTCOnOf[l_pumpno_tx], s_nTimerSettings.m_RTCONHr[l_pumpno_tx][1], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][1], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][1], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][1], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][1], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][1],
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][2], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][2], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][2], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][2], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][2], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][2],
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][3], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][3], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][3], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][3], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][3], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][3],
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][4], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][4], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][4], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][4], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][4], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][4],
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][5], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][5], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][5], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][5], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][5], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][5],
-			s_nTimerSettings.m_RTCONHr[l_pumpno_tx][6], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][6], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][6], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][6], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][6], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][6]);
-	sAPI_UartPrintf(textBuf);
+	sprintf(textBuf, "Ranset,%d,%d,%d,%d,%d,%d,%d,\n\r",nProgramProcess.ProgramEnable,nProgramProcess.RtcRunFlag,nProgramProcess.Status,nProgramProcess.ZoneNo,nProgramProcess.RemaningSec,nProgramProcess.Sno,nProgramProcess.RemainingFlow);
+	
+	// sprintf(textBuf, "tnkset,%01d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,\n\r",
+	// 		s_nMSettings.m_RTCOnOf[l_pumpno_tx], s_nTimerSettings.m_RTCONHr[l_pumpno_tx][1], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][1], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][1], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][1], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][1], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][1],
+	// 		s_nTimerSettings.m_RTCONHr[l_pumpno_tx][2], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][2], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][2], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][2], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][2], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][2],
+	// 		s_nTimerSettings.m_RTCONHr[l_pumpno_tx][3], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][3], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][3], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][3], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][3], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][3],
+	// 		s_nTimerSettings.m_RTCONHr[l_pumpno_tx][4], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][4], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][4], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][4], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][4], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][4],
+	// 		s_nTimerSettings.m_RTCONHr[l_pumpno_tx][5], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][5], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][5], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][5], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][5], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][5],
+	// 		s_nTimerSettings.m_RTCO%NHr[l_pumpno_tx][6], s_nTimerSettings.m_RTCONMin[l_pumpno_tx][6], s_nTimerSettings.m_RTCONSec[l_pumpno_tx][6], s_nTimerSettings.m_RTCOfHr[l_pumpno_tx][6], s_nTimerSettings.m_RTCOfMin[l_pumpno_tx][6], s_nTimerSettings.m_RTCOfSec[l_pumpno_tx][6]);
+	// sAPI_UartPrintf(textBuf);
 
 	writeedlen = sAPI_fwrite((UINT8 *)textBuf, strlen((char *)textBuf), 1, file_hdl);
 	if (writeedlen != strlen((char *)textBuf))
@@ -5338,13 +5238,13 @@ void sAPP_Timer1(void *data)
 				}
 				else if (s_nMSettings.m_Enter == 7)
 					//	{}
-					ReadcursetFile(1);
+					ReadProsetFile();
 				else if (s_nMSettings.m_Enter == 10)
 					//	{}
-					ReadcursetFile(2);
+					ReadProsetFile();
 				else if (s_nMSettings.m_Enter == 13)
 				{
-					ReadcursetFile(3);
+					ReadProsetFile();
 				}
 				else if (s_nMSettings.m_Enter == 16)
 				{
@@ -5364,13 +5264,13 @@ void sAPP_Timer1(void *data)
 				//	{}
 
 				else if (s_nMSettings.m_Enter == 24)
-					ReadRTCsetFile(1);
+					ReadRansetFile();
 				//	{}
 				else if (s_nMSettings.m_Enter == 27)
-					ReadRTCsetFile(2);
+					ReadRansetFile();
 				//	{}//
 				else if (s_nMSettings.m_Enter == 30)
-					ReadRTCsetFile(3);
+					ReadRansetFile();
 				//	{}//
 				else if (s_nMSettings.m_Enter == 33)
 				{						// Readmotordata(0);
@@ -5964,6 +5864,7 @@ void sAPP_Timer1(void *data)
 							nConfig[i].Status=1;
 							else
 							nConfig[i].Status=0;
+							nProgramProcess.ValveON = 0;
 						}
 						else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
 						{
@@ -5972,6 +5873,7 @@ void sAPP_Timer1(void *data)
 							nConfig[i].Status=1;
 							else
 							nConfig[i].Status=0;
+							nProgramProcess.ValveON = 1;
 						}
 						//nProgramProcess.ValveON = 0;
 						sprintf(Buff,"\nRec:%d %d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo);
@@ -5992,15 +5894,17 @@ void sAPP_Timer1(void *data)
 							if((Temp & RecValveOnOff.ValveNo))	
 							nConfig[i].Status=0;
 							else
-							nConfig[i].Status=1;
+							nConfig[i].Status=0;
+							nProgramProcess.ValveON = 0;
 						}
 						else if(RecValveOnOff.ValveNo != SendValveOnOff.ValveNo)
 						{
 							Temp=(1<<(nConfig[i].Output_No-1 ));
 							if((Temp & RecValveOnOff.ValveNo))	
-							nConfig[i].Status=1;
+							nConfig[i].Status=0;
 							else
 							nConfig[i].Status=0;
+							nProgramProcess.ValveON = 1;
 						}
 						
 						//nProgramProcess.ValveON = 1;
@@ -6013,6 +5917,11 @@ void sAPP_Timer1(void *data)
 				if(nConfig[i].Object==45)
 				{
 					nConfig[i].Status=RecValveOnOff.MainValveStatus;
+					if(MainValveNo == nConfig[i].Status)
+					{
+						nProgramProcess.MainValveOn=0;
+					}
+					
 				}
 
 				if(nConfig[i].Object==26)
@@ -6026,61 +5935,108 @@ void sAPP_Timer1(void *data)
 			}
 			
 //Praveen
-
+			sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgramProcess.ZoneFlag:%d \r\n",nProgramProcess.ProgramEnable,nProgramProcess.Status,nProgramProcess.ZoneFlag);
+			sAPI_UartPrintf(Buff);
 			if(nProgramProcess.ProgramEnable != 0 && nProgramProcess.Status == 0)
 			{
+				
 				if(nProgramProcess.Sno==nProgram.Sno)
 				{
 					nProgramProcess.Status=1;
 					nProgramProcess.ZoneNo=0;
 					nProgramProcess.NoofZones=nProgram.NoofZones;
 					nProgramProcess.ZoneFlag=1;
+					nProgramProcess.RemaningSec=0;
+					nProgramProcess.RemainingFlow=0;
+					nProgramProcess.OnByCondition=nProgramProcess.ProgramEnable;
 				}
 			}
+			else if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 0)
+			{
+				
+
+					nProgramProcess.NoofZones=nProgram.NoofZones;
+					nProgramProcess.ZoneFlag=1;
+					nProgramProcess.OnByCondition=nProgramProcess.ProgramEnable;
+			}
+			sprintf(Buff,"nProgramProcess.ZoneNo:%d nProgramProcess.NoofZones %d\r\n",nProgramProcess.ZoneNo,nProgramProcess.NoofZones);
+			sAPI_UartPrintf(Buff);
 			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 1)
 			{
 				
 				if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == FlowBased)
 				{
-						
-				}
-				else if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == TimeBased)
-				{
-					if(nProgram.nZone[nProgramProcess.ZoneNo].Duration[0]==0 && 
-					nProgram.nZone[nProgramProcess.ZoneNo].Duration[1]==0 && 
-					nProgram.nZone[nProgramProcess.ZoneNo].Duration[2]==0)
+					nProgramProcess.IrrigationMethod=FlowBased;
+					if(nProgram.nZone[nProgramProcess.ZoneNo].FlowRate==0  )
 					{
-						 nProgramProcess.Status=nProgram.Status=0;
-						 nProgramProcess.ProgramEnable=0;
-						 nProgramProcess.ZoneFlag=0;
-						 nProgramProcess.ZoneNo++;
-						 nProgramProcess.ZoneOnFlag=0;
+						 
+							nProgramProcess.ZoneFlag=3;
+							nProgramProcess.ZoneNo++;
+							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
+							{
+								nProgramProcess.ProgramEnable=0;
+							}
 					}
 					else
 					{
-						if(nProgramProcess.RemaningSec>5)
+						if(nProgramProcess.RemainingFlow!=0)
 						{
-							nProgramProcess.StopSec =nProgramProcess.RemaningSec;
+							nProgramProcess.StopSec = nProgramProcess.RemainingFlow;
+						}
+						else
+						{
+							nProgramProcess.StopSec = nProgram.nZone[nProgramProcess.ZoneNo].FlowRate+RecValveOnOff.Cummulative;
+							nProgramProcess.StartSec=RecValveOnOff.Cummulative;
+						}
+						
+						 //nProgramProcess.StopSec += ((datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec);
+						 //nProgramProcess.StartSec=(datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;  
+						// nProgramProcess.ZoneFlag=0;
+					}
+					
+				}
+				else if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == TimeBased)
+				{
+					nProgramProcess.IrrigationMethod=TimeBased;
+					if(nProgram.nZone[nProgramProcess.ZoneNo].Duration[0]==0 && 
+					nProgram.nZone[nProgramProcess.ZoneNo].Duration[1]==0 )
+					{
+						 
+							nProgramProcess.ZoneFlag=3;
+							nProgramProcess.ZoneNo++;
+							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
+							{
+								nProgramProcess.ProgramEnable=0;
+							}
+					}
+					else
+					{
+						if(nProgramProcess.RemaningSec!=0)
+						{
+							nProgramProcess.StopSec = nProgramProcess.RemaningSec;
 						}
 						else
 						{
 							nProgramProcess.StopSec = nProgram.nZone[nProgramProcess.ZoneNo].Duration[0]*3600+
-							nProgram.nZone[nProgramProcess.ZoneNo].Duration[1]*60+
-							nProgram.nZone[nProgramProcess.ZoneNo].Duration[2];
+							nProgram.nZone[nProgramProcess.ZoneNo].Duration[1]*60;
 						}
 						
 						if(nProgramProcess.StopSec>59)
 							nProgramProcess.ZoneOnFlag=1;
 						else
 						{
-							nProgramProcess.Status=nProgram.Status=0;
-							//nProgramProcess.ProgramEnable=0;
-							nProgramProcess.ZoneFlag=0;
+							//nProgramProcess.Status=nProgram.Status=0;
+							
 							nProgramProcess.ZoneNo++;
 							nProgramProcess.ZoneOnFlag=0;
+							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
+							{
+								nProgramProcess.ProgramEnable=0;
+								nProgramProcess.ZoneFlag=0;
+							}
 						}
-						 nProgramProcess.StopSec += ((datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec);
-						// nProgramProcess.StartSec=(datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;  
+						 //nProgramProcess.StopSec += ((datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec);
+						 //nProgramProcess.StartSec=(datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;  
 						// nProgramProcess.ZoneFlag=0;
 					}
 					
@@ -6088,7 +6044,8 @@ void sAPP_Timer1(void *data)
 
 				if(nProgramProcess.ZoneOnFlag==1)
 				{
-					
+					nProgramProcess.ValveON=0;
+					ValvenOnNo=0;
 					for(int i=0;i<4;i++)
 					{
 						if(nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]>0)
@@ -6096,13 +6053,124 @@ void sAPP_Timer1(void *data)
 							ZoneOnFlag=nProgramProcess.ValveON=1;
 							DelayTime=16;
 							ValvenOnRef=2;
-							ValvenOnNo=0;
+							
+							for(int j=0;j<NoOfObject;j++)
+							{
+								if((nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]==nConfig[j].Output_No) && nConfig[j].Object==13)
+								{
+									ValvenOnNo|=1<<(nConfig[j].Output_No-1);
+									sprintf(Buff,"ValvenOnNo:%d--Output_No:%d--nProgram.nZone[%d].ValveNo:%d\r\n",ValvenOnNo,nConfig[j].Output_No,nProgramProcess.ZoneNo,nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]);
+									sAPI_UartPrintf(Buff);
+								}
+								
+							}
+							SendValveOnOff.ValveNo=ValvenOnNo;
+							SendValveOnOff.ValveStausFlag=ValvenOnRef;
+						}	
+					}
+					if(nProgram.nZone[nProgramProcess.ZoneNo].MainValve==1)
+					{
+						nProgramProcess.MainValveOn=0;
+						for(int i=0;i<NoOfObject;i++)
+						{
+							if(nConfig[i].Object==45)
+							{
+								MainValveNo=nConfig[i].Output_No;
+								nProgramProcess.MainValveOn=1;
+								if(nProgram.ControlSeclection==FlowBased)
+								{
+									nProgramProcess.ControlSeclection=FlowBased;
+									nProgramProcess.SetValue=nProgram.SetFlowRate;
+									nProgramProcess.SetTolerence=nProgram.SetTolerence;
+								}
+								else if(nProgram.ControlSeclection==PressureBased)
+								{
+									nProgramProcess.ControlSeclection=PressureBased;
+									nProgramProcess.SetValue=nProgram.SetPressure;
+									nProgramProcess.SetTolerence=nProgram.SetTolerence;
+								}
+								break;
+							}
+						}
+					}
+					nProgramProcess.ZoneFlag = 2;	
+				}
+			}
+
+sprintf(buf,"MainValveOn:%d--ValveON:%d--IrrigationMe:%d--RemSec:%d--StopSec:%d--StartSec:%d--ValveStaus:%d--ValveOnOff:%d--DelayTime:%d--RemainingFlow:%d\r\n",
+nProgramProcess.MainValveOn,nProgramProcess.ValveON,nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod,
+nProgramProcess.RemaningSec,nProgramProcess.StopSec,nProgramProcess.StartSec,
+SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo,DelayTime,nProgramProcess.RemainingFlow);
+sAPI_UartPrintf(buf);
+sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgramProcess.ZoneFlag:%d \r\n",nProgramProcess.ProgramEnable,nProgramProcess.Status,nProgramProcess.ZoneFlag);
+			sAPI_UartPrintf(Buff);
+			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 2)
+			{
+				if(nProgramProcess.ValveON == 0 && nProgramProcess.MainValveOn == 0)
+				{
+					if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == FlowBased)
+					{
+						nProgramProcess.StartSec=RecValveOnOff.Cummulative;
+						nProgramProcess.RemainingFlow=nProgramProcess.StopSec-nProgramProcess.StartSec;
+						if(nProgramProcess.RemainingFlow<=0)
+						{
+							nProgramProcess.ZoneFlag=3;
+							nProgramProcess.ZoneNo++;
+							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
+							{
+								nProgramProcess.ProgramEnable=0;
+							}
+						}
+					}
+					else if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == TimeBased)
+					{
+						if(nProgramProcess.StartSec>=nProgramProcess.StopSec)
+						{
+							//nProgramProcess.Status=nProgram.Status=0;
+							nProgramProcess.ZoneFlag=3;
+							nProgramProcess.ZoneNo++;
+							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
+							{
+								nProgramProcess.ProgramEnable=0;
+							}
+						}
+						else
+						{
+							CurrentSec = (datetime.tm_hour * 3600) + (datetime.tm_min * 60) + datetime.tm_sec;
+							sprintf(buf,"CurrentSec=%d--StartSec=%d--StopSec=%d--RemSec=%d\r\n",CurrentSec,nProgramProcess.StartSec,nProgramProcess.StopSec,nProgramProcess.RemaningSec);
+							sAPI_UartPrintf(buf);
+							if (CurrentSec != prev_sec1)
+							{
+								nProgramProcess.StartSec++;
+								prev_sec1 = CurrentSec;
+								
+							}
+							nProgramProcess.RemaningSec=nProgramProcess.StopSec-nProgramProcess.StartSec;
+							nProgramProcess.RemaningTime[0]=nProgramProcess.RemaningSec/3600;
+							nProgramProcess.RemaningTime[1]=(nProgramProcess.RemaningSec%3600)/60;
+							nProgramProcess.RemaningTime[2]=(nProgramProcess.RemaningSec%60);
+						}
+					}
+				}
+			}
+
+			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 3)
+			{
+				if(nProgramProcess.ValveON == 0 && nProgramProcess.MainValveOn == 0)
+				{
+					for(int i=0;i<4;i++)
+					{
+						if(nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]>0)
+						{
+							ZoneOnFlag=nProgramProcess.ValveON=1;
+							DelayTime=16;
+							ValvenOnRef=2;
 							for(int i=0;i<8;i++)
 							{
 								for(int j=0;j<NoOfObject;j++)
 								{
-									if((nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]==nConfig[j].Sno) && nConfig[j].Object==13)
-									ValvenOnNo|=1<<nConfig[j].Output_No;
+									if((nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]==nConfig[j].Output_No) && nConfig[j].Object==13)
+									ValvenOnNo|=1<<nConfig[j].Output_No-1;
 								}
 							}
 							SendValveOnOff.ValveNo=ValvenOnNo;
@@ -6144,73 +6212,54 @@ void sAPP_Timer1(void *data)
 							}
 						}
 					}
-					nProgramProcess.ZoneFlag = 2;	
+					nProgramProcess.ZoneFlag=4;
+					nProgramProcess.StartSec=0;
+					
 				}
 			}
-
-			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 2)
+			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 4)
 			{
 				if(nProgramProcess.ValveON == 0 && nProgramProcess.MainValveOn == 0)
 				{
-					if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == FlowBased)
+					CurrentSec = (datetime.tm_hour * 3600) + (datetime.tm_min * 60) + datetime.tm_sec;
+					if (CurrentSec != prev_sec1)
 					{
-						//if(nFlow.FlowCount>=nFlow.FlowTarget)
-						{
-							nProgramProcess.Status=nProgram.Status=0;
-							nProgramProcess.ZoneFlag=1;
-							nProgramProcess.ZoneNo++;
-							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
-							{
-								nProgramProcess.ProgramEnable=0;
-							}
-						}
+						nProgramProcess.StartSec++;
+						prev_sec1 = CurrentSec;
 					}
-					else if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == TimeBased)
-					{
-						if(nProgramProcess.StopSec>0)
-						{
-							 nProgramProcess.StopSec-=((datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec);
-						}
-						else
-						{
-							nProgramProcess.Status=nProgram.Status=0;
-							nProgramProcess.ZoneFlag=1;
-							nProgramProcess.ZoneNo++;
-							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
-							{
-								nProgramProcess.ProgramEnable=0;
-							}
-						}
-					}
+					if(nProgramProcess.StartSec>=(nProgram.DelayBtwZone[0]*60+nProgram.DelayBtwZone[1]))
+				{
+					nProgramProcess.ZoneFlag=1;
+					nProgramProcess.StartSec=0;
 				}
+				}
+				
 			}
 			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable == 0)
 			{
-				if(nProgramProcess.ZoneOnFlag==1)
+				if(nProgramProcess.ZoneFlag==3)
 				{
-					if(nProgramProcess.MainValveOn==0)
-					{
-						for(int i=0;i<4;i++)
-						{
-							if(nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]>0)
-							{
-								ZoneOnFlag=nProgramProcess.ValveON=1;
-								DelayTime=16;
-								ValvenOnRef=1;
-								ValvenOnNo=255;
-								SendValveOnOff.ValveNo=ValvenOnNo;
-								SendValveOnOff.ValveStausFlag=ValvenOnRef;
-								break;
-							}
-							else
-							{
-								nProgramProcess.ValveON=0;
-							}
-							
-							
-						}
-					}
-					
+					nProgramProcess.StartSec=0;
+					nProgramProcess.ZoneFlag=0;
+					nProgramProcess.Status=0;
+					nProgramProcess.ZoneNo=0;
+					nProgramProcess.NoofZones=0;
+					nProgramProcess.RemaningSec=0;
+					nProgramProcess.RemainingFlow=0;
+					nProgramProcess.RemaningTime[0]=0;
+					nProgramProcess.RemaningTime[1]=0;
+					nProgramProcess.RemaningTime[2]=0;
+					nProgramProcess.Sno=0;
+					ZoneOnFlag=nProgramProcess.ValveON=1;
+					DelayTime=16;
+					ValvenOnRef=1;
+					ValvenOnNo=255;
+					SendValveOnOff.ValveNo=ValvenOnNo;
+					SendValveOnOff.ValveStausFlag=ValvenOnRef;
+					nProgramProcess.ZoneOnFlag=0;
+					nProgramProcess.OnByCondition=0;
+					nProgramProcess.IrrigationMethod=0;
+
 					if(nProgram.nZone[nProgramProcess.ZoneNo].MainValve==1)
 					{
 						for(int i=0;i<NoOfObject;i++)
@@ -6243,40 +6292,41 @@ void sAPP_Timer1(void *data)
 				}
 			}
 
-			if(nProgramProcess.ValveON != 0 && DelayTime>15)
+			if(nProgramProcess.ValveON != 0 && DelayTime>10)
 			{
 				int checksum=0,CalculatedCrc=0;
 				memset(Buffer1,0x00,sizeof(Buffer1));
 				sprintf(Buffer1,"$:9:6:1:%d:%d:1:",SendValveOnOff.ValveStausFlag,SendValveOnOff.ValveNo);
-				for(int i=0;i<=strlen(Buffer1)-2;i++)
+				for(int i=0;Buffer1[i]!='\0';i++)
 				{
 					checksum+=(char *)Buffer1[i];
 				}	
 				CalculatedCrc=checksum%256;
 				if(CalculatedCrc==0)
 				CalculatedCrc=1;
-				sprintf(Buffer1,"%s%03d:\r\n",CalculatedCrc);
+				sprintf(Buffer1,"%s%03d:\r\n",Buffer1,CalculatedCrc);
 				sAPI_UartWrite(SC_UART, Buffer1, strlen(Buffer1));
 				sAPI_UartPrintf(Buffer1);
-				Timer=0;
+				DelayTime=0;
+				
 			}
 
-			else if((nProgramProcess.MainValveOn != 0  && nProgramProcess.ValveON == 0 )&& DelayTime>15)
+			else if((nProgramProcess.MainValveOn != 0  && nProgramProcess.ValveON == 0 )&& DelayTime>10)
 			{
 				int checksum=0,CalculatedCrc=0;
 				memset(Buffer1,0x00,sizeof(Buffer1));
 				sprintf(Buffer1,"$:10:10:1:%d:%.01f:%.01f:1:",MainValveNo,nProgramProcess.SetValue,nProgramProcess.SetTolerence);
-				for(int i=0;i<=strlen(Buffer1)-2;i++)
+				for(int i=0;Buffer1[i]!='\0';i++)
 				{
 					checksum+=(char *)Buffer1[i];
 				}	
 				CalculatedCrc=checksum%256;
 				if(CalculatedCrc==0)
 				CalculatedCrc=1;
-				sprintf(Buffer1,"%s%03d:\r\n",CalculatedCrc);
+				sprintf(Buffer1,"%s%03d:\r\n",Buffer1,CalculatedCrc);
 				sAPI_UartWrite(SC_UART, Buffer1, strlen(Buffer1));
 				sAPI_UartPrintf(Buffer1);
-				Timer=0;
+				DelayTime=0;
 			}
 
 			else if(nProgramProcess.ZoneOnFlag != 0 && nProgramProcess.StopSec<=59)
@@ -6285,7 +6335,82 @@ void sAPP_Timer1(void *data)
 				nProgramProcess.ZoneNo++;
 				nProgramProcess.ZoneOnFlag=0;
 			}
-
+			
+			
+			//nProgram.SelectedDate[j]
+			//nProgram.Schedule
+			//nProgram.DayCount
+			//nProgram.StartDate[0]
+			//nProgram.EndDate[0]
+			//nProgram.Rtc[0]
+			sprintf(Buffer1,"Checkrtc:%d--nProgramProcess.RtcRunFlag:%d   RtcSec:%d CurrentSec:%d\r\n",Checkrtc,nProgramProcess.RtcRunFlag,RtcSec,CurrentSec,nProgram.Rtc[0],nProgram.Rtc[0]);
+			sAPI_UartPrintf(Buffer1);
+			if(nProgram.Schedule!=0)
+			{
+				if(nProgram.DayCount!=0)
+				{
+					long StartDay=days_from_civil(nProgram.StartDate[2],nProgram.StartDate[1],nProgram.StartDate[0]);
+					long EndDay=days_from_civil(nProgram.EndDate[2],nProgram.EndDate[1],nProgram.EndDate[0]);
+					long PreDay=days_from_civil(datetime.tm_year,datetime.tm_mon,datetime.tm_mday);
+					int DaysInterval = 	EndDay-StartDay;
+					int PresentDay = 	PreDay-StartDay;
+					if(PresentDay>=0 && PresentDay<=DaysInterval)
+					{
+						if(nProgram.SelectedDate[PresentDay]==1)
+						{
+							Checkrtc=1;
+						}
+						else
+						{
+							Checkrtc=0;
+						}
+					}
+					else
+					{
+						Checkrtc=0;
+					}
+				}
+				else
+				{
+					Checkrtc=0;
+				}
+			}
+			else
+			{
+				Checkrtc=1;
+			}
+			if(Checkrtc==1)
+			{
+				if(nProgramProcess.ProgramEnable==0 && nProgramProcess.RtcRunFlag==0)
+				{
+					if(nProgram.Rtc[1]!=0 || nProgram.Rtc[0]!=0)
+					{
+						RtcSec=(nProgram.Rtc[0]*3600)+(nProgram.Rtc[1]*60);
+						CurrentSec=(datetime.tm_hour*3600)+(datetime.tm_min*60)+(datetime.tm_sec);
+						if(nProgramProcess.Status==0 && nProgramProcess.ProgramEnable==0)
+						{
+							if(CurrentSec>=RtcSec)
+							{
+								nProgramProcess.ProgramEnable=2;
+								nProgramProcess.RtcRunFlag=1;
+								nProgramProcess.Sno = nProgram.ProgramNo;
+							}
+						}
+					}
+				}
+				
+			}
+			Current_min = (datetime.tm_hour * 60) + (datetime.tm_min);
+			if((Current_min)!=Pre_min)
+			{
+			
+				Pre_min = Current_min;
+				
+				sprintf(Buffer1,"Before read:Current_min=%d:Pre_min=%d\r\n",Current_min,Pre_min);
+				sAPI_UartPrintf(Buffer1);
+				WriteRansetFile();
+				ReadRansetFile();
+			}
 			#if 0
 			if(ProgramFlag_1==1 && ProgramStartFlag_1==0)
 			{
@@ -14171,14 +14296,17 @@ else if(s_nMSettings.m_settings_count==10)
 									sprintf(getbuff3,"%s;%d.%03d,%d",getbuff3,nConfig[i].Object,nConfig[i].Sno,RecValveOnOff.ControlFLag,nConfig[i].Status);
 								}
 							}
-							sprintf(getbuff2, "\",\r\n\"2403\":\"24.001,%3.1f;24.002,%3.1f;22.001,%3.1f\",\r\n\"2404\":\"\",",s_nOMSfeedback[0].Pressure, s_nOMSfeedback[1].Pressure,s_nOMSfeedback[0].LPS); // ,%3.1f,%3.1f
-							sprintf(getbuff,"%s%s%s\r\n\"2405\":\"1.001,%d;\",\r\n\"2406\":\"\",",getbuff1,getbuff3,getbuff2,nProgram.Status);
+							sprintf(getbuff2, "\",\r\n\"2403\":\"24.001,%3.1f;24.002,%3.1f;22.001,%3.1f\",\r\n\"2404\":\"\",",s_nOMSfeedback[0].Pressure, s_nOMSfeedback[1].Pressure,RecValveOnOff.LPS); // ,%3.1f,%3.1f
+							sprintf(getbuff,"%s%s%s\r\n\"2405\":\"\",\r\n\"2406\":\"\",",getbuff1,getbuff3,getbuff2);
 							sprintf(getbuff4,"\r\n\"2407\":\"\",");
-							sprintf(getbuff4,"%s\r\n\"2408\":\"\",",getbuff4);
-							sprintf(getbuff4,"%s\r\n\"2409\":\"\",",getbuff4);
-							sprintf(getbuff4,"%s\r\n\"2410\":\"\",",getbuff4);
-							sprintf(getbuff4,"%s\r\n\"2411\":\"\",",getbuff4);
-							sprintf(getbuff,"%s%s\r\n\"2412\":\"\",",getbuff,getbuff4);
+							sprintf(getbuff4,"%s\r\n\"2408\":\"%d,%d.%d,%d,%d,%02d:%02d:%02d,%02d:%02d,%d,%d,%d,%d,;\",",getbuff4,nProgramProcess.Sno,nProgramProcess.Sno,nProgramProcess.ZoneNo+1,nProgramProcess.IrrigationMethod,
+								nProgramProcess.Status,nProgramProcess.RemaningTime[0],nProgramProcess.RemaningTime[1],nProgramProcess.RemaningTime[2],nProgram.nZone[nProgramProcess.ZoneNo].Duration[0],nProgram.nZone[nProgramProcess.ZoneNo].Duration[1],
+								nProgramProcess.RemainingFlow,nProgram.nZone[nProgramProcess.ZoneNo].FlowRate,nProgramProcess.NoofZones,nProgramProcess.OnByCondition);
+							memset(getbuff1,NULL,sizeof(getbuff1)+1);
+							sprintf(getbuff1,"%s\r\n\"2409\":\"\",",getbuff1);
+							sprintf(getbuff1,"%s\r\n\"2410\":\"\",",getbuff1);
+							sprintf(getbuff1,"%s\r\n\"2411\":\"\",",getbuff1);
+							sprintf(getbuff,"%s%s%s\r\n\"2412\":\"\",",getbuff,getbuff4,getbuff1);
 							sprintf(getbuff,"%s\r\n\"WifiStrength\":%d,\r\n\"Version\":\"OSM_TEST\",\r\n\"PowerSupply\":%01d},\r\n\"cD\":\"%02d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"2400\"\r\n}",getbuff,sstrength,!PowerCurrentCondition,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
 									
 							
@@ -16821,7 +16949,9 @@ void sAPP_Timer2(void *argv)
 			{
 
 				Prvsecvar = timvar.tm_sec;
-				
+				DelayTime++;
+				if(DelayTime>15)
+				DelayTime=0;
 				livesendcount++;
 				if (nMSettings.ndebugonof == 1)
 					sAPI_UartPrintf("livesendcount:%d", livesendcount);
@@ -16907,6 +17037,71 @@ int Data_split_Function(char* data)
     }
 	return i;
 }
+
+int Data_split_Function_1(char* data)
+{
+    char split_buf[200] = {0};
+
+    char *Pch1 = NULL;
+    char *Pch2 = NULL;
+    char *Pch3 = NULL;
+
+    char *saveptr1;
+    char *saveptr2;
+    char *saveptr3;
+	char temp1[100];
+    int i = 0, j = 0, l = 0;
+
+    strcpy(split_buf, data);
+
+    // Split by ;
+    Pch1 = strtok_r(split_buf, ";", &saveptr1);
+
+    while(Pch1 != NULL)
+    {
+        
+        strcpy(temp1, Pch1);
+		Pch1 = strtok_r(NULL, ";", &saveptr1);
+	}
+        // Split by ,
+        Pch2 = strtok_r(temp1, ",", &saveptr2);
+        i = 0;
+
+	while(Pch2 != NULL)
+	{
+		char temp2[100], Temp[10];
+		strcpy(temp2, Pch2);
+
+		// Split by :
+		Pch3 = strtok_r(temp2, ":", &saveptr3);
+		j = 0;
+
+		while(Pch3 != NULL)
+		{
+			strcpy(Temp, Pch3);
+			programBuf[i][j] = atof(Temp);
+			sprintf(buf,"Payload[%d][%d]:%s--%0.1f\n",i,j,Temp,programBuf[i][j]);
+			sAPI_UartPrintf(buf);
+			Pch3 = strtok_r(NULL, ":", &saveptr3);
+			j++;
+		}
+
+		Pch2 = strtok_r(NULL, ",", &saveptr2);
+		i++;
+	}
+    
+	return i;
+}
+long days_from_civil(int y, int m, int d) {
+	// Based on Howard Hinnant's algorithm
+	y -= m <= 2;
+	const int era = (y >= 0 ? y : y-399) / 400;
+	const unsigned yoe = (unsigned)(y - era * 400);      // [0, 399]
+	const unsigned doy = (153*(m + (m > 2 ? -3 : 9)) + 2)/5 + d-1; // [0, 365]
+	const unsigned doe = yoe * 365 + yoe/4 - yoe/100 + doy;        // [0, 146096]
+	return era * 146097 + (long)doe - 719468; // days since 1970-01-01
+}
+
 // static void wifi_process_function()
 void wifi_process_function()
 {
@@ -17226,7 +17421,7 @@ void wifi_process_function()
 		//	s_nMSettings.m_settings_count=1;
 			send_pumpconfiguaration(PhoneNumber);
 		} */
-		else if(strstr(smsbuffer,"runprogram") != 0)
+		else if(strstr(smsbuffer,"start") != 0)
 		{
 			Pch1 = strtok((char *)smsbuffer, (char *)"," );
 			StrTokStrVer = 0;
@@ -17237,8 +17432,45 @@ void wifi_process_function()
 			Pch1 = strtok( NULL, "," );
 			}
 
-			nProgramProcess.Sno = myatoi(StrTokStr1[1]);
-			nProgramProcess.ProgramEnable=myatoi(StrTokStr1[2]);
+			nProgramProcess.Sno = nProgram.ProgramNo;
+			nProgramProcess.ProgramEnable=1;
+
+		}
+		else if(strstr(smsbuffer,"stop") != 0)
+		{
+			Pch1 = strtok((char *)smsbuffer, (char *)"," );
+			StrTokStrVer = 0;
+			while( Pch1 != NULL )
+			{
+			strcpy(StrTokStr1[StrTokStrVer],Pch1);
+			StrTokStrVer++;
+			Pch1 = strtok( NULL, "," );
+			}
+
+			nProgramProcess.Sno = nProgram.ProgramNo;
+			nProgramProcess.ZoneFlag=3;
+			nProgramProcess.ProgramEnable=0;
+
+		}
+		else if(strstr(smsbuffer,"changeto") != 0)
+		{
+			Pch1 = strtok((char *)smsbuffer, (char *)"," );
+			StrTokStrVer = 0;
+			while( Pch1 != NULL )
+			{
+			strcpy(StrTokStr1[StrTokStrVer],Pch1);
+			StrTokStrVer++;
+			Pch1 = strtok( NULL, "," );
+			}
+
+			nProgramProcess.ZoneNo=(atoi(StrTokStr1[1]))-1;
+			nProgramProcess.ZoneFlag=3;
+			nProgramProcess.RemaningSec=0;
+			nProgramProcess.RemainingFlow=0;
+			if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
+			{
+				nProgramProcess.ProgramEnable=0;
+			}
 
 		}
 		// else if(strstr(smsbuffer,"Program2") != 0)
@@ -17306,6 +17538,51 @@ void wifi_process_function()
 			send_pumpconfiguaration(PhoneNumber);
 			
 		}
+		else if(strstr(smsbuffer,"calib") != 0)
+		{
+			memset(Buffer1,NULL,sizeof(Buffer1));
+			Pch1 = strtok((char *)smsbuffer, (char *)";" );
+			StrTokStrVer = 0;
+			while( Pch1 != NULL )
+			{
+			strcpy(StrTokStr1[StrTokStrVer],Pch1);
+			StrTokStrVer++;
+			Pch1 = strtok( NULL, ";" );
+			}
+			for(i=1;i<StrTokStrVer;i++)
+			{
+				Pch1 = strtok((char *)StrTokStr1[i], (char *)"," );
+				StrTokStrVer1 = 0;
+				while( Pch1 != NULL )
+				{
+				strcpy(StrTokStr2[StrTokStrVer1],Pch1);
+				StrTokStrVer1++;
+				Pch1 = strtok( NULL, "," );
+				}
+				
+					
+					ncalibration[i-1].Object=myatoi(StrTokStr2[0]);
+					ncalibration[i-1].Sno=myatoi(StrTokStr2[1]);
+					ncalibration[i-1].CalibratedValue=myatof(StrTokStr2[2]);
+					ncalibration[i-1].Factor=myatof(StrTokStr2[3]);
+			}
+			NoOfCalibration=i-1;
+			for(i=0;i<NoOfCalibration;i++)
+			{
+				sprintf(Buffer1,"calibration before write:%d,%d,%f,%f,\n\r",ncalibration[i].Sno,ncalibration[i].Object,ncalibration[i].CalibratedValue,ncalibration[i].Factor);
+				sAPI_UartPrintf(Buffer1);
+			}
+			WritedelsetFile(1);
+			ReaddelsetFile(1);
+			NoOfCalibration=i-1;
+			for(i=0;i<NoOfCalibration;i++)
+			{
+				sprintf(Buffer1,"calibration After write:%d,%d,%f,%f,\n\r",ncalibration[i].Sno,ncalibration[i].Object,ncalibration[i].CalibratedValue,ncalibration[i].Factor);
+				sAPI_UartPrintf(Buffer1);
+			}
+			send_ctconfiguaration(PhoneNumber);
+			
+		}
 		else if(strstr(smsbuffer,"constant") != 0)
 		{
 			memset(Buffer1,NULL,sizeof(Buffer1));
@@ -17331,11 +17608,10 @@ void wifi_process_function()
 					
 					nConstant[i-1].Object=myatoi(StrTokStr2[0]);
 					nConstant[i-1].Sno=myatoi(StrTokStr2[1]);
-				if(nConstant[i-1].Object==26)
+				if(nConstant[i-1].Object==22)
 				{
 					nConstant[i-1].FlowRate=0;
 					nConstant[i-1].LiterPerPluse=myatof(StrTokStr2[2]);
-					nConstant[i-1].Pressure=0;
 				}
 				else if(nConstant[i-1].Object==13 || nConstant[i-1].Object==45)
 				{
@@ -17343,19 +17619,13 @@ void wifi_process_function()
 					sAPI_UartPrintf(Buff);
 					nConstant[i-1].FlowRate=myatof(StrTokStr2[2]);
 					nConstant[i-1].LiterPerPluse=0;
-					nConstant[i-1].Pressure=0;
 				}
-				else
-				{
-					nConstant[i-1].FlowRate=0;
-					nConstant[i-1].LiterPerPluse=0;
-					nConstant[i-1].Pressure=myatof(StrTokStr2[2]);
-				}
+				
 			}
 			NoOfConstant=i-1;
 			for(i=0;i<NoOfConstant;i++)
 			{
-				sprintf(Buffer1,"Constant before write:%d,%d,%f,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+				sprintf(Buffer1,"Constant before write:%d,%d,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse);
 				sAPI_UartPrintf(Buffer1);
 			}
 			WriteEcosetFile();
@@ -17363,7 +17633,7 @@ void wifi_process_function()
 			NoOfConstant;
 			for(i=0;i<NoOfConstant;i++)
 			{
-				sprintf(Buffer1,"Constant after read:%d,%d,%f,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse,nConstant[i].Pressure);
+				sprintf(Buffer1,"Constant after read:%d,%d,%f,%f,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate,nConstant[i].LiterPerPluse);
 				sAPI_UartPrintf(Buffer1);
 			}
 			send_tankconfiguaration(PhoneNumber);
@@ -17375,38 +17645,39 @@ void wifi_process_function()
 			sprintf(buf,"NoOfZone=%d\n\r",NoOfZone);
 			sAPI_UartPrintf(buf);
 			NoOfZone-=1;
+			nProgram.NoofZones=NoOfZone;
 			sprintf(buf,"NoOfZone=%d\n\r",NoOfZone);
 			sAPI_UartPrintf(buf);
 			for(i=0;i<NoOfZone;i++)
 			{
 				nProgram.nZone[i].Sno=zone[i+1][0][0];
-				nProgram.nZone[i].ValveNo[0]=zone[i+1][1][0];
-				nProgram.nZone[i].ValveNo[1]=zone[i+1][1][1];
-				nProgram.nZone[i].ValveNo[2]=zone[i+1][1][2];
-				nProgram.nZone[i].ValveNo[3]=zone[i+1][1][3];
-				nProgram.nZone[i].MainValve=zone[i+1][2][0];
-				nProgram.nZone[i].IrrigationMethod=zone[i+1][3][0];
-				if(nProgram.nZone[i].IrrigationMethod==1)
+				nProgram.nZone[i].ProgramNo=zone[i+1][1][0];
+				nProgram.nZone[i].ValveNo[0]=zone[i+1][2][0];nProgram.nZone[i].ValveNo[1]=zone[i+1][2][1];nProgram.nZone[i].ValveNo[2]=zone[i+1][2][2];nProgram.nZone[i].ValveNo[3]=zone[i+1][2][3];
+				if(zone[i+1][3][0]!=0)
+				nProgram.nZone[i].MainValve=1;
+				else
+				nProgram.nZone[i].MainValve=0;
+				nProgram.nZone[i].IrrigationMethod=zone[i+1][5][0];
+				if(nProgram.nZone[i].IrrigationMethod==2)
 				{
-					nProgram.nZone[i].FlowRate=zone[i+1][4][0];
+					nProgram.nZone[i].FlowRate=zone[i+1][6][0];
 					nProgram.nZone[i].Duration[0]=0;
 					nProgram.nZone[i].Duration[1]=0;
-					nProgram.nZone[i].Duration[2]=0;
 				}
 				else
 				{
-					nProgram.nZone[i].Duration[0]=zone[i+1][5][0];
-					nProgram.nZone[i].Duration[1]=zone[i+1][5][1];
-					nProgram.nZone[i].Duration[2]=zone[i+1][5][2];
+					nProgram.nZone[i].Duration[0]=zone[i+1][6][0];
+					nProgram.nZone[i].Duration[1]=zone[i+1][6][1];
 					nProgram.nZone[i].FlowRate=0;
 				}
-				nProgram.nZone[i].ProgramNo=zone[i+1][6][0];
+				
 				sprintf(Buffer1,"Zone[%d]:%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n\r",i+1,nProgram.nZone[i].Sno,nProgram.nZone[i].ValveNo[0],nProgram.nZone[i].ValveNo[1],nProgram.nZone[i].ValveNo[2],nProgram.nZone[i].ValveNo[3],nProgram.nZone[i].MainValve,nProgram.nZone[i].IrrigationMethod,nProgram.nZone[i].FlowRate,nProgram.nZone[i].Duration[0],nProgram.nZone[i].Duration[1],nProgram.nZone[i].Duration[2],nProgram.nZone[i].ProgramNo);
 				sAPI_UartPrintf(Buffer1);
 			}
+			
 			WritevolsetFile();
 			ReadvolsetFile();
-			
+			NoOfZone=nProgram.NoofZones;
 			// memset(Buffer1,NULL,sizeof(Buffer1));
 			// ReadtnkconfigFile();
 			// Pch1 = strtok((char *)smsbuffer, (char *)";" );
@@ -17443,61 +17714,83 @@ void wifi_process_function()
 		else if(strstr(smsbuffer,"program") != 0)
 		{
 			int k=0,sno=0;
-			float programBuf[50];
+			
 			memset(Buffer1,NULL,sizeof(Buffer1));
-			ReadtnkconfigFile();
-			Pch1 = strtok((char *)smsbuffer, (char *)";" );
-			StrTokStrVer = 0;
-			while( Pch1 != NULL )
-			{
-			strcpy(StrTokStr1[StrTokStrVer],Pch1);
-			StrTokStrVer++;
-			Pch1 = strtok( NULL, ";" );
-			}
-			for(i=1;i<StrTokStrVer;i++)
-			{
-				Pch1 = strtok((char *)StrTokStr1[i], (char *)"," );
-				StrTokStrVer1 = 0;
-				while( Pch1 != NULL )
-				{
-				strcpy(StrTokStr2[StrTokStrVer1],Pch1);
-				StrTokStrVer1++;
-				Pch1 = strtok( NULL, "," );
-				}
-				for(j=0;j<StrTokStrVer1;j++)
-				{
-					programBuf[k++]=myatof(StrTokStr2[j]);
-				}
+			//ReadtnkconfigFile();
+			Data_split_Function_1(smsbuffer);
+			// Pch1 = strtok((char *)smsbuffer, (char *)"," );
+			// StrTokStrVer = 0;
+			// while( Pch1 != NULL )
+			// {
+			// strcpy(StrTokStr1[StrTokStrVer],Pch1);
+			// StrTokStrVer++;
+			// Pch2 = strtok((char *)StrTokStr1[i], (char *)":" );
+			// StrTokStrVer1 = 0;
+			// 	while( Pch2 != NULL )
+			// 	{
+			// 	strcpy(StrTokStr2[StrTokStrVer1],Pch2);
+			// 	StrTokStrVer1++;
+			// 	Pch2 = strtok( NULL, ":" );
+			// 	}
 				
-			}
-			sno=0;
-			i=0;
+			// 	for(j=0;j<StrTokStrVer1;j++)
+			// 	{
+			// 		programBuf[k++]=myatof(StrTokStr2[j]);
+			// 		sprintf(Buffer1,"Program[%d]:%s\n\r",StrTokStrVer1,StrTokStr2[0]);
+			// 		sAPI_UartPrintf(Buffer1);
+			// 	}
+			// Pch1 = strtok( NULL, "," );
+			// }
+			
+				
+				
+			// }
+			// sno=0;
+			 i=0;
 			//sno=programBuf[i]-1;
-			sno=i;
-			nProgram.Sno=1;
-			nProgram.DelayBtwZone[0]=(int)programBuf[++i];
-			nProgram.DelayBtwZone[1]=(int)programBuf[++i];
-			nProgram.DelayBtwZone[2]=(int)programBuf[++i];
-			nProgram.ScaleFact=programBuf[++i];
-			nProgram.Schedule=(int)programBuf[++i];
-			nProgram.StartDate[0]=(int)programBuf[++i];
-			nProgram.StartDate[1]=(int)programBuf[++i];
-			nProgram.StartDate[2]=(int)programBuf[++i];
-			nProgram.DayCount=(int)programBuf[++i];
-			nProgram.EndDate[0]=(int)programBuf[++i];
-			nProgram.EndDate[1]=(int)programBuf[++i];
-			nProgram.EndDate[2]=(int)programBuf[++i];
-			nProgram.Rtc[0]=(int)programBuf[++i];
-			nProgram.Rtc[1]=(int)programBuf[++i];
-			nProgram.Rtc[2]=(int)programBuf[++i];
-			nProgram.Alaram=(int)programBuf[++i];
-			nProgram.ProgramNo=sno;
+			//sno=i;
+			
+			nProgram.Sno=(int)programBuf[0][0];
+			nProgram.DelayBtwZone[0]=(int)programBuf[1][0];
+			nProgram.DelayBtwZone[1]=(int)programBuf[1][1];
+			nProgram.ScaleFact=programBuf[2][0];
+			nProgram.Schedule=(int)programBuf[3][0];
+			nProgram.DayCount=(int)programBuf[4][0];
+			nProgram.StartDate[0]=(int)programBuf[5][2];
+			nProgram.StartDate[1]=(int)programBuf[5][1];
+			nProgram.StartDate[2]=((int)programBuf[5][0]);
+			nProgram.EndDate[0]=(int)programBuf[6][2];
+			nProgram.EndDate[1]=(int)programBuf[6][1];
+			nProgram.EndDate[2]=((int)programBuf[6][0]);
+			nProgram.Rtc[0]=(int)programBuf[7][0];
+			nProgram.Rtc[1]=(int)programBuf[7][1];
+			nProgram.Alaram[0]=(int)programBuf[8][0];
+			nProgram.Alaram[1]=(int)programBuf[8][1];
+			nProgram.ProgramNo=nProgram.Sno;
 			for(j=0,i=0;i<StrTokStrVer;j++)
 			{
-				nProgram.SelectedDate[j]=programBuf[i++];
+				nProgram.SelectedDate[j]=programBuf[9][i++];
 			}
-            sprintf(Buffer1,"Program,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n\r",nProgram.Sno,nProgram.DelayBtwZone[0],nProgram.DelayBtwZone[1],nProgram.DelayBtwZone[2],nProgram.ScaleFact,nProgram.Schedule,nProgram.StartDate[0],nProgram.StartDate[1],nProgram.StartDate[2],nProgram.DayCount,nProgram.EndDate[0],nProgram.EndDate[1],nProgram.EndDate[2],nProgram.Rtc[0],nProgram.Rtc[1],nProgram.Rtc[2],nProgram.Alaram,nProgram.ProgramNo);
+			nProgram.ControlSeclection=(int)programBuf[10][0];
+			if(nProgram.ControlSeclection==1)
+			{
+				nProgram.SetFlowRate=(int)programBuf[10][1];
+				nProgram.SetTolerence=programBuf[10][2];
+			}
+			else
+			{
+				nProgram.SetPressure=programBuf[10][1];
+				nProgram.SetTolerence=programBuf[10][2];
+			}
+			
+            sprintf(Buffer1,"Program,%d,%d,%d,%0.1f,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%0.1f,%0.1f\n\r",nProgram.Sno,nProgram.DelayBtwZone[0],
+				nProgram.DelayBtwZone[1],nProgram.ScaleFact,nProgram.Schedule,
+				nProgram.StartDate[0],nProgram.StartDate[1],nProgram.StartDate[2],nProgram.DayCount,
+				nProgram.EndDate[0],nProgram.EndDate[1],nProgram.EndDate[2],nProgram.Rtc[0],nProgram.Rtc[1],
+				nProgram.Alaram[0],nProgram.Alaram[1],nProgram.ProgramNo,nProgram.ControlSeclection,
+				nProgram.SetFlowRate,nProgram.SetPressure,nProgram.SetTolerence);
             sAPI_UartPrintf(Buffer1);
+			
 			// sno=0;
 			// i=1;
 			// sno=myatoi(StrTokStr1[i]);
@@ -17525,14 +17818,12 @@ void wifi_process_function()
 			// }
 			
 			
-			for(i=0;i<NoOfObject;i++)
-			{
-				sprintf(Buffer1,"Constant:%d,%d,%d,\n\r",nConstant[i].Sno,nConstant[i].Object,nConstant[i].FlowRate);
-			}
-			send_voltageconfiguaration(PhoneNumber);
-			WritecursetFile(1);
-			ReadcursetFile(1);
 			
+			send_voltageconfiguaration(PhoneNumber);
+			WriteProsetFile();
+			ReadProsetFile();
+			sprintf(Buffer1,"Program,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n\r",nProgram.Sno,nProgram.DelayBtwZone[0],nProgram.DelayBtwZone[1],nProgram.DelayBtwZone[2],nProgram.ScaleFact,nProgram.Schedule,nProgram.StartDate[0],nProgram.StartDate[1],nProgram.StartDate[2],nProgram.DayCount,nProgram.EndDate[0],nProgram.EndDate[1],nProgram.EndDate[2],nProgram.Rtc[0],nProgram.Rtc[1],nProgram.Rtc[2],nProgram.Alaram[0],nProgram.Alaram[1],nProgram.ProgramNo);
+            sAPI_UartPrintf(Buffer1);
 		}
 			else if(strstr(smsbuffer,"moisturesetting") != 0)
 		{
@@ -17911,7 +18202,7 @@ void wifi_process_function()
 			sprintf(buf, "\n\rpumpno_f>>:%d\n\r", pumpno_f);
 			sAPI_UartPrintf(buf);
 			pumpno_tx = pumpno_f - 1;
-			ReadcursetFile(pumpno_f);
+			//ReadProsetFile();
 			pumpno_tx = pumpno_f - 1;
 			sprintf(buf, "\n\rpumpno_f>>:%d pumpno_tx %d\n\r", pumpno_f, pumpno_tx);
 			sAPI_UartPrintf(buf);
@@ -17971,8 +18262,8 @@ void wifi_process_function()
 			s_nTimerSettings.m_MaxRnSec[pumpno_tx]=myatoi(StrTokStr1[51]); */
 			sprintf(buf, "\n\rpumpno_f>>:%d s_nMSettings.m_DrScOnOf[%d]:%d\n\r", pumpno_f, pumpno_tx, s_nMSettings.m_DrScOnOf[pumpno_tx]);
 			sAPI_UartPrintf(buf);
-			WritecursetFile(pumpno_f);
-			ReadcursetFile(pumpno_f);
+			WriteProsetFile();
+			ReadProsetFile();
 
 			
 
@@ -18051,7 +18342,7 @@ void wifi_process_function()
 			}
 			pumpno_f = myatoi(StrTokStr1[1]);
 			pumpno_tx = pumpno_f - 1;
-			ReadRTCsetFile(pumpno_f);
+			//ReadRTCsetFile(pumpno_f);
 			pumpno_tx = pumpno_f - 1;
 			sprintf(buf, "\n\rpumpno_f>>:%d pumpno_tx %d\n\r", pumpno_f, pumpno_tx);
 			sAPI_UartPrintf(buf);
@@ -18093,8 +18384,8 @@ void wifi_process_function()
 			s_nTimerSettings.m_RTCOfMin[pumpno_tx][6] = myatoi(StrTokStr1[37]);
 			s_nTimerSettings.m_RTCOfSec[pumpno_tx][6] = myatoi(StrTokStr1[38]);
 
-			WriteRTCsetFile(pumpno_f);
-			ReadRTCsetFile(pumpno_f);
+			//WriteRTCsetFile(pumpno_f);
+			//ReadRTCsetFile(pumpno_f);
 
 			sprintf(buf, "\nRTC_56:%d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%02d,%d", pumpno_tx, s_nTimerSettings.m_RTCONHr[pumpno_tx][5],
 					s_nTimerSettings.m_RTCONMin[pumpno_tx][5], s_nTimerSettings.m_RTCONSec[pumpno_tx][5], s_nTimerSettings.m_RTCOfHr[pumpno_tx][5],
@@ -19321,10 +19612,38 @@ while(1)
 							}
 							RecValveOnOff.ControlFLag=payload_buf[15];
 							RecValveOnOff.MainValveStatus=payload_buf[16];
-
+							RecValveOnOff.Switch=payload_buf[17]-1;
 							
-							sprintf(buf,"ValveStausFlag:%d,ValveNo:%d,SolarVolt:%d,BatVolt:%f,ADC1:%d,ADC2:%d,ADC3:%d,ControlFLag:%d,MainValveStatus:%d",RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo,RecValveOnOff.SolarVolt,RecValveOnOff.BatVolt,RecValveOnOff.ADC1,RecValveOnOff.ADC2,RecValveOnOff.ADC3,RecValveOnOff.ControlFLag,RecValveOnOff.MainValveStatus);
-							sAPI_UartPrintf(buf);
+							RecValveOnOff.LPS=payload_buf[18]-1;
+							RecValveOnOff.LPS+=(payload_buf[19]-1)/10;
+
+							if(payload_buf[20] != 255)
+							{
+								if(payload_buf[20] & (1 << 3))
+									payload_buf[21] = 0;
+
+								if(payload_buf[20] & (1 << 2))
+									payload_buf[22] = 0;
+
+								if(payload_buf[20] & (1 << 1))
+									payload_buf[23] = 0;
+
+								if(payload_buf[20] & (1 << 0))
+									payload_buf[24] = 0;
+							}
+
+							RecValveOnOff.Cummulative = ((uint32_t)payload_buf[21] << 24) |
+										((uint32_t)payload_buf[22] << 16) |
+										((uint32_t)payload_buf[23] << 8)  |
+										((uint32_t)payload_buf[24]);
+							
+							sprintf(Buffer1,"ValveStaus:%d,ValveNo:%d,Solar:%d,Bat:%f,ADC1:%d,ADC2:%d,ADC3:%d\r\n",
+								RecValveOnOff.ValveStausFlag,RecValveOnOff.ValveNo,RecValveOnOff.SolarVolt,RecValveOnOff.BatVolt,RecValveOnOff.ADC1,
+								RecValveOnOff.ADC2,RecValveOnOff.ADC3);
+							sAPI_UartPrintf(Buffer1);
+							sprintf(Buffer1,"Control:%d,MainValve:%d,Switch:%d,LPS:%f,Cum:%ld\r\n",
+								RecValveOnOff.ControlFLag,RecValveOnOff.MainValveStatus,RecValveOnOff.Switch,RecValveOnOff.LPS,RecValveOnOff.Cummulative);
+							sAPI_UartPrintf(Buffer1);
 						}
 						if(uart_read_buf[0] == '$' && uart_read_buf[1] == 'i' && uart_read_buf[2] == 'M')
 						{

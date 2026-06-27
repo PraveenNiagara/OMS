@@ -258,27 +258,34 @@ struct Constant
 	float FlowRate;//uint32_t FlowRate;
 	float LiterPerPluse,Pressure;
 };
+struct calibration
+{
+	unsigned char Sno,Object;
+	float CalibratedValue,Factor;
+};
 struct zone
 {
 	unsigned char Sno,ValveNo[4],MainValve,IrrigationMethod,Duration[3],ProgramNo;
-	float FlowRate;//uint32_t FlowRate;
+	uint32_t FlowRate,TotalFlow;//uint32_t FlowRate;
 	
 	
 };
 struct Program
 {
-	unsigned char Sno,DelayBtwZone[3],Schedule,StartDate[3],SelectedDate[10],DayCount,EndDate[3],Rtc[3],
-	Alaram,ProgramNo,Status,NoofZones,ControlSeclection;
+	unsigned char Sno,DelayBtwZone[3],Schedule,SelectedDate[10],DayCount,Rtc[3],
+	Alaram[2],ProgramNo,Status,NoofZones,ControlSeclection;
 	float ScaleFact,SetPressure,SetTolerence;
 	uint32_t SetFlowRate;
 	struct zone nZone[8];
+	int StartDate[3],EndDate[3];
 
 };
 
 struct ProgramProcess
 {
 	unsigned char Sno,ProgramEnable,ProgramStatus,ZoneNo,NoofZones,ZoneFlag,ZoneOnFlag,ValveON,
-	MainValveOn,Status,ControlSeclection;
+	MainValveOn,Status,ControlSeclection,IrrigationMethod,OnByCondition,RtcRunFlag,RemaningTime[3];
+
 	uint32_t StopSec,StartSec,RemaningSec,RemainingFlow;
 	float SetValue,SetTolerence;
 	
@@ -994,6 +1001,7 @@ extern struct TimerSettings nTimerSettings;
 extern struct MSettings nMSettings;
 extern struct ConfigMaker nConfig[10];
 extern struct Constant nConstant[10];
+extern struct calibration ncalibration[3];
 extern struct Program nProgram;
 extern struct ProgramProcess nProgramProcess;
 //extern struct zone nZone[4];
