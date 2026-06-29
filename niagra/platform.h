@@ -132,7 +132,7 @@ extern unsigned char livedataflag,livedataflag1,livedataflagcount1,livedataflagc
 extern BOOL pressure_calib_flag;
  
 
-extern char filter_sms_flag;
+extern char filter_sms_flag,LogFlag;
 extern char filter_sms_flag_count;
 extern unsigned char WaitOK;
 extern unsigned char SendSMS;
@@ -265,7 +265,7 @@ struct calibration
 };
 struct zone
 {
-	unsigned char Sno,ValveNo[4],MainValve,IrrigationMethod,Duration[3],ProgramNo;
+	unsigned char Sno,ValveNo[4],MainValve,IrrigationMethod,Duration[2],ProgramNo;
 	uint32_t FlowRate,TotalFlow;//uint32_t FlowRate;
 	
 	
@@ -281,14 +281,19 @@ struct Program
 
 };
 
+struct zoneLog
+{
+	unsigned char Sno,IrrigationMethod,SetDuration[2],ActDuration[3],ProgramNo;
+	uint32_t SetFlowRate,ActFlowRate;	
+};
+
 struct ProgramProcess
 {
 	unsigned char Sno,ProgramEnable,ProgramStatus,ZoneNo,NoofZones,ZoneFlag,ZoneOnFlag,ValveON,
-	MainValveOn,Status,ControlSeclection,IrrigationMethod,OnByCondition,RtcRunFlag,RemaningTime[3];
-
-	uint32_t StopSec,StartSec,RemaningSec,RemainingFlow;
+	MainValveOn,Status,ControlSeclection,IrrigationMethod,OnByCondition,RtcRunFlag,RemaningTime[3],Duration[2];
+	uint32_t StopSec,StartSec,RemaningSec,RemainingFlow,FlowRate;
 	float SetValue,SetTolerence;
-	
+	struct zoneLog LogZone[8];
 };
 
 

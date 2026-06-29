@@ -106,7 +106,7 @@ static void sAPP_Timer3(void* argv)
 								if(sgetflag_1==1)
 								{	
 
-							   if(livedataflag ==0 && livedataflag1==0)					   
+							   if(livedataflag ==0 && livedataflag1==0 && LogFlag == 0)					   
 								{
 								if(nMSettings.ndebugonof==1){
 								sAPI_UartPrintf("\n\rNooftcprecvd:[%d],Nooftcpprocessed:[%d]",Nooftcprecvd,Nooftcpprocessed);
@@ -256,7 +256,7 @@ UINT8 MQTTpublish_server(UINT16 len,UINT8 *data)
 					sAPI_Debug("publish SUCCESS");
                     sAPI_UartPrintf("\r\nMQTT publish Successful!\r\n");
 					Nooftcpsendcount=0;
-					livedataflag=0;
+					LogFlag=livedataflag=0;
 					Resendcount++;
 					sAPI_UartPrintf("Resendcount:%d,Mqtt_send_flag:%d",Resendcount,Mqtt_send_flag);
 					

@@ -262,7 +262,7 @@ unsigned char ValveStatus[10]={0},PrvValveStatus[10]={0};
 unsigned char LogValveStatus,LogValveNo,ValveOnOffReason,Prvalve[10]={0},ValveOnTime[2],ValveOffTime[2],ValveOnDueTime[2],ReasonFlag=0,CyclicComplete=0,LiveUpdate=0,RecLiveUpdate=0,ValveSetting=0;
 ;
 
-
+char LogFlag=0;
 char Motoronflag[3] = {0}, prev_Motoronflag[3] = {0}, Motorreasonflag[3] = {0}, act_POnMin[3] = {0}, act_POnSec[3] = {0}, act_rem_delmin[3] = {0}, act_rem_delsec[3] = {0}, act_del_comp_min[3] = {0}, act_del_comp_sec[3] = {0}, prev_Motorreasonflag[3] = {0};
 char act_rem_cyc_ofHr[3] = {0}, act_rem_cyc_ofMin[3] = {0}, act_rem_cyc_ofSec[3] = {0}, act_rem_cyc_onHr[3] = {0}, act_rem_cyc_onMin[3] = {0}, act_rem_cyc_onSec[3] = {0};
 char act_rem_maxHr[3] = {0}, act_rem_maxMin[3] = {0}, act_rem_maxSec[3] = {0};
@@ -4724,7 +4724,7 @@ void WritecalsetFile()
 	}
 }
 
-#if 1
+#if 0
 void readonoffbuff(void)
 {
 	SCFILE *file_hdl = NULL;
@@ -4769,7 +4769,7 @@ void readonoffbuff(void)
 	 
 }
 
-#endif
+
 void writeonoffbuff(void)
 {
 	SCFILE *file_hdl = NULL;
@@ -4804,7 +4804,7 @@ void writeonoffbuff(void)
 	sprintf(textBuf,"sAPI_fclose()\r\n");
 	sAPI_UartPrintf(textBuf);
 }
-
+#endif
 void ph_numcheck()
 {
 	UINT8 i;
@@ -4844,7 +4844,7 @@ void ph_numcheck()
 	sprintf(buf, "HowManyNumberFound %d\r", HowManyNumberFound);
 	sAPI_UartPrintf(buf);
 }
-
+#if 0
 float CalculatePhToPh(float Val1, float Val2) // no_notadded
 {
 	double Tpc, Tp2c;
@@ -4882,7 +4882,7 @@ void FloatroString1Dig(char *String, float Number) // no_notadded
 	sprintf(buf, "String %s", String);
 	sAPI_UartPrintf(buf);
 }
-
+#endif
 void sAPP_Timer1(void *data)
 {
 //	char TempBuf1[500] = "";
@@ -5116,14 +5116,14 @@ void sAPP_Timer1(void *data)
 		nTimerSettings.CycLicOfSec = 0;
 		nTimerSettings.RTCOnOf = 0; */
 
-	for (i = 1; i < 5; i++)
-	{
-		nTimerSettings.RTCOnHr[i] = 0;
-		nTimerSettings.RTCOnMin[i] = 0;
-		nTimerSettings.RTCOnSec[i] = 0;
-		nTimerSettings.RTCOfHr[i] = 0;
-		nTimerSettings.RTCOfMin[i] = 0;
-	}
+	// for (i = 1; i < 5; i++)
+	// {
+	// 	nTimerSettings.RTCOnHr[i] = 0;
+	// 	nTimerSettings.RTCOnMin[i] = 0;
+	// 	nTimerSettings.RTCOnSec[i] = 0;
+	// 	nTimerSettings.RTCOfHr[i] = 0;
+	// 	nTimerSettings.RTCOfMin[i] = 0;
+	// }
 	//      zonecom.foggerRTCOnOf=0;
 	//		SetToGreenFlag = 0;
 	//		Stg3FirstTimer = 0;
@@ -5132,9 +5132,9 @@ void sAPP_Timer1(void *data)
 	// ReadPhoneNumber();
 	// ReadInstDate();
 
-	Motoronflag[0] = 0, Motorreasonflag[0] = 0, act_POnMin[0] = 0, act_POnSec[0] = 0, act_rem_delmin[0] = 0, act_rem_delsec[0] = 0, act_del_comp_min[0] = 0, act_del_comp_sec[0] = 0, Act_level[0] = 0.0, flowisthere[0] = 0;
-	Motoronflag[1] = 0, Motorreasonflag[1] = 0, act_POnMin[1] = 0, act_POnSec[1] = 0, act_rem_delmin[1] = 0, act_rem_delsec[1] = 0, act_del_comp_min[1] = 0, act_del_comp_sec[1] = 0, Act_level[1] = 0.0, flowisthere[1] = 0;
-	Motoronflag[2] = 0, Motorreasonflag[2] = 0, act_POnMin[2] = 0, act_POnSec[2] = 0, act_rem_delmin[2] = 0, act_rem_delsec[2] = 0, act_del_comp_min[2] = 0, act_del_comp_sec[2] = 0, Act_level[2] = 0.0, flowisthere[2] = 0;
+	// Motoronflag[0] = 0, Motorreasonflag[0] = 0, act_POnMin[0] = 0, act_POnSec[0] = 0, act_rem_delmin[0] = 0, act_rem_delsec[0] = 0, act_del_comp_min[0] = 0, act_del_comp_sec[0] = 0, Act_level[0] = 0.0, flowisthere[0] = 0;
+	// Motoronflag[1] = 0, Motorreasonflag[1] = 0, act_POnMin[1] = 0, act_POnSec[1] = 0, act_rem_delmin[1] = 0, act_rem_delsec[1] = 0, act_del_comp_min[1] = 0, act_del_comp_sec[1] = 0, Act_level[1] = 0.0, flowisthere[1] = 0;
+	// Motoronflag[2] = 0, Motorreasonflag[2] = 0, act_POnMin[2] = 0, act_POnSec[2] = 0, act_rem_delmin[2] = 0, act_rem_delsec[2] = 0, act_del_comp_min[2] = 0, act_del_comp_sec[2] = 0, Act_level[2] = 0.0, flowisthere[2] = 0;
 	
 	uart_send_count = 0, Resend_IMEI_count = 0;uart_send_flag=0;Resend_IMEI_flag=0;
 	
@@ -5442,25 +5442,25 @@ void sAPP_Timer1(void *data)
 			   Bearer_enable(BearerCallback);*/
 
 			checkpower = checkpower_act;
-			sprintf(buf, "\n\r line %d RVoltage1 = %d  YVoltage1 = %d BVoltage1 %d checkpower_act %d,checkpower %d,PowerCurrentCondition %d,\n\r", __LINE__, RVoltage1, YVoltage1, BVoltage1, checkpower_act, checkpower, PowerCurrentCondition);
+			sprintf(buf, "\n\r line %d  PowerCurrentCondition %d,\n\r", __LINE__,PowerCurrentCondition);
 			sAPI_UartPrintf(buf);
 
-			if (DebounceDelay == 1)
-			{
-				if (DebounceDelaycounter++ > 3)
-				{
-					DebounceDelaycounter = 0;
-					DebounceDelay = 0;
-				}
-			}
-			if (dtmfDebounceDelay == 1)
-			{
-				if (dtmfDebounceDelaycounter++ > 20)
-				{
-					dtmfDebounceDelaycounter = 0;
-					dtmfDebounceDelay = 0;
-				}
-			}
+			// if (DebounceDelay == 1)
+			// {
+			// 	if (DebounceDelaycounter++ > 3)
+			// 	{
+			// 		DebounceDelaycounter = 0;
+			// 		DebounceDelay = 0;
+			// 	}
+			// }
+			// if (dtmfDebounceDelay == 1)
+			// {
+			// 	if (dtmfDebounceDelaycounter++ > 20)
+			// 	{
+			// 		dtmfDebounceDelaycounter = 0;
+			// 		dtmfDebounceDelay = 0;
+			// 	}
+			// }
 			/* if(getmoistureflag==1&& MakeRealyOn==0)
 			{
 			if(getsensorcounter++>3)
@@ -5511,30 +5511,30 @@ void sAPP_Timer1(void *data)
 			// sAPI_UartPrintf(buf);
 			sAPI_UartPrintf(",CSQ:%d,%d,%d,%d,%d,\n\r",CSQ,Creg,CGREG,Cpin,RST_count);
 			
-			if (rebootflag == 1)
-			{
-				tcpdcounter1 = 0;
+			// if (rebootflag == 1)
+			// {
+			// 	tcpdcounter1 = 0;
 
-				if (rebootflagcounter++ > 5)
-				{
-					rebootflag = 0;
-					rebootflagcounter = 0;
-					tcpdcounter1 = 0;
-					// eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 6, "CONRBT", EAT_NULL);
-				}
-			}
-			else if (rebootflag1 == 1)
-			{
-				tcpdcounter1 = 0;
+			// 	if (rebootflagcounter++ > 5)
+			// 	{
+			// 		rebootflag = 0;
+			// 		rebootflagcounter = 0;
+			// 		tcpdcounter1 = 0;
+			// 		// eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 6, "CONRBT", EAT_NULL);
+			// 	}
+			// }
+			// else if (rebootflag1 == 1)
+			// {
+			// 	tcpdcounter1 = 0;
 
-				if (rebootflagcounter++ > 5)
-				{
-					rebootflag1 = 0;
-					rebootflagcounter = 0;
-					tcpdcounter1 = 0;
-					// eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 6, "CONTCP", EAT_NULL);
-				}
-			}
+			// 	if (rebootflagcounter++ > 5)
+			// 	{
+			// 		rebootflag1 = 0;
+			// 		rebootflagcounter = 0;
+			// 		tcpdcounter1 = 0;
+			// 		// eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 6, "CONTCP", EAT_NULL);
+			// 	}
+			// }
 #if 0
 	                        if((wifiresetflag==1||wifiresetflag1==1)&&s_nMSettings.m_Enter>70)
 							{
@@ -5949,12 +5949,12 @@ void sAPP_Timer1(void *data)
 					nProgramProcess.RemaningSec=0;
 					nProgramProcess.RemainingFlow=0;
 					nProgramProcess.OnByCondition=nProgramProcess.ProgramEnable;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].Sno=1;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].ProgramNo=nProgram.Sno;
 				}
 			}
 			else if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 0)
 			{
-				
-
 					nProgramProcess.NoofZones=nProgram.NoofZones;
 					nProgramProcess.ZoneFlag=1;
 					nProgramProcess.OnByCondition=nProgramProcess.ProgramEnable;
@@ -5963,13 +5963,17 @@ void sAPP_Timer1(void *data)
 			sAPI_UartPrintf(Buff);
 			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 1)
 			{
-				
+				nProgramProcess.LogZone[nProgramProcess.ZoneNo].Sno=nProgramProcess.ZoneNo+1;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].ProgramNo=nProgram.Sno;
 				if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == FlowBased)
 				{
 					nProgramProcess.IrrigationMethod=FlowBased;
+					nProgramProcess.FlowRate=nProgram.nZone[nProgramProcess.ZoneNo].FlowRate;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].IrrigationMethod=FlowBased;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].SetFlowRate=nProgram.nZone[nProgramProcess.ZoneNo].FlowRate;
+
 					if(nProgram.nZone[nProgramProcess.ZoneNo].FlowRate==0  )
 					{
-						 
 							nProgramProcess.ZoneFlag=3;
 							nProgramProcess.ZoneNo++;
 							if(nProgramProcess.ZoneNo>=nProgram.NoofZones)
@@ -5981,7 +5985,7 @@ void sAPP_Timer1(void *data)
 					{
 						if(nProgramProcess.RemainingFlow!=0)
 						{
-							nProgramProcess.StopSec = nProgramProcess.RemainingFlow;
+							nProgramProcess.StartSec = nProgramProcess.StopSec-nProgramProcess.RemainingFlow;
 						}
 						else
 						{
@@ -5989,8 +5993,8 @@ void sAPP_Timer1(void *data)
 							nProgramProcess.StartSec=RecValveOnOff.Cummulative;
 						}
 						
-						 //nProgramProcess.StopSec += ((datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec);
-						 //nProgramProcess.StartSec=(datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;  
+						//nProgramProcess.StopSec += ((datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec);
+						//nProgramProcess.StartSec=(datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;  
 						// nProgramProcess.ZoneFlag=0;
 					}
 					
@@ -5998,6 +6002,13 @@ void sAPP_Timer1(void *data)
 				else if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == TimeBased)
 				{
 					nProgramProcess.IrrigationMethod=TimeBased;
+					
+					nProgramProcess.Duration[0]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[0];
+					nProgramProcess.Duration[1]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[1];
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].IrrigationMethod=TimeBased;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].SetDuration[0]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[0];
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].SetDuration[1]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[1];
+
 					if(nProgram.nZone[nProgramProcess.ZoneNo].Duration[0]==0 && 
 					nProgram.nZone[nProgramProcess.ZoneNo].Duration[1]==0 )
 					{
@@ -6020,6 +6031,7 @@ void sAPP_Timer1(void *data)
 							nProgramProcess.StopSec = nProgram.nZone[nProgramProcess.ZoneNo].Duration[0]*3600+
 							nProgram.nZone[nProgramProcess.ZoneNo].Duration[1]*60;
 						}
+						
 						
 						if(nProgramProcess.StopSec>59)
 							nProgramProcess.ZoneOnFlag=1;
@@ -6050,7 +6062,7 @@ void sAPP_Timer1(void *data)
 					{
 						if(nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]>0)
 						{
-							ZoneOnFlag=nProgramProcess.ValveON=1;
+							nProgramProcess.ValveON=1;
 							DelayTime=16;
 							ValvenOnRef=2;
 							
@@ -6112,6 +6124,7 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					{
 						nProgramProcess.StartSec=RecValveOnOff.Cummulative;
 						nProgramProcess.RemainingFlow=nProgramProcess.StopSec-nProgramProcess.StartSec;
+						nProgramProcess.LogZone[nProgramProcess.ZoneNo].ActFlowRate=nProgramProcess.FlowRate-nProgramProcess.RemainingFlow;
 						if(nProgramProcess.RemainingFlow<=0)
 						{
 							nProgramProcess.ZoneFlag=3;
@@ -6149,6 +6162,9 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 							nProgramProcess.RemaningTime[0]=nProgramProcess.RemaningSec/3600;
 							nProgramProcess.RemaningTime[1]=(nProgramProcess.RemaningSec%3600)/60;
 							nProgramProcess.RemaningTime[2]=(nProgramProcess.RemaningSec%60);
+							nProgramProcess.LogZone[nProgramProcess.ZoneNo].ActDuration[0]=nProgramProcess.StartSec/3600;
+							nProgramProcess.LogZone[nProgramProcess.ZoneNo].ActDuration[1]=(nProgramProcess.StartSec%3600)/60;
+							
 						}
 					}
 				}
@@ -6162,7 +6178,7 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					{
 						if(nProgram.nZone[nProgramProcess.ZoneNo].ValveNo[i]>0)
 						{
-							ZoneOnFlag=nProgramProcess.ValveON=1;
+							nProgramProcess.ValveON=1;
 							DelayTime=16;
 							ValvenOnRef=2;
 							for(int i=0;i<8;i++)
@@ -6243,14 +6259,19 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					nProgramProcess.ZoneFlag=0;
 					nProgramProcess.Status=0;
 					nProgramProcess.ZoneNo=0;
+					NoOfZone=nProgramProcess.NoofZones;
 					nProgramProcess.NoofZones=0;
 					nProgramProcess.RemaningSec=0;
 					nProgramProcess.RemainingFlow=0;
 					nProgramProcess.RemaningTime[0]=0;
 					nProgramProcess.RemaningTime[1]=0;
 					nProgramProcess.RemaningTime[2]=0;
+					nProgramProcess.Duration[0]=0;
+					nProgramProcess.Duration[1]=0;
+					nProgramProcess.FlowRate=0;
 					nProgramProcess.Sno=0;
-					ZoneOnFlag=nProgramProcess.ValveON=1;
+					ZoneOnFlag=1;
+					nProgramProcess.ValveON=1;
 					DelayTime=16;
 					ValvenOnRef=1;
 					ValvenOnNo=255;
@@ -6336,7 +6357,40 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 				nProgramProcess.ZoneOnFlag=0;
 			}
 			
-			
+			if(ZoneOnFlag==1)
+			{
+				ZoneOnFlag=0;
+				memset(strBuf,0x00,sizeof(strBuf));
+				sprintf(strBuf,"{\r\n\"cC\":\"%s\",\r\n\"cM\":{",IMEI);
+
+							/***** Device details *****/
+							for(int i=0;i<NoOfZone;i++)
+							{
+								if(nProgramProcess.LogZone[i].IrrigationMethod==TimeBased)
+								{
+									sprintf(strBuf,"%s\r\n\"8301\": \"%d.%d,%d,%d:%d,%d:%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
+							nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActDuration[0],nProgramProcess.LogZone[i].ActDuration[1],
+							nProgramProcess.LogZone[i].SetDuration[0],nProgramProcess.LogZone[i].SetDuration[1]);
+								}
+								else if(nProgramProcess.LogZone[i].IrrigationMethod==FlowBased)
+								{
+									sprintf(strBuf,"%s\r\n\"8301\": \"%d.%d,%d,%d,%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
+							nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActFlowRate,nProgramProcess.LogZone[i].SetFlowRate);
+								
+								}
+							}
+							sprintf(strBuf,"%s\r\n\"WifiStrength\":%d,\r\n\"Version\":\"OSM_TEST\",\r\n\"PowerSupply\":%01d},\r\n\"cD\":\"%02d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"8300\"\r\n}",strBuf,sstrength,!PowerCurrentCondition,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
+									
+							LogFlag=1;
+							
+							sprintf(TCPWifigprsstrBUFF,"%s",strBuf);
+                            sprintf(buf,"\n\rTCPWifigprsstrBUFF>>:[%s]",TCPWifigprsstrBUFF);
+							sAPI_UartPrintf(buf);
+							sgetflag = 1;
+							sgetflag_1 = 1;
+							sAPI_UartPrintf("\n\rSETFLAG_1:%d", sgetflag_1);
+							tcpdcounter = 0;
+			}
 			//nProgram.SelectedDate[j]
 			//nProgram.Schedule
 			//nProgram.DayCount
@@ -6351,11 +6405,10 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 				{
 					long StartDay=days_from_civil(nProgram.StartDate[2],nProgram.StartDate[1],nProgram.StartDate[0]);
 					long EndDay=days_from_civil(nProgram.EndDate[2],nProgram.EndDate[1],nProgram.EndDate[0]);
-					long PreDay=days_from_civil(datetime.tm_year,datetime.tm_mon,datetime.tm_mday);
-					int DaysInterval = 	EndDay-StartDay;
-					int PresentDay = 	PreDay-StartDay;
-					if(PresentDay>=0 && PresentDay<=DaysInterval)
+					if((EndDay>StartDay) || (nProgram.EndDate[2]==0 && nProgram.EndDate[1]==0 && nProgram.EndDate[0]==0))
 					{
+						long PreDay=days_from_civil(datetime.tm_year,datetime.tm_mon,datetime.tm_mday);
+						int PresentDay = 	((PreDay-StartDay)) % nProgram.DayCount;
 						if(nProgram.SelectedDate[PresentDay]==1)
 						{
 							Checkrtc=1;
@@ -6367,8 +6420,27 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					}
 					else
 					{
-						Checkrtc=0;
+						
+						long PreDay=days_from_civil(datetime.tm_year,datetime.tm_mon,datetime.tm_mday);
+						int DaysInterval = 	EndDay-StartDay;
+						int PresentDay = 	PreDay-StartDay;
+						if(PresentDay>=0 && PresentDay<=DaysInterval)
+						{
+							if(nProgram.SelectedDate[PresentDay]==1)
+							{
+								Checkrtc=1;
+							}
+							else
+							{
+								Checkrtc=0;
+							}
+						}
+						else
+						{
+							Checkrtc=0;
+						}
 					}
+					
 				}
 				else
 				{
@@ -6494,36 +6566,6 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					sAPI_UartWrite(SC_UART, textBuf, strlen(textBuf));
 					sAPI_UartPrintf(textBuf);
 				}
-				if ((uart_send_count <= 3) && (uart_send_flag == 1))
-
-				{
-					memset(textBuf, NULL, sizeof(textBuf));
-					sprintf(textBuf, "$S,C,%d,%d,%d,\n\r", nMSettings.motor1onof, nMSettings.motor2onof, nMSettings.motor3onof);
-					sAPI_UartWrite(SC_UART, textBuf, strlen(textBuf));
-					sAPI_UartPrintf(textBuf);
-					uart_send_count++;
-					if (uart_send_count >= 3)
-					{
-						//	first_time_data_req_flag=0;
-						uart_send_flag = 0;
-						uart_send_count = 0;
-					}
-				}
-				else if ((uart_send_count <= 3) && (uart_send_flag == 2))
-
-				{
-					memset(textBuf, NULL, sizeof(textBuf));
-					sprintf(textBuf, "$S,C,0,0,0,\n\r");
-					sAPI_UartWrite(SC_UART, textBuf, strlen(textBuf));
-					sAPI_UartPrintf(textBuf);
-					uart_send_count++;
-					if (uart_send_count >= 3)
-					{
-						//	first_time_data_req_flag=0;
-						uart_send_flag = 1;
-						uart_send_count = 0;
-					}
-				}
 				if (Resend_IMEI_flag == 1 && Resend_IMEI_count <= 8 && s_nMSettings.m_Enter >= 70 && uart_send_flag == 0 && uart_data_comm_flag == 0)
 				{
 
@@ -6545,102 +6587,7 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 
 			sprintf(buf, "\n\r uart_send_count %d uart_send_flag %d Resend_IMEI_flag %d Resend_IMEI_count %d \n\r", uart_send_count, uart_send_flag, Resend_IMEI_flag, Resend_IMEI_count);
 			sAPI_UartPrintf(buf);
-
-#if 0
-							//if(CheckRTC() == 1)
-								if((CheckRTC() == 1) && (s_nMSettings.m_Enter >70))
-							{
-								
-								// MotorStarterTripCount = 0;
-								OverAllStarterTrip = 0;
-								ActMotorStarterTripTimer =0;
-							//	if(nMSettings.rtcautorstonof==1)
-								MakeRealyOn = 1;  //dg_commented
-								StartByMobile = 0;
-							//	RunMotor(MakeRealyOn,PowerCurrentCondition);
-							 }
-							
-							else
-							{
-								
-								if(StartByMobile == 1)
-								{
-									MakeRealyOn = 1;
-							//		RunMotor(MakeRealyOn,PowerCurrentCondition);
-								}
-								else
-								{
-									//OffMotorByPhone = 0;
-								//	if(nMSettings.rtcautorstonof==1)
-									MakeRealyOn = 0;  //dg_commented
-							//		RunMotor(MakeRealyOn,PowerCurrentCondition);
-								}
-							}
-										
-							
-
-							if(nMSettings.TargetOnOff == 1 && TargetNumberFound == 1 && OnByTarget == 1)
-							{
-								TargetTimerCnt++;
-								sprintf(buf,"\n\r*******Target Counter = %ld********\n\r",TargetTimerCnt);
-								sAPI_UartPrintf(buf);
-								if(TargetTimerCnt>=500)								//1000
-								{
-									OnByTarget = 0;
-									MakeRealyOn = 0;
-									nCYCTimer = NO_TCOND;
-									StartByMobile = 0;
-									OffMotorByPhone = 0;
-									nSTATE_STATUS_SMS =STATUS_MOTOR_OFF_TARGET;
-									SendSmsToAll = 1;
-									// nSTATE_MOTOR_ON_SMS=STATE_MOTOR_ON_DEFAULT;
-									nSTATE_STATUS_SMS = STATE_MOTOR_OFF_TARGET;
-								}
-							}
-							else
-								TargetTimerCnt = 0;
-							//	RunMotor(MakeRealyOn,PowerCurrentCondition);
-
-								//if(nTimerSettings.AutoRstOn == 0 && PowerCurrentCondition == 1)
-								//	MakeRealyOn = 0;
-
-							if(nTimerSettings.Drrestartpoweronof==1 && MakeRealyOn == 1 )
-							{
-								sAPI_GetRealTimeClock(&datetime);
-								if(nTimerSettings.DrReOnOf == 1)
-								{
-									if(datetime.tm_sec != ActStarDetaPrvSec)
-									{
-										nMoTr.ActDrRunRestart++;
-										ActStarDetaPrvSec = datetime.tm_sec;
-									}
-									sprintf(buf,"\n\rDebug2:nMoTr.ActDrRunRestart = %d  nMoTr.DrRunRestart = %d\n\r",nMoTr.ActDrRunRestart,nMoTr.DrRunRestart);
-									sAPI_UartPrintf(buf);
-									RemainingDrTime = nMoTr.DrRunRestart-nMoTr.ActDrRunRestart;     //aj added
-									if(nMoTr.ActDrRunRestart>=nMoTr.DrRunRestart)
-									{
-										if(PowerCurrentCondition == 0)
-											nSTATE_MOTOR = STATE_MOTOR_TRIP_RESTART;
-										else
-											nSTATE_STATUS_SMS =STATUS_NO_ELECTRICICY;
-										sprintf(buf,"\n\rReStart Time Completed\n\r");
-										sAPI_UartPrintf(buf);
-										nTimerSettings.Drrestartpoweronof=0;
-										SendSmsToAll = 1;
-									}
-									else
-									{
-										if(PowerCurrentCondition == 0)
-											nSTATE_STATUS_SMS =STATUS_MOTOR_DRYRUN_TRIP_SMS;
-										else
-											// sAPI_UartPrintf("STATUS_NO_ELECTRICICY;");                //aj
-											nSTATE_STATUS_SMS =STATUS_NO_ELECTRICICY;
-											//nSTATE_MOTOR_SMS = STATE_MOTOR_DRYRUN_TRIP_SMS;
-											nSTATE_MOTOR = STATE_MOTOR_TRIP_DRYRUN;
-									}
-								}
-							}
-#endif
+			
 
 			if(g_new_MAC_flag==1)
 			{
@@ -6649,10 +6596,12 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 				WriteEpromidFile();
 				MQTT_Reconnect();
 			}
+			#if 0
 			sprintf(buf, "\n\rDebug2:s_nMSettings.m_settings_req_flag = %d  s_nMSettings.m_pumpno_send = %d g_no_of_pumps =%d s_nMSettings.m_settings_count %d\n\r", s_nMSettings.m_settings_req_flag, s_nMSettings.m_pumpno_send, g_no_of_pumps, s_nMSettings.m_settings_count);
 			//	g_no_of_pumps=2;
 			// s_nMSettings.m_settings_req_flag=1;
 			sAPI_UartPrintf(buf);
+			
 			if (s_nMSettings.m_pumpno_send == 0)
 				s_nMSettings.m_pumpno_send = 1;
 			if (s_nMSettings.m_settings_req_flag == 1 && s_nMSettings.m_pumpno_send <= g_no_of_pumps) // subash2
@@ -6858,6 +6807,7 @@ else if(s_nMSettings.m_settings_count==10)
 				sAPI_UartPrintf(buf);
 				s_nMSettings.calibration_flag = 0;
 			}
+			#endif
 			/*if(s_nMSettings.m_Enter>=70 && PowerCurrentCondition == 0 )
 			{
 				nMSettings.motorallonofcount++;
@@ -6985,87 +6935,7 @@ else if(s_nMSettings.m_settings_count==10)
 			nMSettings.motor1onof=0;
 			} */
 
-#if 0
 
-							if(pressure_calib_flag>=1)
-							{
-							pressure_calib_flag=0;
-							sprintf(textBuf,"$D,M,83,83,83,83,83,83");
-							sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-			                sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-	                        while(dricomdelay<1000){dricomdelay++;}dricomdelay=0;
-							sprintf(buf,"%s\n\r ",textBuf);
-                             sAPI_UartPrintf(buf);
-							}
-
-
-							if(setserialflag>0)
-							{
-							if(setserialflagcount++>10)
-							{
-								setserialflagcount=0;
-							sprintf(buf,"setserialflag data***************/n/r");
-							sAPI_UartPrintf(buf);
-							//sprintf(textBuf,"$D,M,0,0,0,%ld,%ld,%ld,%ld,%ld\n\r ",zoneid[setserialflag].ida1,zoneid[setserialflag].ida2,zoneid[setserialflag].ida3,setserialflag,zoneid[setserialflag].ida4 );
-			                sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-			                sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-							setserialflag++;
-							if(setserialflag>nDripSettings.decidefblast)
-							{
-							setserialflag=0;
-							sprintf(textBuf,"$D,M,2,2,2,2,%ld,%ld,%ld,%ld\n\r ",zonecom.humonlevel,zonecom.humoflevel,zonecom.temponlevel,zonecom.tempoflevel);
-			                sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-			                sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-
-							}
-							}
-							}
-
-							/* if((setserialflag_1>0) && (setserialflag_1<=3))
-							{
-							if(setserialflagcount1++>10)
-							{
-								setserialflagcount1=0;
-							sprintf(buf,"setserialflag data***************///n/r");
-							// sAPI_UartPrintf(buf);
-							//sprintf(textBuf,"$D,M,0,0,0,%ld,%ld,%ld,%ld,%ld\n\r ",zoneid[setserial1_val].ida1,zoneid[setserial1_val].ida2,zoneid[setserial1_val].ida3,setserial1_val,zoneid[setserial1_val].ida4 );
-			              //  sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-			               /* sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-							setserialflag_1++;
-							}
-							} */
-							if(setserialflag_1>3)
-							setserialflag_1=0;
-							if( MakeRealyOn == 0)
-							{
-								
-								
-								sAPI_GetRealTimeClock(&datetime);
-								if(datetime.tm_hour != ActPrvmosHr && s_nMSettings.m_Enter>=70)
-									{
-										/*  sprintf(textBuf,"$D,M,1,\n\r ");
-			                         sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-	                                 sprintf(buf,"%s\n\r ",textBuf);while(dricomdelay<1000){dricomdelay++;}dricomdelay=0;
-	                    			 sAPI_UartPrintf(buf);
-									 sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-	                                 sprintf(buf,"%s\n\r ",textBuf);while(dricomdelay<1000){dricomdelay++;}dricomdelay=0;
-	                    			 sAPI_UartPrintf(buf);
-									 sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-	                                 sprintf(buf,"%s\n\r ",textBuf);while(dricomdelay<1000){dricomdelay++;}dricomdelay=0;
-	                       			 sAPI_UartPrintf(buf);*/
-									 ActPrvmosHr = datetime.tm_hour;
-										/*  if(nMSettings.dataSMSOnOff==1)
-									 {
-									 getdataflag =1;
-									 enter2=0;
-									 } */
-								     if(nMSettings.sampleSMSOnOff==1)
-									 Send_samplemoisture(SmsNumber[0]);
-									}
-
-						    }
-
-#endif
 
 			Nooftcpsendcount++;
 			sprintf(buf, "\n\rNooftcpsendcount=%d\n\r", Nooftcpsendcount);
@@ -7173,6 +7043,7 @@ else if(s_nMSettings.m_settings_count==10)
 				sAPI_UartPrintf(buf);
 				View_Settings_flag = 0;
 			} */
+			 #if 0
 			 if(View_Settings_flag==1)
 			//if (View_Send_Flag == 1)
 			{
@@ -7299,128 +7170,6 @@ else if(s_nMSettings.m_settings_count==10)
 					l_pumpval = 0;
 				}
 			}
-#if 0
-						//	if((getdataflag>0 && s_nMSettings.m_Enter>=70 && (strlen(IMEI)>0)&&Nooftcprecvd1<=12&&enter2>60 ) || ( s_nMSettings.m_Enter>=70 && (strlen(IMEI)>0)&&Nooftcprecvd1<=12 && getdataflag_1==1)) //340
-	if((getdataflag>0 && s_nMSettings.m_Enter>=70 && (strlen(IMEI)>0)&&Nooftcprecvd1<=12&&((zonecom.standalonemodeonof == 1 && enter2>150 )|| (zonecom.standalonemodeonof == 0 && enter2>60 ))) || ( s_nMSettings.m_Enter>=70 && (strlen(IMEI)>0)&&Nooftcprecvd1<=12 && getdataflag_1==1)) //340
-    
-	{
-                     
-								char getbuff[500];
-								char getbuff1[10];
-								int contentlen;
-								int counti=0;
-							if(getdataflagcount++>6)
-								{
-								getdataflagcount=0;
-					        sprintf(buf,"getdataflag data***************\n\r");
-							sAPI_UartPrintf(buf);
-							counti=(getdataflag-1)*20;
-							counti=counti+1;
-							sprintf(FBKBuf,"");
-							getdataflag++;
-							/*zoneid[i].fsno=1;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=0.09;
-							zoneid[i].fsno=2;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=0.09;
-							zoneid[i].fsno=3;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=3;zoneid[zoneid[i].fsno].fbkval=0.09;
-							zoneid[i].fsno=4;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=4;zoneid[zoneid[i].fsno].fbkval=0.09;
-							zoneid[i].fsno=5;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=10;zoneid[zoneid[i].fsno].fbkval=0.09;
-							zoneid[i].fsno=6;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=0;zoneid[zoneid[i].fsno].fbkval=0.09;
-							
-							zoneid[i].fsno=7;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=0.1;
-							zoneid[i].fsno=8;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=0.2;
-							zoneid[i].fsno=9;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=0.09;
-							zoneid[i].fsno=10;zoneid[zoneid[i].fsno].datatype=1;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=0.09;
-							zoneid[i].fsno=11;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=38;
-							zoneid[i].fsno=12;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=61;
-							
-							zoneid[i].fsno=13;zoneid[zoneid[i].fsno].datatype=3;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=129;
-							zoneid[i].fsno=14;zoneid[zoneid[i].fsno].datatype=3;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=2240;
-							zoneid[i].fsno=15;zoneid[zoneid[i].fsno].datatype=0;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=523;
-							zoneid[i].fsno=16;zoneid[zoneid[i].fsno].datatype=0;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=323;
-							zoneid[i].fsno=17;zoneid[zoneid[i].fsno].datatype=4;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=38;
-							zoneid[i].fsno=18;zoneid[zoneid[i].fsno].datatype=4;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=61;
-							
-							zoneid[i].fsno=19;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=129;
-							zoneid[i].fsno=20;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=2240;
-							zoneid[i].fsno=21;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=523;
-							zoneid[i].fsno=22;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=323;
-							zoneid[i].fsno=23;zoneid[zoneid[i].fsno].datatype=0;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=383889;
-							zoneid[i].fsno=24;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=2;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=25;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=3;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=26;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=4;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=27;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=10;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=28;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=0;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=29;zoneid[zoneid[i].fsno].datatype=2;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=61;
-							
-							zoneid[i].fsno=30;zoneid[zoneid[i].fsno].datatype=3;zoneid[zoneid[i].fsno].fbk=3;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=31;zoneid[zoneid[i].fsno].datatype=3;zoneid[zoneid[i].fsno].fbk=4;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=32;zoneid[zoneid[i].fsno].datatype=3;zoneid[zoneid[i].fsno].fbk=10;zoneid[zoneid[i].fsno].fbkval=61;
-							zoneid[i].fsno=33;zoneid[zoneid[i].fsno].datatype=3;zoneid[zoneid[i].fsno].fbk=0;zoneid[zoneid[i].fsno].fbkval=61;
-							*/
-				for(i=counti;i<counti+20;i++)
-				{
-							if(i>255 )
-							{
-							getdataflag=0;
-							getdataflag_1=0;
-							break;
-							}
-
-							//zoneid[i].fsno=i;
-                            //zoneid[zoneid[i].fsno].fbk=-1;
-                           /*  if(zoneid[i].datatype ==1)
-							sprintf(getbuff1,"A");
-                            else if(zoneid[i].datatype ==2)
-							sprintf(getbuff1,"P");
-                            else if(zoneid[i].datatype ==3)
-							sprintf(getbuff1,"L");
-						    else if(zoneid[i].datatype ==4)
-							sprintf(getbuff1,"C");
-                            else
-							sprintf(getbuff1," "); */
-						//    zoneid[i].fsno=1;zoneid[zoneid[i].fsno].fbk=1;zoneid[zoneid[i].fsno].fbkval=0.09;
-
-						   // sprintf(FBKBuf,"%s%03d:%d:%d%s,",FBKBuf,zoneid[i].fsno,zoneid[zoneid[i].fsno].fbk,zoneid[zoneid[i].fsno].fbkval,getbuff1);
-						//	sprintf(buf,"%s\n\r ",FBKBuf);
-						//	sAPI_UartPrintf(buf);
-				}
-                             
-						//	sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%s\",\r\n\"cD\":\"%d/%d/20%02d\",\r\n\"cT\":\"%d:%d:%d\",\r\n\"mC\":\"NLM\"\r\n}",IMEI,FBKBuf,datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-							sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%s\",\r\n\"cD\":\"%02d/%02d/%04d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"NLM\"\r\n}",IMEI,FBKBuf,datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-							sAPI_UartPrintf(getbuff);
-							//
-						//	sprintf(getbuff,"{ }\n\r");
-							contentlen=strlen(getbuff);
-							contentlen=contentlen;
-							sprintf(buf,"tcp copy length=%d",contentlen);
-							sAPI_UartPrintf(buf);
-						//	sprintf(buf,"getbuff copy =%s",getbuff);
-						// sAPI_UartPrintf(buf);
-						//	memset(&TCPwifiStrNumber[Nooftcprecvd].TCPWifistr,0,500);
-							sprintf(TCPwifiStrNumber1[Nooftcprecvd1].TCPWifigprsstr1,"%s",getbuff);
-							sprintf(TCPwifiStrNumber1[Nooftcprecvd1].TCPWifistr1,"POST /api/v1/controller/messages/ HTTP/1.1\r\nHost: %s:8080\r\nUser-Agent: curl/7.52.1\r\nAccept: */*\r\nContent-Type: application/json\r\nContent-Length: %d\r\n\r\n\%s\r\n",DeviceConfig.TcpServerIP,contentlen,getbuff);
-
-							memset(&getbuff,0,500);
-							contentlen=strlen(TCPwifiStrNumber1[Nooftcprecvd1].TCPWifistr1);
-							sprintf(buf,"tcp copy length=%d",contentlen);
-							sAPI_UartPrintf(buf);
-							if((getdataflag>0) || (getdataflag_1>0))
-							Nooftcprecvd1++;
-
-							sprintf(buf,"%s\n\r ",FBKBuf);
-	                        sAPI_UartPrintf(buf);
-							if(i>nDripSettings.decidefblast)
-							{
-							getdataflag=0;
-							getdataflag_1=0;
-							//break;
-							}
-				}
-							//sAPI_UartWrite(eat_uart_wifi, FBKBuf, strlen(FBKBuf));
-							//sprintf(buf,"%s\n\r ",FBKBuf);
-							//sAPI_UartPrintf(buf);
-							//eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 4, "FBKD", EAT_NULL);
-							//getdataflag++;
-	}
 #endif
 			/*	if(zoneonof[nVaTr.programselection].moistureonof==1 && MakeRealyOn == 0)
 			   {
@@ -7477,684 +7226,6 @@ else if(s_nMSettings.m_settings_count==10)
 					   }
 			   }	*/
 
-#if 0
-		if(progqueonof == 1&& proqueflag==0 && nDripSettings.driponof==1 && nVaTr.cycrestartonof==0 && MakeRealyOn == 1 && nVaTr.cyclecompleted==1)
-			{
-						     char progindex;
-							 char prvprogsel;
-							 //prvprogsel=nVaTr.programselection;
-							 sprintf(buf,"proqueflagcounter = %d ***********************",proqueflagcounter);
-							 sAPI_UartPrintf(buf);
-							 if(proqueflagcounter++>120)
-							 {
-							 prvprogsel=nVaTr.programselection;
-                             for (i = 1; i < 5; i++)
-							 {
-								//sprintf(buf,"recived no %s , Reg number %s,%d",p+j,SmsNumber[i],j);
-                          // sAPI_UartPrintf(buf);						
-						sprintf(buf,"nVaTr.programselection = %d GREENT[i].progque=%d***********************",nVaTr.programselection,GREENT[i].progque);
-							sAPI_UartPrintf(buf);
-							if (nVaTr.programselection== GREENT[i].progque && GREENT[i].progque>0)
-								{
-									progindex = i+1;
-									if(progindex<5)
-									{
-									for (i = progindex; i < 5; i++)
-							        {
-									if(GREENT[i].progque>0 )
-									{
-									nVaTr.programselection = GREENT[i].progque;
-									proqueflagcounter=0;
-									sprintf(buf,"nVaTr.programselection = %d",nVaTr.programselection);
-									sAPI_UartPrintf(buf);
-									break;
-									}
-									//progindex=i;
-									}
-									}
-									//progindex=progindex+1;
-									sprintf(buf,"nVaTr.programselection = %d prvprogsel=%d***********************",nVaTr.programselection,prvprogsel);
-									sAPI_UartPrintf(buf);
-									if(prvprogsel==nVaTr.programselection)
-									{
-									for (i = 1; i < 5; i++)
-							        {
-									if(GREENT[i].progque>0 )
-									{
-									nVaTr.programselection = GREENT[i].progque;
-									proqueflagcounter=0;
-									sprintf(buf,"nVaTr.programselection = %d",nVaTr.programselection);
-									sAPI_UartPrintf(buf);
-									break;
-									}
-									}
-									}
-
-									proqueflagcounter=0;
-									sprintf(buf,"nVaTr.programselection = %d",nVaTr.programselection);
-									sAPI_UartPrintf(buf);
-									break;
-							}
-							 }
-
-                            if(prvprogsel!= nVaTr.programselection)
-                            {
-						    WriteDprevSettings();
-		                    sprintf(buf,"\n pos=%d\n\r",nVaTr.programselection);
-		                    sAPI_UartPrintf(buf);
-							ReadDprevSettings();
-		                    sprintf(buf,"\n pos=%d\n\r",nVaTr.programselection);
-		                    sAPI_UartPrintf(buf);
-							STATE_SENDSMS=STATE_PROGRAMSEL_SMS;
-		                    SendSmsToAll = 1;
-		                    s_nMSettings.m_Enter=1;
-							if(nVaTr.querestartonof==1)
-							proqueflag=1;
-						    else
-							proqueflag=2;
-							}
-							else
-							proqueflag=2;
-							 }
-			}
-			
-						/*	else if(progqueonof == 1&& proqueflag==0 && nDripSettings.driponof==1 && nVaTr.cycrestartonof==1 && MakeRealyOn == 1 && nVaTr.cyclecompleted==1)
-							{
-						     char progindex;
-							 char prvprogsel;
-
-							 prvprogsel=nVaTr.programselection;
-                             for (i = 1; i < 5; i++)
-							 {
-								//sprintf(buf,"recived no %s , Reg number %s,%d",p+j,SmsNumber[i],j);
-							sAPI_UartPrintf(buf);
-							if (nVaTr.programselection== GREENT[i].progque && GREENT[i].progque>0)
-							{
-									progindex = i+1;
-									if(progindex<5)
-									{
-									for (i = progindex; i < 5; i++)
-							        {
-									if(GREENT[i].progque>0 )
-									{
-									nVaTr.programselection = GREENT[i].progque;
-									break;
-									}
-									}
-									}
-									break;
-							}
-							}
-                            if(prvprogsel!= nVaTr.programselection)
-                            {
-						    WriteDprevSettings();
-		                    sprintf(buf,"\n pos=%d\n\r",nVaTr.programselection);
-		                    sAPI_UartPrintf(buf);
-							ReadDprevSettings();
-		                    sprintf(buf,"\n pos=%d\n\r",nVaTr.programselection);
-		                    sAPI_UartPrintf(buf);
-							STATE_SENDSMS=STATE_PROGRAMSEL_SMS;
-		                    SendSmsToAll = 1;
-		                    s_nMSettings.m_Enter=1;
-							proqueflag=2;
-							}
-							else
-							proqueflag=2;
-
-							}*/
-                            if(proqueflag==1 && s_nMSettings.m_Enter>70 && nVaTr.cyclecompleted==1)
-							{
-                                   if(PowerCurrentCondition == 0)
-									nSTATE_MOTOR = STATE_MOTOR_TRIP_RESTART;
-									else
-									nSTATE_STATUS_SMS =STATUS_NO_ELECTRICICY;
-									sprintf(buf,"\n\rReStart Time Completed\n\r");
-									sAPI_UartPrintf(buf);
-									nVaTr.cyclecompleted=0;
-									SendSmsToAll = 1;
-								    nDripSettings.startcontrol=1;
-									dripcyclecount=0;
-									dripcycledate=0;
-									proqueflag=2;
-									nDripSettings.dripgapdaycount=0;
-									//WriteDprevSettings();
-									//ReadDprevSettings();
-									//SendSmsToAll = 1;
-									
-									WriteonofFile();
-
-									PreviousTrip = NO_TRIP_FLAG;
-									nTimerSettings.Driprestartpoweronof=0;
-							}
-		if(nDripSettings.driponof==1 && nVaTr.cycrestartonof==0 && MakeRealyOn == 1)
-			{
-
-							nMoTr.RTCON[6] = (zonecom.daycountmin*3600)+(zonecom.daycountsec*60);
-                            if(nMoTr.RTCON[6]>86400)
-                            nMoTr.RTCON[6] = 86400;
-							sAPI_GetRealTimeClock(&datetime);
-							nVaTr.CurrentSec = (datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;
-							//sprintf(buf,"\n\rnVaTr.CurrentSec = %d  nMoTr.RTCON4 = %d\n\r",nVaTr.CurrentSec,nMoTr.RTCON4);
-                            sAPI_UartPrintf(buf);
-							if(nVaTr.CurrentSec<(nMoTr.RTCON[6]+10) && nVaTr.CurrentSec>nMoTr.RTCON[6] && nMoTr.RTCON[6] !=0&&dripcycledatecheck==0 )
-							{
-							dripcycledate++;
-							nDripSettings.dripgapdaycount++;
-							//WriteDprevSettings();
-							//ReadDprevSettings();
-							STATE_SENDSMS=	STATE_SKIPDAYCOUNT_SMS;
-							SendSmsToAll = 1;
-
-							//sprintf(buf,"\n\rdripcycledate = %d  \n\r",dripcycledate);
-							// sAPI_UartPrintf(buf);
-							if(dripcycledate>999)
-							{
-							dripcycledate=0;
-							dripcyclecount=0;
-							}
-							dripcycledatecheck=1;
-							}
-			}
-
-							if(nVaTr.CurrentSec>(nMoTr.RTCON[6]+10) && nVaTr.CurrentSec<(nMoTr.RTCON[6]+15)&& dripcycledatecheck==1)
-							dripcycledatecheck=0;
-
-			if(nTimerSettings.Driprestartpoweronof==1 && MakeRealyOn == 1)
-				{
-							nMoTr.RTCON[6] = (zonecom.daycountmin*3600)+(zonecom.daycountsec*60);
-                            if(nMoTr.RTCON[6]>86400)
-                            nMoTr.RTCON[6] = 86400;
-							sAPI_GetRealTimeClock(&datetime);
-							nVaTr.CurrentSec = (datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;
-
-                            if(nVaTr.CurrentSec<(nMoTr.RTCON[6]+10) && nVaTr.CurrentSec>(nMoTr.RTCON[6]+1) && nMoTr.RTCON[6] !=0)
-                            {
-							     if(nDripSettings.dripgapdayonof==0||(nDripSettings.dripgapdaycount>=nDripSettings.dripgapdays))
-								   {
-								    if(PowerCurrentCondition == 0)
-									nSTATE_MOTOR = STATE_MOTOR_TRIP_RESTART;
-									else
-									nSTATE_STATUS_SMS =STATUS_NO_ELECTRICICY;
-									sprintf(buf,"\n\rReStart Time Completed\n\r");
-									sAPI_UartPrintf(buf);
-									nVaTr.cyclecompleted=0;
-									WriteonofFile();
-
-									SendSmsToAll = 1;
-									if(nVaTr.cyclecompleted==1)
-								    nDripSettings.startcontrol=1;
-									nDripSettings.stp=nDripSettings.startfrom;
-									nDripSettings.calc=nDripSettings.stp;
-									nDripSettings.startcontrol=0;
-									nDripSettings.changeinstp1=0;
-									nDripSettings.changeinstp=0;
-
-									nDripSettings.changeincalc=0;
-									nVaTr.Currentvalve = nDripSettings.stp;
-									dripcyclecount=0;
-									dripcycledate=0;
-
-									nDripSettings.dripgapdaycount=0;
-								//	WriteDprevSettings();
-								//	ReadDprevSettings();
-								//	SendSmsToAll = 1;
-								
-									PreviousTrip = NO_TRIP_FLAG;
-									nTimerSettings.Driprestartpoweronof=0;
-									}
-							}
-
-				}
- 
-				//dg_nsdkk			//if(PowerCurrentCondition==0 && PowerOnDelayComPleted==1 && nDripSettings.driponof==1)
- 
-			//if(nDripSettings.driponof==1)
-		//		#if 0
-				if(PowerCurrentCondition== 0 && MakeRealyOn == 1 && nDripSettings.driponof==1 && PowerOnDelayComPleted==1 )
-					{
-						sprintf(buf,"STATE_MOTOR_ON\n\r");								
-								sAPI_UartPrintf(buf);
-								//if(nDripSettings.driponof==1)
-								if(nSTATE_MOTOR ==STATE_MOTOR_ON ||nSTATE_MOTOR ==STATE_MOTOR_TRIP_DRYRUN_SCAN || nSTATE_MOTOR ==STATE_MOTOR_TRIP_OVERLOAD_SCAN ||nSTATE_MOTOR ==STATE_MOTOR_TRIP_LOWPRESS_SCAN ||nSTATE_MOTOR ==STATE_MOTOR_TRIP_HIGHPRESS_SCAN)
-								{
-									sprintf(buf,"\n\r STATE_MOTOR_ON ok\n\r");
-									sAPI_UartPrintf(buf);
-									sAPI_GetRealTimeClock(&datetime);
-									nVaTr.CurrentSec = (datetime.tm_hour*3600)+(datetime.tm_min*60)+datetime.tm_sec;
-									if(DripDate!=datetime.tm_mday)
-									{
-										//	nVaTr.STEP1 = nVaTr.STEP1-86400;
-										//	nVaTr.STEP2 = nVaTr.STEP2-86400;
-										DripDate=datetime.tm_mday;
-										nDripSettings.checkagain=1;
-									}
-									if((CheckLowerTank() == 0 || nMSettings.TankOnOff == 0) && CheckManualSwitch() == 0 && nTimerSettings.ManualOnOff==0  )
-									{
-										//	RunModule();
-										nDripSettings.calconof=0;
-										again11send=0;
-									}
-								    else
-									{
-										valvetimercounter=0;
-										nDripSettings.calc=nDripSettings.stp;
-									//	skipfbk=0;
-										pwrdeltimercounter = (zonecom.fbkdelmin*60)+zonecom.fbkdelsec;
-									//	pwrdeltimercounter=120;
-										pwrdeltimercounter=pwrdeltimercounter*2;
-									//	nDripSettings.calconof=1;
-										nDripSettings.calc=nDripSettings.stp;
-										fertgetstart1timer=0;
-										fertgetstart2timer=0;
-										fertgetstart3timer=0;
-										firstvalestsmsonof=1;
-										firstvalesmsonof=1;
-										nVaTr.ActRefreshOnDelay =0;
-										again1send=1;
-										again2send=1;
-										again3send=1;
-										again4send=1;
-										again5send=1;
-									 //	again7send=1;
-										again8send=1;
-										again10send=0;
-										nVaTr.sendcheckagain=0;
-
-									if(again12send++>7 && nDripSettings.calconof==0 )
-									{
-									if(again12send++>10)
-									{again12send=0;nDripSettings.calconof=1;}
-									sprintf(textBuf,"$D,D,1,1,1,0,0,0,0\n\r ");
-								    sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-								    }
-
-									switchModule();
-									}
-								//	nDripSettings.calconof=0;
-								//	again11send=0;
-								}
-								else
-								{
-								//	sprintf(buf,"\n\r default case 4 \n\r");
-								// sAPI_UartPrintf(buf);
-								//	OUT_DEBUG3(textBuf,"$D,4,1\n\r");
-
-									if(again12send++>20)
-									{
-									again12send=0;
-									sprintf(textBuf,"$D,D,1,1,1,0,0,0,0\n\r ");
-			                        sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-									}
-									if(nDripSettings.calconof==0 )
-									{
-									sprintf(textBuf,"$D,D,1,0,1,0,0,0,0\n\r ");
-			                        sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-									   if(again11send++>3)
-									   {
-									//	skipfbk=0;
-										valvetimercounter=0;
-										pwrdeltimercounter = (zonecom.fbkdelmin*60)+zonecom.fbkdelsec;
-									//	pwrdeltimercounter=120;
-										pwrdeltimercounter=pwrdeltimercounter*2;
-
-										nDripSettings.calconof=1;
-										nDripSettings.calc=nDripSettings.stp;
-										fertgetstart1timer=0;
-										fertgetstart2timer=0;
-										fertgetstart3timer=0;
-										firstvalestsmsonof=1;
-										firstvalesmsonof=1;
-										nVaTr.ActRefreshOnDelay =0;
-										again1send=1;
-										again2send=1;
-										again3send=1;
-										again4send=1;
-										again5send=1;
-									//	again7send=1;
-										again8send=1;
-										again10send=0;
-										nVaTr.sendcheckagain=0;
-										sprintf(textBuf,"$D,D,1,0,1,0,0,0,0\n\r ");
-			                            sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-										sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-
-										nVaTr.sendremaintime=0;
-										}
-
-										//gotnext=0;
-									}
-								}
-							}
-						
-							else
-							{
-							//	sprintf(buf,"\n\r default case 4 \n\r");
-							// sAPI_UartPrintf(buf);
-							//	OUT_DEBUG3(textBuf,"$D,4,1\n\r");
-								if(again12send++>20)
-								{
-									again12send=0;
-									if(nDripSettings.driponof==1)
-									sprintf(textBuf,"$D,D,1,1,1,0,0,0,0\n\r ");
-								    else
-									sprintf(textBuf,"$D,D,1,0,1,0,0,0,0\n\r ");
-			                        sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-							    }
-								if(nDripSettings.calconof==0 )
-								{
-								      sprintf(textBuf,"$D,D,1,0,1,0,0,0,0\n\r ");
-			                          sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-										   if(again11send++>3)
-									   {
-										//nVaTr.TSTEP2 = (zonecom.fbkdelmin*60)+zonecom.fbkdelsec;
-										//pwrdeltimercounter=nVaTr.TSTEP2*2;
-										pwrdeltimercounter = (zonecom.fbkdelmin*60)+zonecom.fbkdelsec;
-										//pwrdeltimercounter=120;
-										pwrdeltimercounter=pwrdeltimercounter*2;
-
-										nDripSettings.calconof=1;
-										nDripSettings.calc=nDripSettings.stp;
-										fertgetstart1timer=0;
-										fertgetstart2timer=0;
-										fertgetstart3timer=0;
-										firstvalestsmsonof=1;
-										firstvalesmsonof=1;
-										nVaTr.ActRefreshOnDelay =0;
-										again1send=1;
-										again2send=1;
-										again3send=1;
-										again4send=1;
-										again5send=1;
-									//	again7send=1;
-										again8send=1;
-										again10send=0;
-										nVaTr.sendcheckagain=0;
-										if(refresh_filter_on_flag==1)
-										{
-										fertgetstart6timer=0;
-								//		again9send=1;
-										}
-										sprintf(textBuf,"$D,D,1,0,1,0,0,0,0\n\r ");
-			                            sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-										sAPI_UartWrite(SC_UART,textBuf, strlen(textBuf));
-	                                    nVaTr.sendremaintime=0;
-										valvetimercounter=0;
-										}
-
-								}
-							}
-						/*if(GiveCallToNumber != 0 ||
-								DelSMS != 0 ||
-								SendSMS != 0 ||
-								ReadSMS != 0 ||
-								callreceived != 0) */
-           //      #endif
-								if(nDripSettings.startcontrolt==1)
-							{
-								ReadDprevSettings();
-								sprintf(buf,"tstartra =%ld ",nDripSettings.tstartfrom );
-								sAPI_UartPrintf(buf);
-								sprintf(buf,"startra =%ld ",nDripSettings.startfrom );
-								sAPI_UartPrintf(buf);
-								nDripSettings.prvstartfrom=nDripSettings.startfrom;
-								sprintf(buf,"prvstartra =%ld ",nDripSettings.prvstartfrom );
-								sAPI_UartPrintf(buf);
-								nDripSettings.startfrom=nDripSettings.tstartfrom;
-								sprintf(buf,"tstartad =%ld ",nDripSettings.startfrom );
-								sAPI_UartPrintf(buf);
-								decide_sub_next(nDripSettings.startfrom);
-								sprintf(buf,"startwb =%ld ",nDripSettings.startfrom );
-								sAPI_UartPrintf(buf);
-								if(nDripSettings.decidefirst>nDripSettings.startfrom)
-								nDripSettings.startfrom=7;
-								WriteDprevSettings();
-								ReadDprevSettings();
-								sprintf(buf,"startra =%ld ",nDripSettings.startfrom );
-								sAPI_UartPrintf(buf);
-								STATE_SENDSMS=	STATE_STARTFROM_SMS;
-								SendSmsToAll = 1;
-								nDripSettings.startcontrolt=0;
-								nVaTr.REMTIM=0;
-							}
-#endif // dg_nsdkk
-			if (PlaySound == 1)
-			{
-				sprintf(buf, "HowManySoundToPlay%02d", HowManySoundToPlay);
-				sAPI_UartPrintf(buf);
-				sprintf(buf, "HowManySoundPlayed%02d", HowManySoundPlayed);
-				sAPI_UartPrintf(buf);
-				// if(HowManySoundToPlay != HowManySoundPlayed)
-				if (HowManySoundToPlay > HowManySoundPlayed)
-				{
-					PlaySoundVer++;
-					sAPI_UartPrintf("PlaySoundVer%02d", PlaySoundVer);
-
-					if (PlaySoundVer == 1)
-					{
-
-						sAPI_UartPrintf(buffer);
-					}
-					else if (PlaySoundVer == 2)
-					{
-						// if(sound_flag_ok==0)
-						if (austat == 0)
-						{
-							//		PlayAudio(HowManySound[HowManySoundPlayed]); //dg_nsdk
-							HowManySoundPlayed++;
-							PlaySoundVer = 0;
-						}
-						else
-							PlaySoundVer = 1;
-					}
-					else if (PlaySoundVer == 3)
-					{
-
-						sAPI_UartPrintf(buffer);
-					}
-					else if (PlaySoundVer == 4)
-					{
-
-						sAPI_UartPrintf(buffer);
-					}
-					else if (PlaySoundVer >= 3)
-					{
-						HowManySoundPlayed++;
-						PlaySoundVer = 0;
-						sprintf(buf, "HowManySoundPlayed:%02d", HowManySoundPlayed);
-						sAPI_UartPrintf(buf);
-					}
-				}
-				else
-				{
-					HowManySoundToPlay = HowManySoundPlayed = 0;
-					PlaySound = 0;
-					sAPI_UartPrintf("HowManySoundPlayed fail");
-				}
-			}
-			if (limitsmscount > limitsmsset && limitsmsonof == 1)
-			{
-				limitsmsflag = 1;
-			}
-			else
-				limitsmsflag = 0;
-
-			sAPI_GetRealTimeClock(&datetime);
-			/* if((onehour_time!=datetime.tm_hour) && s_nMSettings.m_Enter > 70)
-			{
-
-				onehour_time=datetime.tm_hour;
-				onehour_send_flag=1;
-				//sgetflag_2=1;
-				sAPI_UartPrintf("\n\r entry to onehour_time =1 line %d ",__LINE__);
-			} */
-			if (datetime.tm_sec != OnehrPrvSec)
-			{
-
-				OnehrPrvSec = datetime.tm_sec;
-				Onehr_sec_timer++;
-
-				/* if((Onehr_sec_timer>=3600) && s_nMSettings.m_Enter > 70)
-				{
-					Onehr_sec_timer=0;
-					onehour_send_flag=1;
-					//sgetflag_2=1;
-					sAPI_UartPrintf("\n\r entry to onehour_time =1 line %d ",__LINE__);
-				} */
-			}
-
-			if (PowerIsThere == 1 && AllSmsSendDone == 1 && CallModeOn == 0 && nMSettings.staticSMSOnOff == 1)
-			{
-				// checkpower=Check2Phase();
-				if (checkpower == 2)
-				{
-					if (nTimerSettings.AutoStIIOnOff == 0 || Mobile2Phs3Phase == 3) // dg_nsdk
-					{
-						StatusSMSDelay1 = 0;
-						SMS30MinStatus = 0;
-					}
-				}
-				StatusSMSDelay1++;
-				if (StatusSMSDelay1 >= 200)
-				{
-					StatusSMSDelay1 = 0;
-					StatusSMSDelay2++;
-					if (StatusSMSDelay2 >= 180)
-					{
-						SMS30MinStatus = 1;
-						sprintf(buf, "\n\rNow Sending 30 tm_min Status SMS\n\r");
-						sAPI_UartPrintf(buf);
-						SMS30MinStatusNumber = 0;
-						SMS30MinStatusDelay = 0;
-						StatusSMSDelay2 = 0;
-					}
-				}
-			}
-			else
-			{
-				StatusSMSDelay1 = 0;
-				StatusSMSDelay2 = 0;
-				SMS30MinStatus = 0;
-				SMS30MinStatusDelay = 0;
-			}
-			if (SMS30MinStatus == 1)
-			{
-				if (SMS30MinStatusDelay++ >= 15)
-				{
-					SMS30MinStatusDelay = 0;
-					sprintf(buf, "\n\r*******30 tm_min Status SMS SMS30MinStatusNumber = %d********\n\r", SMS30MinStatusNumber);
-					sAPI_UartPrintf(buf);
-					sprintf((char *)Status30MinPhNo, "0%s", SmsNumber[0]);
-					// StopTimer(&timer);
-					//	send_test_smsStatus(Status30MinPhNo); //dg_nsdk
-					// timer.timeoutPeriod = 300;
-					// timer.timerId = StartTimer(&timer);
-					// SMS30MinStatusNumber++;
-					// if(SMS30MinStatusNumber>=HowManyNumberFound)
-					//{
-					SMS30MinStatusNumber = 0;
-					SMS30MinStatus = 0;
-					sprintf(buf, "\n\rNow 30 tm_min Status SMS Sendng Completed\n\r");
-					sAPI_UartPrintf(buf);
-					//}
-				}
-			}
-			if (StaticSMSSend == 1)
-			{
-				if (StaticSMSDelay++ >= 15)
-				{
-					StaticSMSDelay = 0;
-					sprintf(buf, "\n\r*******Static SMS SMS30MinStatusNumber = %d********\n\r", SMS30MinStatusNumber);
-					sAPI_UartPrintf(buf);
-					if (strstr(SmsNumber[SMS30MinStatusNumber], "*") == 0)
-						sprintf((char *)Status30MinPhNo, "0%s", SmsNumber[SMS30MinStatusNumber]);
-					//	SendSMSStr(StaticSmsString,Status30MinPhNo); //dg_nsdk
-					SMS30MinStatusNumber++;
-					if (SMS30MinStatusNumber >= HowManyNumberFound)
-					{
-						SMS30MinStatusNumber = 0;
-						SMS30MinStatus = 0;
-						StaticSMSSend = 0;
-						sprintf(buf, "\n\rNow 30 tm_min Status SMS Sendng Completed\n\r");
-						sAPI_UartPrintf(buf);
-					}
-				}
-			}
-#if 0
-						if(nMSettings.VBFOnOff == 1&& Callreceiv == 0 )
-						{
-							IamCalling = 1;
-							if(PowerCondCall == 1&& nMSettings.pwrvfbOnOf==1 )
-							{
-								CallingBecError = 1;
-								PowerCondCall = 0;
-								PowerCondVoice = 1;
-							}
-							else if(nSTATE_MOTOR_SMS != STATE_NO_MOTOR_SMS && GCallingBecError != nSTATE_MOTOR_SMS)
-							{
-								GCallingBecError = nSTATE_MOTOR_SMS;
-								switch(nSTATE_MOTOR_SMS)
-								{
-									case STATE_MOTORON_SMS:
-										break;
-									case STATE_MOTOROF_SMS:
-										break;
-									case STATE_MOTOR_STARTER_TRIP_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_UPPERTANK_TRIP_SMS:
-										break;
-									case STATE_MOTOR_LOWERTANK_TRIP_SMS:
-                                       CallingBecError = 1;
-										break;
-									case STATE_MOTOR_DRYRUN_TRIP_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_CYCLIC_TRIP_SMS:
-										//CallingBecError = 1;
-										break;
-									case STATE_MOTOR_MAX_TRIP_SMS:
-										//CallingBecError = 1;
-										break;
-									case STATE_MOTOR_RTCOF1_TRIP_SMS:
-										//CallingBecError = 1;
-										break;
-									case STATE_MOTOR_RTCOF2_TRIP_SMS:
-										//CallingBecError = 1;
-										break;
-									case STATE_MOTOR_RTCOF3_TRIP_SMS:
-										//CallingBecError = 1;
-										break;
-									case STATE_MOTOR_TRIP_CURRENTSPP_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_TRIP_SPP_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_RTCOF4_TRIP_SMS:
-										//CallingBecError = 1;
-										break;
-									case STATE_MOTOR_TRIP_LOWVOLTAGE_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_TRIP_HIGHVOLTAGE_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_TRIP_OVERLOAD_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_TRIP_HIGHPRESS_SMS:
-										CallingBecError = 1;
-										break;
-									case STATE_MOTOR_TRIP_LOWPRESS_SMS:
-										CallingBecError = 1;
-										break;
-                                   default :
-									break;
-
-								}
-							}
-						}
-#endif
 			/*if(getdataflag==1 && ModemIsReady == 1)
 			{
 			sprintf(textBuf,"$G,M,%ld,1,1,%ld,%ld,%ld\n\r ",zonecom.getdtaid,zoneid[zonecom.getdtaid].ida1,zoneid[zonecom.getdtaid].ida2,zoneid[zonecom.getdtaid].ida3 );
@@ -9475,7 +8546,7 @@ else if(s_nMSettings.m_settings_count==10)
 																//if(on_data_M1 == 0)
 																	//sprintf(s_nlogtime[on_data_M1].Act_Mtr1_On,"ON=%02d:%02d:%02d",datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
 																sprintf(Buffer4,"%s,%02d:%02d:%02d",Buffer4,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-																writeonoffbuff();//Praveen Motor On																
+																//writeonoffbuff();//Praveen Motor On																
 																/*else
 																	
 																sprintf(s_nlogtime[on_data_M1].Act_Mtr1_On,"%s,N=%02d:%02d:%02d",s_nlogtime[on_data_M1].Act_Mtr1_On,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
@@ -11503,10 +10574,10 @@ else if(s_nMSettings.m_settings_count==10)
 												sprintf(buf,"\n\r WorkingOn3Phas = %01d\n\r",WorkingOn3Phas);
 												sAPI_UartPrintf(buf);
 												
-											//switch(nSTATE_MOTOR3_ON_SMS)
-											//{
-												//case STATE_MOTOR3ON_SMS:
-													//{
+												//switch(nSTATE_MOTOR3_ON_SMS)
+												//{
+													//case STATE_MOTOR3ON_SMS:
+														//{
 														
 														if(nSTATE_MOTOR3_ON_SMS==STATE_MOTOR3_ON_DEFAULT)
 														{
@@ -11888,1161 +10959,8 @@ else if(s_nMSettings.m_settings_count==10)
 														}
 														sprintf(Buffer3,"%s",Buffer6);
 										}
-
-										/* else if(STATE_SENDSMS != STATE_NO_SMS)
-										{
-											sprintf(buf,"reference");
-											sAPI_UartPrintf(buf);
-											switch(STATE_SENDSMS)
-											{
-												 case STATE_SMSON_SMS:
-												{
-													if(nMSettings.SMSOnOff == 1)
-														sprintf(Buffer1,"SMS ON");
-													else
-														sprintf(Buffer1,"SMS OFF");
-												}
-												break;
-												case STATE_STANDZON_SMS:
-												{
-
-														sprintf(Buffer1,"STANDALONE ZONE=%d ON",nDripSettings.stchangefrom);
-
-												}
-												break;
-												case STATE_LIMIT_SMSON_SMS:
-												{
-													if(limitsmsonof == 1)
-														sprintf(Buffer1,"SMS LIMIT ON");
-													else
-														sprintf(Buffer1,"SMS LIMIT OFF");
-												}
-												break;
-
-												case STATE_stSMSON_SMS:
-												{
-													if(nMSettings.staticSMSOnOff == 1)
-														sprintf(Buffer1,"STATICSMS ON");
-													else
-														sprintf(Buffer1,"STATICSMS OFF");
-												}
-												break;
-			                                     case STATE_canSMSON_SMS:
-												{
-													if(nMSettings.canSMSOnOff == 1)
-														sprintf(Buffer1,"DELAY TIME VALVE ON OFF FUNCTION ON");
-													else
-														sprintf(Buffer1,"DELAY TIME VALVE ON OFF FUNCTION OFF");
-												}
-												break;
-												case STATE_sampleSMSON_SMS:
-												{
-													if(nMSettings.sampleSMSOnOff == 1)
-														sprintf(Buffer1,"SAMPLE SMS ON");
-													else
-														sprintf(Buffer1,"SAMPLE SMS OFF");
-												}
-												break;
-												case STATE_dataSMSON_SMS:
-												{
-													if(nMSettings.dataSMSOnOff == 1)
-														sprintf(Buffer1,"DATA SMS ON");
-													else
-														sprintf(Buffer1,"DATA SMS OFF");
-												}
-												break;
-
-												case STATE_gethidesmson_SMS:
-												{
-													if(nMSettings.gethidesmsonoff == 1)
-														sprintf(Buffer1,"NAME SMS ON");
-													else
-														sprintf(Buffer1,"NAME SMS OFF");
-												}
-												break;
-												case STATE_SFB_SMS:
-												{
-													if(nMSettings.SfbOnOff == 1)
-														sprintf(Buffer1,"STARTER FEEDBACK ON");
-													else
-														sprintf(Buffer1,"STARTER FEEDBACK OFF");
-												}
-												break;
-												case STATE_PRESSURE_SMS:
-												{
-													if(nMSettings.PressureOnOff == 1)
-														sprintf(Buffer1,"PRESSURE SCAN ON");
-													else
-														sprintf(Buffer1,"PRESSURE SCAN OFF");
-
-												}
-												break;
-												case STATE_MANUALSWITCH_SMS:
-												{
-													if(nMSettings.ManualswitchOnOff == 1)
-														sprintf(Buffer1,"MANUALSWITCH SCAN ON");
-													else
-														sprintf(Buffer1,"MANUALSWITCH SCAN OFF");
-
-												}
-												break;
-												case STATE_TANK_SMS:
-												{
-													if(nMSettings.TankOnOff == 1)
-														sprintf(Buffer1,"TANK LEVEL SCAN ON");
-													else
-														sprintf(Buffer1,"TANK LEVEL SCAN OFF");
-
-												}
-												break;
-												case STATE_SUMP_SMS:
-												{
-													if(nMSettings.SumpOnOff == 1)
-														sprintf(Buffer1,"SUMP LEVEL SCAN ON");
-													else
-														sprintf(Buffer1,"SUMP LEVEL SCAN OFF");
-
-												}
-												break;
-												case STATE_SUMP_RST_SMS:
-												{
-													if(nMSettings.SumprstOnOff == 1)
-														sprintf(Buffer1,"SUMP RESTART ON");
-													else
-													if(nMSettings.SumprstOnOff == 0)
-														sprintf(Buffer1,"SUMP RESTART OFF");
-												}
-												break;
-												case STATE_DRYRUN_SMS:
-												{
-													if(nMSettings.DryRunOnOff == 1)
-														sprintf(Buffer1,"DRYRUN SCAN ON");
-													else
-														sprintf(Buffer1,"DRYRUN SCAN OFF");
-
-												}
-												break;
-												case STATE_SECONOF_SMS:
-												{
-													if(nMSettings.SecOnOf == 1)
-														sprintf(Buffer1,"SECURITY ON");
-													else
-														sprintf(Buffer1,"SECURITY OFF");
-
-												}
-												break;
-												case STATE_TARGET_SMS:
-												{
-													if(nMSettings.TargetOnOff == 1)
-														sprintf(Buffer1,"TARGET CALL ON");
-													else
-														sprintf(Buffer1,"TARGET CALL OFF");
-												}
-												break;
-												case STATE_PWRVFB_SMS:
-												{
-													if(nMSettings.pwrvfbOnOf== 1)
-														sprintf(Buffer1,"POWER VFB ON\n");
-													else
-														sprintf(Buffer1,"POWER VFB OFF\n");
-												}
-												break;
-
-												case STATE_VFB_SMS:
-												{
-													if(nMSettings.VBFOnOff== 1)
-														sprintf(Buffer1,"VOICE FEEDBACK ON");
-													else
-														sprintf(Buffer1,"VOICE FEEDBACK OFF");
-												}
-												break;
-												case STATE_ONDELAY_SMS:
-												{
-													sprintf(Buffer1,"ON DELAY = %02d:%02d:%02d",nTimerSettings.POnHr,nTimerSettings.POnMin,nTimerSettings.POnSec);
-												}
-												break;
-												case STATE_SDDELAY_SMS:
-												{
-													sprintf(Buffer1,"STAR DELTA DELAY = %02d:%02d:%02d",nTimerSettings.SDHr,nTimerSettings.SDMin,nTimerSettings.SDSec);
-												}
-												break;
-												case STATE_SFBDELAY_SMS:
-												{
-													sprintf(Buffer1,"STARTER FEEDBACK DELAY = %02d:%02d:%02d",nTimerSettings.SfbHr,nTimerSettings.SfbMin,nTimerSettings.SfbSec);
-												}
-												break;
-												case STATE_DRRSTONOF_SMS:
-												{
-													if(nTimerSettings.DrReOnOf == 1)
-														sprintf(Buffer1,"DRY RUN RESTART ON");
-													else
-														sprintf(Buffer1,"DRY RUN RESTART OFF");
-												}
-												break;
-												case STATE_DRRST_SMS:
-												{
-													sprintf(Buffer1,"DRY RUN RESTART TIME = %02d:%02d:%02d",nTimerSettings.DrReHr,nTimerSettings.DrReMin,nTimerSettings.DrReSec);
-												}
-												break;
-												case STATE_DRSCANONOF_SMS:
-												{
-													if(nTimerSettings.DrScOnOf == 1)
-														sprintf(Buffer1,"DRY RUN SCAN ON");
-													else
-														sprintf(Buffer1,"DRY RUN SCAN OFF");
-												}
-												break;
-												case STATE_DRSCAN_SMS:
-												{
-													sprintf(Buffer1,"DRY RUN SCAN TIME = %02d:%02d:%02d",nTimerSettings.DrScHr,nTimerSettings.DrScMin,nTimerSettings.DrScSec);
-												}
-												break;
-												case STATE_MAXTIMONOF_SMS:
-												{
-													if(nTimerSettings.MaxRnOnOf == 1)
-														sprintf(Buffer1,"MAXIMUM RUN TIMER ON");
-													else
-														sprintf(Buffer1,"MAXIMUM RUN TIMER OFF");
-												}
-												break;
-												case STATE_MAXTIM_SMS:
-												{
-													sprintf(Buffer1,"MAXIMUM RUN TIMER = %02d:%02d:%02d",nTimerSettings.MaxRnHr,nTimerSettings.MaxRnMin,nTimerSettings.MaxRnSec);
-												}
-												break;
-												case STATE_CYCLICONOF_SMS:
-												{
-													if(nTimerSettings.CycLicOnOf == 1)
-														sprintf(Buffer1,"CYCLIC TIMER ON\n");
-													else
-														sprintf(Buffer1,"CYCLIC TIMER OFF\n");
-													sprintf(Buffer1,"%sCYCLIC ON TIMER = %02dH:%02dM\n",Buffer1,nTimerSettings.CycLicOnHr,nTimerSettings.CycLicOnMin);
-
-													sprintf(Buffer1,"%sCYCLIC OF TIMER = %02dH:%02dM",Buffer1,nTimerSettings.CycLicOfHr,nTimerSettings.CycLicOfMin);
-												}
-												break;
-												case STATE_FOTA_SMS:
-												{
-													sprintf(Buffer1,"FOTA UPDATION FAILED"); 
- 													
-												}
-												break;
-												case STATE_MQTT_STATUS_SMS:
-												{  
-												    if(MqttInitStatus==1)
-													sprintf(Buffer1,"MQTT CONNECTED"); 
-													else
-													sprintf(Buffer1,"MQTT DISCONNECTED"); 
- 													
-												}
-												break;
-												case STATE_FERTCYCLICONOF_SMS:
-												{
-													again1send=1;
-													again2send=1;
-													again3send=1;
-													again4send=1;
-
-													sprintf(Buffer1,"FERTCYCLIC ON TIMER = %02dM:%02dS\n",nTimerSettings.fertCycLicOnMin,nTimerSettings.fertCycLicOnSec);
-
-													sprintf(Buffer1,"%sFERTCYCLIC OF TIMER = %02dM:%02dS",Buffer1,nTimerSettings.fertCycLicOfMin,nTimerSettings.fertCycLicOfSec);
-												}
-												break;
-											
-												case STATE_VALVEONOF_SMS:		//Valve control mode on/off time sms
-												{
-													if(nDripSettings.driponof==1)
-													{
-													sprintf(Buffer1,"VALVE CONTROL MODE ON");
-													}
-													else
-													sprintf(Buffer1,"VALVE CONTROL MODE OFF");
-
-												}
-												break;
-												case STATE_DRIPGAPDAYONOF_SMS:		//Valve DAY SKIP mode on/off time sms
-												{
-													if(nDripSettings.dripgapdayonof==1)
-													{
-													sprintf(Buffer1,"VALVE DAY SKIP MODE ON");
-													}
-													else
-													sprintf(Buffer1,"VALVE DAY SKIP MODE OFF");
-
-												}
-												break;
-												case STATE_GAPDAYS_SMS:		//Valve DAY SKIP mode on/off time sms
-												{
-													sprintf(Buffer1,"SET NO. OF SKIP DAYS=%03d",nDripSettings.dripgapdays);
-
-												}
-												break;
-												case STATE_SKIPDAYCOUNT_SMS:		//Valve DAY SKIP mode on/off time sms
-												{
-													sprintf(Buffer1," DRIP CYCLE COUNT=%03d\nDRIP DAY COUNT=%03d \nSKIP DAY COUNT= %03d\nSET SKIP DAYS=%03d\n",dripcyclecount,dripcycledate,nDripSettings.dripgapdaycount,nDripSettings.dripgapdays);
-												}
-												break;
-												case STATE_VALVEVIEW_SMS:		//Valve No: on/off sms send
-											{
-												long runvtim;
-												float pervtim;
-												revalue = zone[nVaTr.Currentvalve].stoptime;
-												reTpHr = revalue/3600;
-												revalue = revalue%3600;
-												reTpMin = revalue/60;
-												revalue = revalue%60;
-												reTpSec = revalue;
-                                                pervtim = ((zoneonof[nVaTr.programselection].timerpercent)*0.01);
-							                    runvtim=((zone[nDripSettings.changeinstp].actthr*3600)+(zone[nDripSettings.changeinstp].acttmin*60));
-							                    runvtim = (long)(pervtim*runvtim);
-
-												sprintf(Buffer1," %02d044 \n",(datetime.tm_sec+2));
-												sprintf(Buffer1,"%sP%d\nZONE=%03d CLOSE\nZONE=%03d OPEN\n",Buffer1,nVaTr.programselection,nVaTr.Currentvalve,nDripSettings.changeinstp);
-												if((zoneonof[nVaTr.programselection].flowmodeonof == 1)||(zoneonof[nVaTr.programselection].flowonof == 1))
-												{
-													sprintf(Buffer1,"%sFLO=%d L\n",Buffer1,zone[nVaTr.Currentvalve].zstopflowrate);
-                                    				if((zoneonof[nVaTr.programselection].flowmodeonof == 1))
-													sprintf(Buffer1,"%sRFLO=%d L\n",Buffer1,zone[nDripSettings.stp].actflowrate);//
-												}
-												sprintf(Buffer1,"%sFR=%03.1f L\n",Buffer1,zone[nVaTr.Currentvalve].runflowrate);//
-
-                								if((zoneonof[nVaTr.programselection].moisturemodeonof == 1)||(zoneonof[nVaTr.programselection].moistureonof == 1))
-                                                sprintf(Buffer1,"%sMOIS1=%d MOIS2=%d PERCENT\n",Buffer1,zone[nDripSettings.stp].stopmoisture1,zone[nDripSettings.stp].stopmoisture2);
-
-												sprintf(Buffer1,"%sTIM=%02d:%02d:%02d\n",Buffer1,reTpHr,reTpMin,reTpSec);
-												revalue = runvtim;
-												reTpHr = revalue/3600;
-												revalue = revalue%3600;
-												reTpMin = revalue/60;
-												revalue = revalue%60;
-												reTpSec = revalue;
-                                                if(zoneonof[nVaTr.programselection].flowmodeonof == 0)
-												sprintf(Buffer1,"%sRTIM=%02d:%02d:%02d",Buffer1,reTpHr,reTpMin,reTpSec);
-
-											}
-												break;
-												case STATE_FIRST_VALVEVIEW_SMS:		//First Valve No: on/off sms send
-											{
-												int tp2;
-												revalue = nVaTr.REMTIM;
-												if(revalue<0)
-								                  revalue=0;
-
-												reTpHr = revalue/3600;
-												revalue = revalue%3600;
-												reTpMin = revalue/60;
-												revalue = revalue%60;
-												reTpSec = revalue;
-
-												sprintf(Buffer1," %02d045 \n",(datetime.tm_sec+2));
-												sprintf(Buffer1,"%sP%1d ZONE=%03d OPEN\n",Buffer1,nVaTr.programselection,nDripSettings.stp);
-											    sprintf(Buffer1,"%sRTIM=%02d:%02d:%02d\n",Buffer1,reTpHr,reTpMin,reTpSec);
-												if((zoneonof[nVaTr.programselection].flowmodeonof == 1))
-												{
-                                                tp2	= zone[nDripSettings.stp].remfflowrate;
-												sprintf(Buffer1,"%sRFLO=%d L\n",Buffer1,tp2);
-												}
-												sprintf(Buffer1,"%sFR=%03.1f L\n",Buffer1,zone[nDripSettings.stp].runflowrate);//
-
-											}
-												break;
-												case STATE_STVALVEVIEW_SMS:		//Valve No: on/off sms send
-											{
-												revalue = nVaTr.prvstruntime;
-												reTpHr = revalue/3600;
-												revalue = revalue%3600;
-												reTpMin = revalue/60;
-												revalue = revalue%60;
-												reTpSec = revalue;
-
-												sprintf(Buffer1," %02d064 \n",(datetime.tm_sec+2));
-												sprintf(Buffer1,"%sP%d\nSTANDALONE ZONE=%03d CLOSE\nSTANDALONE ZONE=%03d OPEN\n",Buffer1,nVaTr.programselection,nDripSettings.changeinststp,nVaTr.Currentstvalve);
-												sprintf(Buffer1,"%sTIM=%02d:%02d:%02d\n",Buffer1,reTpHr,reTpMin,reTpSec);
-												sprintf(Buffer1,"%sFLO=%d\n",Buffer1,nVaTr.prvstrunflow);
-												sprintf(Buffer1,"%sFR=%03.1f L\n",Buffer1,zone[nDripSettings.stp].runflowrate);//
-
-											}
-												break;
-
-												case STATE_FIRST_STVALVEVIEW_SMS:		//First Valve No: on/off sms send
-												{
-
-												sprintf(Buffer1," %02d063\n",(datetime.tm_sec+2));
-												sprintf(Buffer1,"%sP%1d\nSTANDALONE ZONE=%03d OPEN\n",Buffer1,nVaTr.programselection,nDripSettings.ststp);
-											    //sprintf(Buffer1,"%sRemaining time= %02d:%02d:%02d\n",Buffer1,reTpHr,reTpMin,reTpSec);
-												sprintf(Buffer1,"%sFR=%03.1f L\n",Buffer1,zone[nDripSettings.stp].runflowrate);//
-
-												}
-												break;
-
-												case STATE_CYCLE_COMPLETED_SMS:		//First Valve No: on/off sms send
-												{
-													sprintf(Buffer1,"ZONE CYCLE COMPLETED AND  NEXT ZONE CYCLE STARTED\n DRIP CYCLE COUNT=%03d\n DRIP DAY COUNT=%03d\nSKIP DAY COUNT=%d\nSET SKIP DAYS=%03d\n ",dripcyclecount,dripcycledate,nDripSettings.dripgapdaycount,nDripSettings.dripgapdays);
-												}
-												break;
-												case STATE_VALVESKIPVIEW_SMS:		//Valve No: SKIPPED sms send
-												{
-													sprintf(Buffer1," %02d114\n",(datetime.tm_sec+2));
-													sprintf(Buffer1,"%sZONE=%03d SKIPPED BECAUSE OF NO FEEDBACK \n ",Buffer1,nVaTr.Skipvalve);
-												}
-												break;
-												case STATE_FERTON_SMS:
-												{
-													removeniagara=1;
-													sprintf(Buffer1," %02d046\n",(datetime.tm_sec+2));
-													if(nVaTr.fertv1Smsonof == 1)
-														sprintf(Buffer1,"%sFERT1 ON\n",Buffer1);
-													else
-													{
-													if(nMoTr.ActlF1RunTimer>0)
-													{
-													value = nMoTr.ActlF1RunTimer;
-		                                            TpHr = value/3600;
-		                                            value = value%3600;
-		                                            TpMin = value/60;
-		                                            value = value%60;
-		                                            TpSec = value;
-													sprintf(Buffer1,"%sFERT1 OFF F1T=%02d:%02d:%02d\n",Buffer1,TpHr,TpMin,TpSec);
-
-													}
-													else
-													sprintf(Buffer1,"%sFERT1 OFF\n",Buffer1);
-													}
-													if(nVaTr.fertv2Smsonof == 1)
-														sprintf(Buffer1,"%sFERT2 ON\n",Buffer1);
-													else
-													{
-													if(nMoTr.ActlF2RunTimer>0)
-													{
-													value = nMoTr.ActlF2RunTimer;
-		                                            TpHr = value/3600;
-		                                            value = value%3600;
-		                                            TpMin = value/60;
-		                                            value = value%60;
-		                                            TpSec = value;
-													sprintf(Buffer1,"%sFERT2 OFF F2T=%02d:%02d:%02d\n",Buffer1,TpHr,TpMin,TpSec);
-													}
-													else
-													sprintf(Buffer1,"%sFERT2 OFF\n",Buffer1);
-													}
-													if(nVaTr.fertv3Smsonof == 1)
-														sprintf(Buffer1,"%sFERT3 ON\n ",Buffer1);
-													else
-													{
-													if(nMoTr.ActlF3RunTimer>0)
-													{
-													value = nMoTr.ActlF3RunTimer;
-		                                            TpHr = value/3600;
-		                                            value = value%3600;
-		                                            TpMin = value/60;
-		                                            value = value%60;
-		                                            TpSec = value;
-													sprintf(Buffer1,"%sFERT3 OFF F3T=%02d:%02d:%02d\n",Buffer1,TpHr,TpMin,TpSec);
-													}
-													else
-													sprintf(Buffer1,"%sFERT3 OFF\n",Buffer1);
-													}if(nVaTr.fertv4Smsonof == 1)
-														sprintf(Buffer1,"%sFERT4 ON ",Buffer1);
-													else
-													{
-													if(nMoTr.ActlF4RunTimer>0)
-													{
-													value = nMoTr.ActlF4RunTimer;
-		                                            TpHr = value/3600;
-		                                            value = value%3600;
-		                                            TpMin = value/60;
-		                                            value = value%60;
-		                                            TpSec = value;
-													sprintf(Buffer1,"%sFERT4 OFF F4T=%02d:%02d:%02d\n",Buffer1,TpHr,TpMin,TpSec);
-													}
-													else
-													sprintf(Buffer1,"%sFERT4 OFF\n",Buffer1);
-													}
-													}
-												break;
-
-												case STATE_REFRESH1ONOF_SMS:
-												{
-													if(nVaTr.refreshv1Smson == 1)
-														sprintf(Buffer1,"FILTER1 ON\n");
-													else if(nVaTr.refreshv1Smsof == 1)
-														sprintf(Buffer1,"FILTER1 OFF\n");
-												}
-												break;
-
-												case STATE_REFRESH2ONOF_SMS:
-												{
-													if(nVaTr.refreshv2Smson == 1)
-														sprintf(Buffer1,"FILTER2 ON\n");
-													else if(nVaTr.refreshv2Smsof == 1)
-														sprintf(Buffer1,"FILTER2 OFF\n");
-												}
-												break;
-
-												case STATE_REFRESH3ONOF_SMS:
-												{
-													if(nVaTr.refreshv3Smson == 1)
-														sprintf(Buffer1,"FILTER3 ON\n");
-													else if(nVaTr.refreshv3Smsof == 1)
-														sprintf(Buffer1,"FILTER3 OFF\n");
-												}
-												break;
-
-												case STATE_REFRESH4ONOF_SMS:
-												{
-													if(nVaTr.refreshv4Smson == 1)
-														sprintf(Buffer1,"FILTER4 ON\n",Buffer1);
-													else if(nVaTr.refreshv4Smsof == 1)
-														sprintf(Buffer1,"FILTER4 OFF\n",Buffer1);
-												}
-												break;
-
-
-												case STATE_ENTERDRIPSETON_SMS:		//Drip password on time sms
-												{
-													if(nDripSettings.entersetting==1)
-													{
-													sprintf(Buffer1,"DRIP SETTING MODE ON ");
-													}
-													else
-													sprintf(Buffer1,"DRIP SETTING MODE OFF ");
-
-												}
-												break;
-												case STATE_STARTFROM_SMS:		//valve start from on time sms
-												{
-													sprintf(Buffer1," SET VALVE START FROM= %03d\nPREVIOUS SET VALVE START FROM= %03d\nSET FIRST VALVE = %03d\nSET LAST VALVE = %03d\n",nDripSettings.startfrom,nDripSettings.prvstartfrom,nDripSettings.decidefirst,nDripSettings.decidelast);
-
-												}
-												break;
-												case STATE_CHANGEFROM_SMS:		//valve start from on time sms
-												{
-													if(zone[nDripSettings.changefrom].actthr>0||zone[nDripSettings.changefrom].acttmin>0)
-													sprintf(Buffer1," SET ZONE CHANGE FROM= %03d\n",nDripSettings.changefrom);
-													else
-													sprintf(Buffer1," CHANGE FROM ZONE TIME IS ZERO ");
-
-
-												}
-												break;
-												case STATE_VLIMITSMSSET_SMS:		//valve start from on time sms
-												{
-													sprintf(Buffer1,"V49 SET SMS LIMIT = %03d\n",limitsmsset);
-													if(limitsmsonof == 1)
-														sprintf(Buffer1,"%sSMS LIMIT ON\n",Buffer1);
-													else
-														sprintf(Buffer1,"%sSMS LIMIT OFF\n",Buffer1);
-
-
-												}
-												break;
-
-												case STATE_LIMITSMSSET_SMS:		//valve start from on time sms
-												{
-													sprintf(Buffer1,"SET SMS LIMIT = %03d\n",limitsmsset);
-													if(limitsmsonof == 1)
-														sprintf(Buffer1,"%sSMS LIMIT ON\n",Buffer1);
-													else
-														sprintf(Buffer1,"%sSMS LIMIT OFF\n",Buffer1);
-
-
-												}
-												break;
-												case STATE_DECIDELAST_SMS:		//valve start from on time sms
-												{
-		//									//sprintf(Buffer1,"ZONE START FROM= %03d\nPREVIOUS SET ZONE START FROM= %03d\nSET FIRST VALVE = %03d\nSET LAST VALVE = %03d",nDripSettings.startfrom,nDripSettings.prvstartfrom,nDripSettings.decidefirst,nDripSettings.decidelast);
-													sprintf(Buffer1,"ZONE START FROM= %03d\nSET FB LAST VALVE = %03d\nSET LAST VALVE = %03d",nDripSettings.startfrom,nDripSettings.decidefblast,nDripSettings.decidelast);
-
-												}
-												break;
-
-												case STATE_FERTSKIPGROUPDETAILS_SMS:		//valve start from on time sms
-												{
-													sprintf(Buffer1,"SET1 FERTILIZER SKIP FIRST AND LAST= %03d,%03d\nSET2 FERTILIZER SKIP FIRST AND LAST= %03d,%03d\nSET3 FERTILIZER SKIP FIRST AND LAST = %03d,%03d\n",nDripSettings.fertskipfirst1,nDripSettings.fertskiplast1,nDripSettings.fertskipfirst2,nDripSettings.fertskiplast2,nDripSettings.fertskipfirst3,nDripSettings.fertskiplast3);
-
-												}
-												break;
-												case STATE_FERTSKIPDETAILS_SMS:		//valve start from on time sms
-												{
-													sprintf(Buffer1,"FERTILIZER SKIP1= %03d\nFERTILIZER SKIP2= %03d\nFERTILIZER SKIP3= %03d\nFERTILIZER SKIP4= %03d\nFERTILIZER SKIP5= %03d\nFERTILIZER SKIP6= %03d\nFERTILIZER SKIP7= %03d\nFERTILIZER SKIP8= %03d\n",nDripSettings.fertskip1,nDripSettings.fertskip2,nDripSettings.fertskip3,nDripSettings.fertskip4,nDripSettings.fertskip5,nDripSettings.fertskip6,nDripSettings.fertskip7,nDripSettings.fertskip8);
-
-												}
-												break;
-												case STATE_DECIDEFIRST_SMS:		//valve start from on time sms
-												{
-													sprintf(Buffer1," SET VALVE START FROM= %03d\nPREVIOUS SET VALVE START FROM= %03d\nSET FIRST VALVE = %03d\nSET LAST VALVE = %03d\n",nDripSettings.startfrom,nDripSettings.prvstartfrom,nDripSettings.decidefirst,nDripSettings.decidelast);;
-
-												}
-												break;
-												case STATE_CYCRESTARTONOF_SMS:
-												{
-													if(nVaTr.cycrestartonof==1)
-													{
-													sprintf(Buffer1,"VALVE CYCLIC RESTART ON");
-													}
-													else
-													sprintf(Buffer1,"VALVE CYCLIC RESTART OFF");
-
-												}
-												break;
-												case STATE_QUERESTARTONOF_SMS:
-												{
-													if(nVaTr.querestartonof==1)
-													{
-													sprintf(Buffer1,"PROGRAM QUE CYCLIC RESTART ON");
-													}
-													else
-													sprintf(Buffer1,"PROGRAM QUE CYCLIC RESTART OFF");
-
-												}
-												break;
-												case STATE_CALFLOWONOF_SMS:
-												{
-													if(nVaTr.calflowrateonof==1)
-													{
-													sprintf(Buffer1,"CACULATED FLOWRATE SET ON");
-													}
-													else
-													sprintf(Buffer1,"CACULATED FLOWRATE SET OFF");
-
-												}
-												break;
-
-
-												case STATE_VALFBONOF_SMS:
-												{
-													if(nVaTr.valvefeedbackonof==1)
-													{
-													sprintf(Buffer1,"VALVE FEEDBACK CHECK ON");
-													}
-													else
-													sprintf(Buffer1,"VALVE FEEDBACK CHECK OFF");
-
-												}
-												break;
-												case STATE_DELVALFBONOF_SMS:
-												{
-													if(nVaTr.delvalvefeedbackonof==1)
-													{
-													sprintf(Buffer1,"DELAY VALVE FEEDBACK CHECK ON");
-													}
-													else
-													sprintf(Buffer1,"DELAY VALVE FEEDBACK CHECK OFF");
-
-												}
-												break;
-												case STATE_VALFBKTIM_SMS:
-												{
-													sprintf(Buffer1,"VALVE FEEDBACK CHECK TIME = %02d:%02d:%02d",nVaTr.valvefbkTimHr,nVaTr.valvefbkTimMin,nVaTr.valvefbkTimSec);
-												}
-												break;
-												case STATE_REFRESHONOF_SMS:
-												{
-													if(nVaTr.refreshvalveonof==1)
-													{
-													sprintf(Buffer1,"VALVE REFRESH CONTROL ON");
-													}
-													else
-													sprintf(Buffer1,"VALVE REFRESH CONTROL OFF");
-												}
-												break;
-												case STATE_VREFRSHTIMON_SMS:
-												{
-													sprintf(Buffer1,"REF V1 ON TIM=%02d:%02d",nVaTr.RefreshTimonHr1,nVaTr.RefreshTimonMin1);
-													sprintf(Buffer1,"%s\nREF V2 ON TIM=%02d:%02d",Buffer1,nVaTr.RefreshTimonHr2,nVaTr.RefreshTimonMin2);
-													sprintf(Buffer1,"%s\nREF V3 ON TIM=%02d:%02d",Buffer1,nVaTr.RefreshTimonHr3,nVaTr.RefreshTimonMin3);
-													sprintf(Buffer1,"%s\nREF V4 ON TIM=%02d:%02d",Buffer1,nVaTr.RefreshTimonHr4,nVaTr.RefreshTimonMin4);
-
-												}
-												break;
-												case STATE_VREFRSHTIMOF_SMS:
-												{
-													sprintf(Buffer1,"VALVE REFRESH OFF TIME = %02d:%02d:%02d",nVaTr.RefreshTimofHr,nVaTr.RefreshTimofMin,nVaTr.RefreshTimofSec);
-												}
-												break;
-												case STATE_RTCONOF_SMS:
-												{
-													if(nTimerSettings.RTCOnOf == 1)
-														sprintf(Buffer1,"REAL TIME CLOCK ON");
-													else
-														sprintf(Buffer1,"REAL TIME CLOCK OFF");
-												}
-												break;
-												case STATE_RTCTIMON1_SMS:
-												{
-													sprintf(Buffer1,"RTC1 ON= %02dH:%02dM\n",nTimerSettings.RTCOnHr[1],nTimerSettings.RTCOnMin[1]);
-
-													sprintf(Buffer1,"%sRTC1 OFF= %02dH:%02dM",Buffer1,nTimerSettings.RTCOfHr[1],nTimerSettings.RTCOfMin[1]);
-												}
-												break;
-												case STATE_RTCTIMON2_SMS:
-												{
-													sprintf(Buffer1,"RTC2 ON= %02dH:%02dM\n",nTimerSettings.RTCOnHr[2],nTimerSettings.RTCOnMin[2]);
-
-													sprintf(Buffer1,"%sRTC2 OFF= %02dH:%02dM",Buffer1,nTimerSettings.RTCOfHr[2],nTimerSettings.RTCOfMin[2]);
-												}
-												break;
-												case STATE_RTCTIMON3_SMS:
-												{
-													sprintf(Buffer1,"RTC3 ON= %02dH:%02dM\n",nTimerSettings.RTCOnHr[3],nTimerSettings.RTCOnMin[3]);
-
-													sprintf(Buffer1,"%sRTC3 OFF= %02dH:%02dM",Buffer1,nTimerSettings.RTCOfHr[3],nTimerSettings.RTCOfMin[3]);
-												}
-												break;
-												case STATE_RTCTIMON4_SMS:
-												{
-													sprintf(Buffer1,"RTC4 ON= %02dH:%02dM\n",nTimerSettings.RTCOnHr[4],nTimerSettings.RTCOnMin[4]);
-
-													sprintf(Buffer1,"%sRTC4 OFF= %02dH:%02dM",Buffer1,nTimerSettings.RTCOfHr[4],nTimerSettings.RTCOfMin[4]);
-												}
-												break;
-												 case STATE_DATETIME_SMS:
-												{
-													sAPI_GetRealTimeClock(&datetime);
-													sprintf(Buffer1,"DATE=%02d/%02d/%04d \n TIME=%02d:%02d:%02d \n STORED 4G AG4 BOD PCGv%s",datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour, datetime.tm_min, datetime.tm_sec,Version);//DSV6.3F
-												}
-												break; 
-												case STATE_PROGRAMSEL_SMS:
-												{
-													if(nVaTr.programselection==1)
-													sprintf(Buffer1,"DRIP PROGRAM 1 SELECTED ");
-													else if(nVaTr.programselection==2)
-													sprintf(Buffer1,"DRIP PROGRAM 2 SELECTED ");
-													else if(nVaTr.programselection==3)
-													sprintf(Buffer1,"DRIP PROGRAM 3 SELECTED ");
-													else if(nVaTr.programselection==4)
-													sprintf(Buffer1,"DRIP PROGRAM 4 SELECTED ");
-													else
-													sprintf(Buffer1,"DRIP PROGRAM 1 SELECTED ");
-												}
-												break;
-												case STATE_SCRDLONOF_SMS:
-												{
-													if(nTimerSettings.ScrDlOnOff == 1)
-														sprintf(Buffer1,"SCR TIMER ON");
-													else
-														sprintf(Buffer1,"SCR TIMER OFF");
-
-												}
-												break;
-												case STATE_POSCRDLONOF_SMS:
-												{
-													if(nTimerSettings.PoScrDlOnOff == 1)
-														sprintf(Buffer1,"SCR DELAY TIMER ON");
-													else
-														sprintf(Buffer1,"SCR DELAY TIMER OFF");
-
-												}
-												break;
-												case STATE_SCRDEL_SMS:
-												{
-													sprintf(Buffer1,"SCR TIMER  = %02d:%02d:%02d",nTimerSettings.ScrDlHr,nTimerSettings.ScrDlMin,nTimerSettings.ScrDlSec);
-												}
-												break;
-												case STATE_POSCRDEL_SMS:
-												{
-													sprintf(Buffer1,"SCR TIMER  = %02d:%02d:%02d",nTimerSettings.PoScrDlHr,nTimerSettings.PoScrDlMin,nTimerSettings.PoScrDlSec);
-												}
-												break;
-												case STATE_LOWVOLTONOFF_SMS:
-												{
-													if(nTimerSettings.LowVoltOnOff == 1)
-														sprintf(Buffer1,"LOW VOLTAGE SCAN ON");
-													else
-														sprintf(Buffer1,"LOW VOLTAGE SCAN OFF");
-
-												}
-												break;
-												case STATE_LOWVOLTII_SMS:
-												{
-													sprintf(Buffer1,"LOW VOLTAGE TRIP FOR 2 PHASE = %03d",nTimerSettings.LowVoltII);
-												}
-												break;
-												case STATE_LOWVOLTIII_SMS:
-												{
-													sprintf(Buffer1,"LOW VOLTAGE TRIP FOR 3 PHASE = %03d",nTimerSettings.LowVoltIII);
-												}
-												break;
-												case STATE_HIGHVOLTONOFF_SMS:
-												{
-													if(nTimerSettings.HighVoltOnOff == 1)
-														sprintf(Buffer1,"HIGH VOLTAGE SCAN ON");
-													else
-														sprintf(Buffer1,"HIGH VOLTAGE SCAN OFF");
-
-												}
-												break;
-												case STATE_HIGHVOLTII_SMS:
-												{
-													sprintf(Buffer1,"HIGH VOLTAGE TRIP FOR 2 PHASE = %03d",nTimerSettings.HighVoltII);
-												}
-												break;
-												case STATE_HIGHVOLTIII_SMS:
-												{
-													sprintf(Buffer1,"HIGH VOLTAGE TRIP FOR 3 PHASE = %03d",nTimerSettings.HighVoltIII);
-												}
-												break;
-												case STATE_IMBVOLT_SMS:
-												{
-													sprintf(Buffer1,"IMBALANCE VOLTAGE = %03d",nTimerSettings.ImbVolt);
-												}
-												break;
-												case STATE_PFCVOLT_SMS:
-												{
-													sprintf(Buffer1,"SET PFC VOLTAGE = %03d",nTimerSettings.pfcvolt);
-												}
-												break;
-												case STATE_REVPHASE_SMS:
-												{
-													if(nTimerSettings.RvePhOnoff == 1)
-														sprintf(Buffer1,"REVERSE PHASE SCAN ON");
-													else
-														sprintf(Buffer1,"REVERSE PHASE SCAN OFF");
-
-												}
-												break;
-												case STATE_CURSPP_SMS:
-												{
-													if(nTimerSettings.CurSppOnOff == 1)
-														sprintf(Buffer1,"CURRENT SPP SCAN ON");
-													else
-														sprintf(Buffer1,"CURRENT SPP SCAN OFF");
-
-												}
-												break;
-												case STATE_SPP_SMS:
-												{
-													if(nTimerSettings.SppOnoff == 1)
-														sprintf(Buffer1,"VOLTAGE SENSING SPP ON");
-													else
-														sprintf(Buffer1,"VOLTAGE SENSING SPP OFF");
-
-												}
-												break;
-												case STATE_CALFLOWII_SMS:
-												{
-													//FloatroString1Dig(TpStr,nTimerSettings.DrAmpsII);
-													sprintf(Buffer1,"CALCULATED FLOW SET FOR 2 PHASE = %03.01f",nTimerSettings.calflow2);
-												}
-												break;
-												case STATE_CALFLOWIII_SMS:
-												{
-													//FloatroString1Dig(TpStr,nTimerSettings.DrAmpsII);
-													sprintf(Buffer1,"CALCULATED FLOW SET FOR 3 PHASE = %03.01f",nTimerSettings.calflow3);
-												}
-												break;
-												case STATE_DRAMPII_SMS:
-												{
-													//FloatroString1Dig(TpStr,nTimerSettings.DrAmpsII);
-													sprintf(Buffer1,"DRY RUN AMPS FOR 2 PHASE = %03.01f",nTimerSettings.DrAmpsII);
-												}
-												break;
-												case STATE_DRAMPIII_SMS:
-												{
-												    //FloatroString1Dig(TpStr,nTimerSettings.DrAmpsIII);
-													sprintf(Buffer1,"DRY RUN AMPS FOR 3 PHASE = %03.01f",nTimerSettings.DrAmpsIII);
-												}
-												break;
-												case STATE_OLINOFF_SMS:
-												{
-													if(nTimerSettings.OlOnOff == 1)
-														sprintf(Buffer1,"OVER LOAD SCAN ON");
-													else
-														sprintf(Buffer1,"OVER LOAD SCAN OFF");
-
-												}
-												break;
-                                                case STATE_LOWPRESSONOF_SMS:
-												{
-													if(nTimerSettings.lowpressOnOff == 1)
-														sprintf(Buffer1,"LOW PRESSURE SCAN ON");
-													else
-														sprintf(Buffer1,"LOW PRESSURE SCAN OFF");
-
-												}
-												break;
-												case STATE_HIGHPRESSONOF_SMS:
-												{
-													if(nTimerSettings.highpressOnOff == 1)
-														sprintf(Buffer1,"HIGH PRESSURE SCAN ON");
-													else
-														sprintf(Buffer1,"HIGH PRESSURE SCAN OFF");
-
-												}
-												break;
-												case STATE_LOWPRESS_SMS:
-												{
-												 //FloatroString1Dig(TpStr,nTimerSettings.OlAmpsII);
-													sprintf(Buffer1,"SET LOW PRESSURE = %02.01f",nTimerSettings.lowpress);
-												}
-												break;
-                                                case STATE_HIGHPRESS_SMS:
-												{
-												 //FloatroString1Di g(TpStr,nTimerSettings.OlAmpsII);
-													sprintf(Buffer1,"SET HIGH PRESSURE = %02.01f",nTimerSettings.highpress);
-												}
-												break;
-												case STATE_OLAMPSII_SMS:
-												{
-												 //FloatroString1Dig(TpStr,nTimerSettings.OlAmpsII);
-													sprintf(Buffer1,"OVER LOAD AMPS FOR 2 PHASE = %03.01f",nTimerSettings.OlAmpsII);
-												}
-												break;
-												case STATE_OLAMPSIII_SMS:
-												{
-												    //FloatroString1Dig(TpStr,nTimerSettings.OlAmpsIII);
-													sprintf(Buffer1,"OVER LOAD AMPS FOR 3 PHASE = %03.01f",nTimerSettings.OlAmpsIII);
-												}
-												break;
-												case STATE_OLSCAN_SMS:
-												{
-													sprintf(Buffer1,"OVER LOAD SCAN TIME = %02d:%02d:%02d",nTimerSettings.OlScanHr,nTimerSettings.OlScanMin,nTimerSettings.OlScanSec);
-
-												}
-												break;
-												case STATE_AUTOSTII_SMS:
-												{
-													if(nTimerSettings.AutoStIIOnOff == 1)
-														sprintf(Buffer1,"II PHASE ON");
-													else
-														sprintf(Buffer1,"II PHASE OFF");
-
-												}
-												break;
-												case STATE_AUTOSTIII_SMS:
-												{
-													if(nTimerSettings.AutoStIIIOnOff == 1)
-														sprintf(Buffer1,"MOBILE SET 3 PHASE ON ");
-													else
-														sprintf(Buffer1,"MOBILE SET 3 PHASE OFF");
-
-												}
-												break;
-												case STATE_AUTOOLDRRST_SMS:
-												{
-													if(nTimerSettings.AutoOlDrRstIIOnOff == 1)
-														sprintf(Buffer1,"OVER LOAD RESET ON");
-													else
-														sprintf(Buffer1,"OVER LOAD RESET OFF");
-
-												}
-												break;
-												case STATE_AUTODRRUNRST_SMS:
-												{
-													if(nTimerSettings.AutoDrRunRstIIOnOff == 1)
-														sprintf(Buffer1,"DRY RUN RESET ON");
-													else
-														sprintf(Buffer1,"DRY RUN RESET OFF");
-
-												}
-												break;
-												case STATE_POWERFACTOR_SMS:
-												{
-													if(nTimerSettings.pfcOnOff==1)
-														sprintf(Buffer1,"POWER FACTOR CORRECTION ON");
-													else
-														sprintf(Buffer1,"POWER FACTOR CORRECTION OFF");
-
-												}
-												break;
-												case STATE_MANULONOF_SMS:
-												{
-													if(nTimerSettings.ManualOnOff == 1)
-														sprintf(Buffer1,"MANUAL ON ");
-													else
-														sprintf(Buffer1,"MANUAL OFF");
-
-												}
-												break;
-												case STATE_OLRSTVOLONOFF_SMS:
-												{
-													if(nTimerSettings.OlRstVolOnoff == 1)
-														sprintf(Buffer1,"OL RESTART VOLTAGE ON");
-													else
-														sprintf(Buffer1,"OL RESTART VOLTAGE OFF");
-
-												}
-												break;
-												case STATE_OLRSTVOL_SMS:
-												{
-													sprintf(Buffer1,"OL RESTART VOLTAGE = %03d",nTimerSettings.OlRstVol);
-												}
-												break;
-												case STATE_DROCCONOFF_SMS:
-												{
-													if(nTimerSettings.DrOccurOnOff == 1)
-														sprintf(Buffer1,"DRY RUN OCCURANCE SCAN ON");
-													else
-														sprintf(Buffer1,"DRY RUN OCCURANCE SCAN OFF");
-
-												}
-												break;
-												case STATE_DROCCTIM_SMS:
-												{
-													sprintf(Buffer1,"DRY RUN OCCURANCE TIME = %02d:%02d:%02d",nTimerSettings.DrOccurTimHr,nTimerSettings.DrOccurTimMin,nTimerSettings.DrOccurTimSec);
-												}
-												break;
-												case STATE_DROCCNUM_SMS:
-												{
-													sprintf(Buffer1,"NUMBER OF DRY RUN OCCURANCE  = %03d",nTimerSettings.DrOccurNum);
-												}
-												break;
-												case STATE_DIFFVOLTII_SMS:
-												{
-													sprintf(Buffer1,"DIFFERENCE LOW VOLTAGE FOR 2 PHASE = %03d\n",nTimerSettings.DiffVoltII );
-												}
-												break;
-												case STATE_DIFFVOLTIII_SMS:
-												{
-													sprintf(Buffer1,"DIFFERENCE LOW VOLTAGE FOR 3 PHASE = %03d\n",nTimerSettings.DiffVoltIII );
-												}
-												break;
-								
-											 
-												case STATE_CTRON_SMS:
-												{
-													sprintf(Buffer1,"CT R SENSING ON\n\r");
-												}
-												break;
-												case STATE_CTROF_SMS:
-												{
-													sprintf(Buffer1,"CT R SENSING OFF\n\r");
-												}
-												break;
-												case STATE_CTYON_SMS:
-												{
-													sprintf(Buffer1,"CT Y SENSING ON\n\r");
-												}
-												break;
-												case STATE_CTYOF_SMS:
-												{
-													sprintf(Buffer1,"CT Y SENSING OFF\n\r");
-												}
-												break;
-												case STATE_CTBON_SMS:
-												{
-													sprintf(Buffer1,"CT B SENSING ON\n\r");
-												}
-												break;
-												case STATE_CTBOF_SMS:
-												{
-													sprintf(Buffer1,"CT B SENSING OFF\n\r");
-												}
-												break;
-												case STATE_SERVICE_SMS:
-												{
-												if(nMSettings.gethidesmsonoff == 1)
-												sprintf(Buffer1,"SERVICE NUMBER REG. DONE\n ");
-												else
-												sprintf(Buffer1,"SERVICE NUMBER REG. DONE\n NUMBER=%s",ServiceNumber);
-												}
-												break;
-												case STATE_AUTORST2ONOFF_SMS:
-												{
-													if(nTimerSettings.AutoRst2On == 1)
-														sprintf(Buffer1,"AUTO RESET 2 ON");
-													else
-														sprintf(Buffer1,"AUTO RESET 2 OFF");
-
-												}
-												break;
-												case STATE_AUTORSTONOFF_SMS:
-												{
-													if(nTimerSettings.AutoRstOn == 1)
-														sprintf(Buffer1,"MOBILE RESET ON");
-													else
-														sprintf(Buffer1,"MOBILE RESET OFF");
-
-												}
-												break;
-												case STATE_HIDIFFVOLTII_SMS:
-												{
-													sprintf(Buffer1,"DIFFERENCE HIGH VOLTAGE FOR 2 PHASE = %03d\n",nTimerSettings.HiDiffVoltII );
-
-												}
-												break;
-												case STATE_HIDIFFVOLTIII_SMS:
-												{
-													sprintf(Buffer1,"DIFFERENCE HIGH VOLTAGE FOR 3 PHASE = %03d\n",nTimerSettings.HiDiffVoltIII );
-												}
-												break;
-												default:
-												{
-													sprintf(Buffer1,"UnKnown2 Please send this to Customer Support Error : STATE_SENDSMS = %d",STATE_SENDSMS);
-
-												}
-												break;
-											}
-										} */
-										//else if(PowerOnSms == 1)
-										//else if((PowerOnSms == 1) && (creg_reset_flag==0))
 										else if(PowerOnSms == 1)
 										{
-											/* if(creg_reset_flag==0)
-											{ */
-											//checkpower=Check2Phase();
-										/*	if(YVoltage1<115)
-												checkpower=2;
-											else
-											checkpower=3;
-											if(checkpower == 3)
-											{
-
-
-											if(MakeRealyOn == 1 && nTimerSettings.AutoRstOn ==1)
-											{
-											if(Appmodeon==1)
-										    sprintf(Buffer1," %02d031\n",(datetime.tm_sec+2));
-										    else
-											sprintf(Buffer1,"AUTO ON \n POWER ON WITH 3 PHASE");
-											}
-											else if(MakeRealyOn == 1 && nTimerSettings.AutoRstOn ==0)
-											{
-											if(Appmodeon==1)
-										    sprintf(Buffer1," %02d032\n",(datetime.tm_sec+2));
-										    else
-											sprintf(Buffer1,"AUTO OFF \n POWER ON WITH 3 PHASE\n AUTO RESET OFF");
-											}
-											else
-											{
-											if(Appmodeon==1)
-										    sprintf(Buffer1," %02d033\n",(datetime.tm_sec+2));
-										    else
-											sprintf(Buffer1,"AUTO OFF \n POWER ON WITH 3 PHASE");
-											}
-											}
-
-											else
-											{
-											if(MakeRealyOn == 1 && nTimerSettings.AutoRstOn ==1)
-											{
-											if(Appmodeon==1)
-										    sprintf(Buffer1," %02d034\n",(datetime.tm_sec+2));
-										    else
-											sprintf(Buffer1,"AUTO ON \n POWER ON WITH 2 PHASE");
-											}
-											else if(MakeRealyOn == 1 && nTimerSettings.AutoRstOn ==0)
-											{
-											if(Appmodeon==1)
-										    sprintf(Buffer1," %02d035\n",(datetime.tm_sec+2));
-										    else
-											sprintf(Buffer1,"AUTO OFF \n POWER ON WITH 2 PHASE\n AUTO RESET OFF");
-											}
-											else
-											{
-											if(Appmodeon==1)
-										    sprintf(Buffer1," %02d036\n",(datetime.tm_sec+2));
-										    else
-											sprintf(Buffer1,"AUTO OFF \n POWER ON WITH 2 PHASE");  //dg_changed  1 space removed before power
-											}
-											}   
-											
-										//	sprintf(Buffer1,"%s\nR=%03.0f;",Buffer1,nCurretnCond.RVoltage);
-											sprintf(Buffer1,"%s\nR=%03.0f;",Buffer1,RVoltage1);
-					                    //    sprintf(Buffer1,"%sY=%03.0f;",Buffer1,nCurretnCond.YVoltage);   //dg_changed  removed \n
-											  sprintf(Buffer1,"%sY=%03.0f;",Buffer1,YVoltage1);
-										//    sprintf(Buffer1,"%sB=%03.0fV\n",Buffer1,nCurretnCond.BVoltage);  //dg_changed  1 space removed after v
-											sprintf(Buffer1,"%sB=%03.0fV\n",Buffer1,BVoltage1); */
 											sprintf(Buffer1,"POWER ON"); 
 											value =0;// nMoTr.ActofpowerRunTimer;
 		                                    TpHr = value/3600;
@@ -13566,51 +11484,6 @@ else if(s_nMSettings.m_settings_count==10)
 				prev_sec = CurrentSec;
 			}
 
-#if 0		
-						if(CallConnected == 1 || CallModeOn==1)
-						{
-
-							sprintf(buf,"\n\rCALL CONNECTED  CallConnectedDelay = %d\n\r",CallConnectedDelay);
-							sAPI_UartPrintf(buf);
-							CallConnectedDelay++;
-							if(addcall==1 && CallConnectedDelay==10)
-							{
-								//eat_send_msg_to_user(EAT_USER_0, EAT_USER_1, EAT_FALSE, 6, "ATD121", EAT_NULL);
-							}
-							if(addcall==1 && CallConnectedDelay>30)
-							{
-
-									//sprintf(buffer,"AT+CHLD=3\n\r");
-								//sprintf(buf,"\n\r%s\n\r",buffer);
-								//sAPI_UartPrintf(buf);	
-								//eat_modem_write((UINT8*)buffer, strlen(buffer));
-								//eat_send_msg_to_user(EAT_USER_0, EAT_USER_1, EAT_FALSE, 4, "CHLD", EAT_NULL);
-								addcall=0;
-							}
-							if(CallConnectedDelay>=500)
-							{
-							//	sprintf(buffer,"ATH\n\r");
-							//	sprintf(buf,"\n\r%s\n\r",buffer);
-							//sAPI_UartPrintf(buf);
-							  //eat_modem_write((UINT8*)buffer, strlen(buffer));
-								sprintf(buf,"LINE no is %d",__LINE__);
-								sAPI_UartPrintf(buf);
-								//eat_send_msg_to_user(EAT_USER_0, EAT_USER_1, EAT_FALSE, 3, "ATH", EAT_NULL);
-								CallConnectedDelay = 0;
-								CallConnected = 0;
-								IamCalling = 0;
-								GiveCallToNumber = 0;
-								WaitOK = 0;
-								Callreceiv = 0;
-								RingVerDelay = 0;
-								sAPI_UartPrintf("\n\rCall Ended\n\r");								 
-								CallModeOn = 0;
-								HowManySoundToPlay = HowManySoundPlayed = 0;
-								PlaySoundVer=0;
-								PlaySound = 0;
-							}
-						}
-#endif
 			if (nMSettings.ndebugonof == 1)
 				sAPI_UartPrintf("Noofsettingsprocessed:%d,Noofsettingsrecvd:%d", Noofsettingsprocessed, Noofsettingsrecvd);
 
@@ -13973,267 +11846,7 @@ else if(s_nMSettings.m_settings_count==10)
 				memset(getbuff4, NULL, sizeof(getbuff4) + 1);
 				sprintf(buf, "\n\r tcp copy=ok2");
 				sAPI_UartPrintf(buf);
-				if (DeviceConfig.interface == WIFI)
-				{
-#if 0 // dg_nsdkkk
-							//sprintf(buf,"tcp copy=ok3");
-							//sAPI_UartPrintf(buf);
-							 if(Nooftcpprocessed!=prvNooftcpprocessed)
-							 {
-								prvNooftcpprocessed= Nooftcpprocessed;
-								Nooftcpsendcount=0;
-
-							 }
-
-							if(tcpopenflag==1 && wifiopenflag==1 && clostcpcounter<=50 )    // changed from 10
-							{
-					//		#if 0 //dg_nsdkkk
-							if(tcpdcounter++>20)
-							{
-							sprintf(buf,"\n\rNooftcpprocessed= %d\n\r",Nooftcpprocessed);
-							sAPI_UartPrintf(buf);
-							sprintf(buf,"\n\rNooftcprecvd= %d\n\r",Nooftcprecvd);
-							sAPI_UartPrintf(buf);
-		                    clostcpcounter++;
-						    //	strcpy(SendSMSString,TCPwifiStrNumber[Nooftcpprocessed].TCPWifistr);
-						    //	livedataflag=1;
-							if(livedataflag ==0 && livedataflag1==0)
-							{
-							//gettcpcounter=0;
-							if(nMSettings.ndebugonof==1)
-							{
-							sprintf(buf,"tcp copy=%s",TCPwifiStrNumber[Nooftcpprocessed].TCPWifistr);
-							sAPI_UartPrintf(buf);
-							sprintf(buf,"tcp copy done7777777777777777777777777777777777777777777");
-							sAPI_UartPrintf(buf);
-							sprintf(buf,"SMSString length = %d\n\r",strlen(SendSMSString));
-							sAPI_UartPrintf(buf);
-							}
-							if(Nooftcprecvd1>Nooftcpprocessed1)
-							{
-							Http_send_flag=0;
-							sAPI_UartWrite(eat_uart_wifi, TCPwifiStrNumber1[Nooftcpprocessed1].TCPWifistr1,strlen(TCPwifiStrNumber1[Nooftcpprocessed1].TCPWifistr1));
-							Nooftcpprocessed1++;
-							}
-							else
-							{
-							Http_send_flag=1;
-							sAPI_UartWrite(eat_uart_wifi, TCPwifiStrNumber[Nooftcpprocessed].TCPWifistr,strlen(TCPwifiStrNumber[Nooftcpprocessed].TCPWifistr));
-							Nooftcprecvd1=Nooftcpprocessed1=0;
-							}
-							//	sprintf(buf,"tcp copy done7777777777777777777777777777777777777777777");
-							// sAPI_UartPrintf(buf);
-							//	sprintf(buf,"SMSString length = %d\n\r",strlen(SendSMSString));
-							// sAPI_UartPrintf(buf);
-							//	//eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 7, "SENDTCP", EAT_NULL);
-							}
-						else
-						{
-							INT32 ret;
-	                        UINT8  *k = EAT_NULL;
-	                        char TpStr4[50] = "nimish";
-	                        long TpHr,TpMin,TpSec,value;
-	                        long runvtim,runvflow;
-							float pervtim;
-							int pervflow;
-							//if(livedataflag==0)
-							//Nooftcprecvd++;
-							livedataflagcount1++;
-							if(livedataflagcount1>2 && livedataflag1>0)
-							{
-							livedataflagcount1=4;
-							livedataflag1=0;
-						
-
-							}
-							gettcpcounter=0;
-							revalue = zone[nVaTr.Currentvalve].stoptime;
-							reTpHr = revalue/3600;
-							revalue = revalue%3600;
-							reTpMin = revalue/60;
-							revalue = revalue%60;
-							reTpSec = revalue;
-							pervtim = ((zoneonof[nVaTr.programselection].timerpercent)*0.01);
-							runvtim=((zone[nDripSettings.changeinstp].actthr*3600)+(zone[nDripSettings.changeinstp].acttmin*60));
-							runvtim = (long)(pervtim*runvtim);
-                            pervflow = ((zoneonof[nVaTr.programselection].flowpercent)*0.01);
-                            runvflow=zone[nDripSettings.stp].actflowrate;
-							runvflow = (long)(pervflow*runvflow);
-	                      //  BigSMS[0] = 0;
-							/* if(zonecom.standalonemodeonof==1)
-							value = 0;
-						    else */
-							value = nVaTr.REMTIM;
-							if(value<0)
-								value=0;
-
-							TpHr = value/3600;
-							value = value%3600;
-							TpMin = value/60;
-							value = value%60;
-							TpSec = value;
-
-							/* if(zonecom.standalonemodeonof==1)
-							revalue = nVaTr.struntime;
-						    else */
-							revalue = runvtim;
-
-							reTpHr = revalue/3600;
-							revalue = revalue%3600;
-							reTpMin = revalue/60;
-							revalue = revalue%60;
-							reTpSec = revalue;
-
-							//\",\r\n\"cL\":\"%s\",\r\n\"cZ\":\"%s\",\r\n\"cD\":\"%d/%d/20%02d\",\r\n\"cT\":\"%d:%d:%d\",\r\n\"mC\":\"LD\"\r\n}"
-						//	sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"LD\":\"%d-%d-20%02d,%d:%d:%d,%03.0fV,%03.0fV,%03.0fV,%03.0fV,%03.0fV,%03.0f,%s %s\",\r\n\"cL\":\"%s\",\r\n\"cZ\":\"%s\",\r\n\"cD\":\"%d/%d/20%02d\",\r\n\"cT\":\"%d:%d:%d\",\r\n\"mC\":\"SMS\"\r\n}",IMEI,datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour,datetime.tm_min,datetime.tm_sec,nCurretnCond.RVoltage,nCurretnCond.YVoltage,nCurretnCond.BVoltage,nCurretnCond.RYVoltage,nCurretnCond.YBVoltage,nCurretnCond.BRVoltage,SmsTCPStrNumber[NumberOfSmsAllreadySend].SmsTCPstr,SMS_BUF,DIS_BUF,VAL_BUF);
-							sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,",IMEI,nCurretnCond.RVoltage,nCurretnCond.YVoltage,nCurretnCond.BVoltage,nCurretnCond.RYVoltage,nCurretnCond.YBVoltage,nCurretnCond.BRVoltage);//,DIS_BUF,VAL_BUF,datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);   //dg_bckup
-						//	sprintf(getbuff,"\r\n\"cC\":\"%s\",\r\n\"cM\":\"%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,",IMEI,nCurretnCond.RVoltage,nCurretnCond.YVoltage,nCurretnCond.BVoltage,nCurretnCond.RYVoltage,nCurretnCond.YBVoltage,nCurretnCond.BRVoltage);//,DIS_BUF,VAL_BUF,datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-
-							FloatroString1Dig(TpStr4,nCurretnCond.Rcurrent);
-			                sprintf(getbuff,"%s%s,",getbuff,TpStr4);
-							FloatroString1Dig(TpStr4,nCurretnCond.Ycurrent);
-							sprintf(getbuff,"%s%s,",getbuff,TpStr4);
-							FloatroString1Dig(TpStr4,nCurretnCond.Bcurrent);
-							if(zonecom.standalonemodeonof==1)
-							sprintf(getbuff,"%s%s,Standalone Mode,",getbuff,TpStr4);
-							else if(zoneonof[nVaTr.programselection].flowmodeonof==1)
-							sprintf(getbuff,"%s%s,Flow Mode,",getbuff,TpStr4);
-							else if(zoneonof[nVaTr.programselection].moisturemodeonof==1)
-							sprintf(getbuff,"%s%s,Moisture Mode,",getbuff,TpStr4);
-                            else if(zoneonof[nVaTr.programselection].levelmodeonof==1)
-                            sprintf(getbuff,"%s%s,Level Mode,",getbuff,TpStr4);
-							else
-							sprintf(getbuff,"%s%s,Timer Mode,",getbuff,TpStr4);
-                            if((zoneonof[nVaTr.programselection].flowmodeonof == 0))
-							{runvflow=0;value=0;}
-							else
-								value=(runvflow-zone[nDripSettings.stp].Actflowrate);
-							if(value<0)
-								value=0;
-							if(zonecom.standalonemodeonof==1)
-							sprintf(getbuff,"%s%d,%03d,",getbuff,nVaTr.programselection,nDripSettings.ststp);
-						    else
-							sprintf(getbuff,"%s%d,%03d,",getbuff,nVaTr.programselection,nDripSettings.stp);
-
-
-						//	sprintf(getbuff,"%s%02ld:%02ld:%02ld,%02ld:%02ld:%02ld,%d,%d,100,100,%d,%d,%d,%d,%03.1f,%d,%03.1f,%d,%d,123456789,49.9,%03d,%03d,100,100,100,100,100,100,100,100,%d,%d,%d,%d,",getbuff,reTpHr,reTpMin,reTpSec,TpHr,TpMin,TpSec,runvflow,value,nVaTr.fertv1Smsonof,nVaTr.fertv2Smsonof,nVaTr.fertv3Smsonof,nVaTr.fertv4Smsonof,zone[nDripSettings.stp].runpressure,nVaTr.Currentflow,zone[nDripSettings.stp].runflowrate,LastDayRunflow,Runflow,zoneid[nDripSettings.decidelast+1].fbkval,zoneid[nDripSettings.decidelast+2].fbkval,CSQ,PrvLocanMotorStatus,PrvMSMotorStatus,nTimerSettings.ManualOnOff);
-						//	sprintf(getbuff,"%s%02ld:%02ld:%02ld,%02ld:%02ld:%02ld,%d,%d,100,100,%d,%d,%d,%d,%03.1f,%d,%03.1f,%d,%d,123456789,49.9,%03d,%03d,100,100,100,100,100,100,%.02fF-%02d,100,%d,%d,%d,%d,",getbuff,reTpHr,reTpMin,reTpSec,TpHr,TpMin,TpSec,runvflow,value,nVaTr.fertv1Smsonof,nVaTr.fertv2Smsonof,nVaTr.fertv3Smsonof,nVaTr.fertv4Smsonof,zone[nDripSettings.stp].runpressure,nVaTr.Currentflow,zone[nDripSettings.stp].runflowrate,LastDayRunflow,Runflow,zoneid[nDripSettings.decidelast+1].fbkval,zoneid[nDripSettings.decidelast+2].fbkval,leveltank,levelpercent,CSQ,PrvLocanMotorStatus,PrvMSMotorStatus,nTimerSettings.ManualOnOff);
-							//sprintf(getbuff,"%s%02ld:%02ld:%02ld,%02ld:%02ld:%02ld,%d,%d,100,100,%d,%d,%d,%d,%03.1f,%d,%03.1f,%d,%d,123456789,49.9,%03d,%03d,100,100,100,100,100,100,%.02fF-%02d,%03.1f,%d,%d,%d,%d,,",getbuff,reTpHr,reTpMin,reTpSec,TpHr,TpMin,TpSec,runvflow,value,nVaTr.fertv1Smsonof,nVaTr.fertv2Smsonof,nVaTr.fertv3Smsonof,nVaTr.fertv4Smsonof,zone[nDripSettings.stp].runpressure,nVaTr.Currentflow,zone[nDripSettings.stp].runflowrate,LastDayRunflow,Runflow,zoneid[nDripSettings.decidelast+1].fbkval,zoneid[nDripSettings.decidelast+2].fbkval,leveltank,levelpercent,zone[nDripSettings.stp].outpressure,CSQ,PrvLocanMotorStatus,PrvMSMotorStatus,nTimerSettings.ManualOnOff);
-
-						   value = RunTimer;
-							TpHr = value/3600;
-							value = value%3600;
-							TpMin = value/60;
-							value = value%60;
-							TpSec = value;
-
-							value = LastDayRunTimer;
-							reTpHr = value/3600;
-							value = value%3600;
-							reTpMin = value/60;
-							value = value%60;
-							reTpSec = value;
-							sprintf(getbuff,"%s%02ld:%02ld,%02ld:%02ld,",getbuff,TpHr,TpMin,reTpHr,reTpMin);
-
-						   if(nMSettings.ndebugonof==1)
-							sprintf(buf,"DIS_BUF1 copy =%s",DIS_BUF);
-                             sAPI_UartPrintf(buf);
-							if(DIS_BUF[0] == '$')
-							{
-							k = DIS_BUF;
-							len=strlen(DIS_BUF);
-							for (i = 0; i <len; i++)
-							{
-								if(*k=='\n')
-								*k = ' ';
-							    else if(*k=='\r')
-								*k = ' ';
-									k++;
-							}
-							}
-							else
-							{strcpy(DIS_BUF,"$L,     NO DATA,    ");}
-						if(nMSettings.ndebugonof==1)
-							sprintf(buf,"DIS_BUF copy =%s",DIS_BUF);
-                             sAPI_UartPrintf(buf);
-							sprintf(getbuff,"%s\",\r\n\"cL\":\"%s\",\r\n\"cZ\":\"%s\",\r\n\"cD\":\"%d/%d/20%02d\",\r\n\"cT\":\"%d:%d:%d\",\r\n\"mC\":\"LD\"\r\n}",getbuff,DIS_BUF,VAL_BUF,datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-
-						
-
-
-						//	sprintf(getbuff,"%s%02ld:%02ld:%02ld,%d,%d,%d,%d,%d,%d,%s\"\r\n}",getbuff,TpHr,TpMin,TpSec,zone[nDripSettings.stp].actflowrate,value,nVaTr.fertv1Smsonof,nVaTr.fertv2Smsonof,nVaTr.fertv3Smsonof,nVaTr.fertv4Smsonof,DIS_BUF);
-							contentlen=strlen(getbuff);
-						    sprintf(BigSMS,"POST /api/v1/controller/messages/ HTTP/1.1\r\nHost: %s:8080\r\nUser-Agent: curl/7.52.1\r\nAccept: */*\r\nContent-Type: application/json\r\nContent-Length: %d\r\n\r\n\%s\r\n",DeviceConfig.TcpServerIP,contentlen,getbuff);
-						//	sprintf(BigSMS,"POST /api/v1/getlivestatus/ HTTP/1.1\r\nHost: %s:8091\r\nUser-Agent: curl/7.52.1\r\nAccept: */*\r\nContent-Type: application/json\r\nContent-Length: %d\r\n\r\n\%s\r\n",DeviceConfig.TcpServerIP,contentlen,getbuff);
-							if(livedataflag1==0 && livedataflag==0)
-							{
-							sAPI_UartWrite(eat_uart_wifi, TCPwifiStrNumber[Nooftcpprocessed].TCPWifistr,strlen(TCPwifiStrNumber[Nooftcpprocessed].TCPWifistr));
-							Http_send_flag=0;
-							}
-							else
-							{
-							Http_send_flag=0;
-						    sAPI_UartWrite(eat_uart_wifi, BigSMS,strlen(BigSMS));
-							}
-			
-
-
-			}
-							//Nooftcpprocessed++;
-							tcpdcounter=0;
-							tcpdcounter1=0;
-							getdataflag1=0;
-							}
-							//sprintf(buf,"\n\rtest1=%d,%d,%
-							sAPI_UartPrintf(buf);
-					//		#endif
-							}
-							else if(tcpopenflag==1 && wifiopenflag==1 && clostcpcounter>=50)
-							{
-							//clostcpcounter=0;
-							if(tcpdcounter++>8)
-							{
-								tcpdcounter=0;
-								clostcpcounter=0;
-								wifiopenflag=0;
-								//eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 5, "CLOSE", EAT_NULL);
-							}
-							}
-							else
-							{
-								//tcpdcounter++;
-								gettcpcounter=0;
-								if(tcpopenflag==1&&wifiresetflag1==0&&wifiresetflag==0 && wifiopenflag==0  )
-								{
-								//tcpdcounter++;
-								tcpdcounter1++;
-								if(tcpdcounter1>30)
-								{
-                                //eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 6, "CONFIG", EAT_NULL);
-								if(nMSettings.ndebugonof==1)
-								{
-								sprintf(buf,"tcp copy done222222222222222222222222222222222222222222222");
-								sAPI_UartPrintf(buf);
-								//wifiopenflag=1;
-								tcpdcounter1=0;
-								getdataflag1=1;
-								}
-								}
-								}
-
-								/*else if(tcpdcounter==0&&tcpopenflag==1 && wifiopenflag==0 )
-								{
-								tcpdcounter++;
-                                //eat_send_msg_to_user(EAT_USER_0, EAT_USER_2, EAT_FALSE, 7, "CONFIG1", EAT_NULL);
-
-								}*/
-
-								//if(tcpdcounter>10)
-								//tcpdcounter=10;
-							}
-#endif
-				}
-				else if (DeviceConfig.interface == GPRS && fotaflsg == 0 && CallConnected == 0 && ringflag == 0)
+				if (DeviceConfig.interface == GPRS && fotaflsg == 0 && CallConnected == 0 && ringflag == 0)
 
 				{
 
@@ -14300,8 +11913,8 @@ else if(s_nMSettings.m_settings_count==10)
 							sprintf(getbuff,"%s%s%s\r\n\"2405\":\"\",\r\n\"2406\":\"\",",getbuff1,getbuff3,getbuff2);
 							sprintf(getbuff4,"\r\n\"2407\":\"\",");
 							sprintf(getbuff4,"%s\r\n\"2408\":\"%d,%d.%d,%d,%d,%02d:%02d:%02d,%02d:%02d,%d,%d,%d,%d,;\",",getbuff4,nProgramProcess.Sno,nProgramProcess.Sno,nProgramProcess.ZoneNo+1,nProgramProcess.IrrigationMethod,
-								nProgramProcess.Status,nProgramProcess.RemaningTime[0],nProgramProcess.RemaningTime[1],nProgramProcess.RemaningTime[2],nProgram.nZone[nProgramProcess.ZoneNo].Duration[0],nProgram.nZone[nProgramProcess.ZoneNo].Duration[1],
-								nProgramProcess.RemainingFlow,nProgram.nZone[nProgramProcess.ZoneNo].FlowRate,nProgramProcess.NoofZones,nProgramProcess.OnByCondition);
+								nProgramProcess.Status,nProgramProcess.RemaningTime[0],nProgramProcess.RemaningTime[1],nProgramProcess.RemaningTime[2],nProgramProcess.Duration[0],nProgramProcess.Duration[1],
+								nProgramProcess.RemainingFlow,nProgramProcess.FlowRate,nProgramProcess.NoofZones,nProgramProcess.OnByCondition);
 							memset(getbuff1,NULL,sizeof(getbuff1)+1);
 							sprintf(getbuff1,"%s\r\n\"2409\":\"\",",getbuff1);
 							sprintf(getbuff1,"%s\r\n\"2410\":\"\",",getbuff1);
@@ -14318,369 +11931,6 @@ else if(s_nMSettings.m_settings_count==10)
 						    }
 							#endif
 
-						#if 0
-						if(livedataflag ==1 || livedataflag1==1)       //LIVE
-							{							 
-							INT32 ret;
-	                        UINT8  *k = EAT_NULL;
-	                        char TpStr4[50] = "nimish";
-							char getbuff_temp[20];
-	                        long TpHr,TpMin,TpSec,value;
-							long TpHr2,TpMin2,TpSec2,value2;
-							long TpHr3,TpMin3,TpSec3,value3;
-	                        long runvtim,runvflow;
-							float pervtim;  
-							int pervflow,size;
-							char flowbuf[50]={0};char presbuf[50]={0};char levelbuf[50]={0};char flotbuf[50]={0};char tankbuf[50]={0};char sumpbuf[50]={0};
-						//	char Motor1onflag=0,Motor2onflag=0,Motor3onflag=0;
-							    
-                        //    value=xxx 
-							memset(getbuff,NULL,sizeof(getbuff)+1);
-							memset(getbuff1,NULL,sizeof(getbuff1)+1);
-							memset(getbuff2,NULL,sizeof(getbuff2)+1);
-							memset(getbuff3,NULL,sizeof(getbuff3)+1);
-							memset(getbuff4,NULL,sizeof(getbuff4)+1);
-							livedataflagcount1++;
-							if(livedataflagcount1>2 && livedataflag1>0)
-							{
-							livedataflagcount1=4;
-							livedataflag1=0;
-							if(nMSettings.dataSMSOnOff==1)
-							{
-							getdataflag =1;
-							enter2=0;
-							}
-
-							}
-
-
-						
-						act_del_completed[0]=(act_POnMin[0]*60+act_POnSec[0])-(act_rem_delmin[0]*60+act_rem_delsec[0]);
-								
-						act_del_comp_min[0]=act_del_completed[0]/60;
-						act_del_comp_sec[0]=act_del_completed[0]%60;
-						
-						act_del_completed[1]=(act_POnMin[1]*60+act_POnSec[1])-(act_rem_delmin[1]*60+act_rem_delsec[1]);
-													
-						act_del_comp_min[1]=act_del_completed[1]/60;
-						act_del_comp_sec[1]=act_del_completed[1]%60;
-						
-						act_del_completed[2]=(act_POnMin[2]*60+act_POnSec[2])-(act_rem_delmin[2]*60+act_rem_delsec[2]);
-													
-						act_del_comp_min[2]=act_del_completed[2]/60;
-						act_del_comp_sec[2]=act_del_completed[2]%60;
-						
-						sprintf(buf,"\n\r act_rem_delmin[0] %d  act_rem_delsec[0] %d act_rem_delmin[1] %d  act_rem_delsec[1] %d  act_rem_delmin[2] %d  act_rem_delsec[2] %d",act_rem_delmin[0],act_rem_delsec[0],act_rem_delmin[1],act_rem_delsec[1],act_rem_delmin[2],act_rem_delsec[2]);
-							sAPI_UartPrintf(buf);
-						
-						
-			
-							
-									
-									
-						
-							if(s_npump[0].m_flowonof == 0)
-							sprintf(flowbuf, "\r\n\"WM\":\"-\",\r\n\"CF\":\"-\"");
-							else 
-							sprintf(flowbuf, "\r\n\"WM\":\"%03.01f\",\r\n\"CF\":\"%07d\"", Act_lps1[0], cumulative_flow1[0]);
-						
-							if (s_npump[0].m_pressureonof == 0)
-							sprintf(presbuf, "\r\n\"PR\":\"-\"");
-							else
-							sprintf(presbuf, "\r\n\"PR\":\"%03.01f\"", Act_pressure[0]);
-							
-							if(s_npump[0].m_Level_on_off==0)
-							sprintf(levelbuf,"\r\n\"LV\":\"-,-\"");
-							 else
-							//sprintf(levelbuf,"\r\n\"LV\":\"%03d\"",Act_level[0]);// subash doubte 
-						sprintf(levelbuf,"\r\n\"LV\":\"%03.01f,%02d\"",Act_level[0],level_percent);
-						
-						
-						if (s_npump[0].m_Sump_on_off == 0)
-						sprintf(sumpbuf, "\r\n\"FT\":\"-:-:");
-					else if (s_npump[0].m_no_of_sump_pins == 1)
-						
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", actual_float_stat[0][0]);
-					//	sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", s_npump[0].m_sump_pin_no[0]);
-					else
-						
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", actual_float_stat[0][0], actual_float_stat[0][1]);
-					//	sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", s_npump[0].m_sump_pin_no[0], s_npump[0].m_sump_pin_no[1]);
-
-					if (s_npump[0].m_Tank_on_off == 0)
-						sprintf(tankbuf, "-:-\"");
-					else if (s_npump[0].m_no_of_tank_pins == 1)
-						sprintf(tankbuf, "-:%01d\"", actual_float_stat[0][2]);
-					//	sprintf(tankbuf, "%01d:-\"", s_npump[0].m_tank_pin_no[0]);
-					else
-						sprintf(tankbuf, "%01d:%01d\"", actual_float_stat[0][2], actual_float_stat[0][3]);
-					//	sprintf(tankbuf, "%01d:%01d\"", s_npump[0].m_tank_pin_no[0], s_npump[0].m_tank_pin_no[1]);
-					sprintf(buf,"\n\r sumpbuf [%s]",sumpbuf);
-					sAPI_UartPrintf(buf);
-					sprintf(flotbuf,"%s",sumpbuf);
-					sprintf(buf,"\n\r tankbuf [%s]",tankbuf);
-					sAPI_UartPrintf(buf);
-					sprintf(flotbuf,"%s%s",flotbuf,tankbuf);
-					sprintf(buf,"\n\r flotbuf [%s]",flotbuf);
-					sAPI_UartPrintf(buf);
-					/* if(Motorreasonflag[0] ==1 || Motorreasonflag[0] ==0)
-					{								
-						set_value=0,actual_value=0;
-					} */	
-					
-								sprintf(getbuff1,"{\r\n\"cC\":\"%s\",\r\n\"cM\": [ \r\n{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%01d,%s,%s,%s,%s,\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\",\r\n\"CFDL\":\"%02d:%02d:%02d\",\r\n\"CNDL\":\"%02d:%02d:%02d\",\r\n\"MR\":\"%02d:%02d:%02d\",\r\n\"DRST\":\"%02d:%02d:%02d\"\r\n },",IMEI,Motoronflag[0],Motorreasonflag[0],actual_value,set_value,phase_number,flowbuf,presbuf,levelbuf,flotbuf,act_POnMin[0],act_POnSec[0],act_del_comp_min[0],act_del_comp_sec[0],act_rem_delmin[0],act_rem_delsec[0],act_rem_cyc_ofHr[0],act_rem_cyc_ofMin[0],act_rem_cyc_ofSec[0],act_rem_cyc_onHr[0],act_rem_cyc_onMin[0],act_rem_cyc_onSec[0],act_rem_maxHr[0],act_rem_maxMin[0],act_rem_maxSec[0],nMSettings.act_rem_DrHr[0],nMSettings.act_rem_DrMin[0],nMSettings.act_rem_DrSec[0]);
-									
-									sprintf(buf,"\n\r getbuff1 [%s]",getbuff1);
-									sAPI_UartPrintf(buf);
-									size=strlen(getbuff1);
-									sprintf(buf,"\n\r size getbuff1 [%d]",size);
-									sAPI_UartPrintf(buf);
-													
-							if(s_npump[1].m_flowonof == 0)
-							sprintf(flowbuf, "\r\n\"WM\":\"-\",\r\n\"CF\":\"-\"");
-							else 
-							sprintf(flowbuf, "\r\n\"WM\":\"%03.01f\",\r\n\"CF\":\"%07d\"", Act_lps1[1], cumulative_flow1[1]);
-						
-							if (s_npump[1].m_pressureonof == 0)
-							sprintf(presbuf, "\r\n\"PR\":\"-\"");
-							else
-							sprintf(presbuf, "\r\n\"PR\":\"%03.01f\"", Act_pressure[1]);
-							
-							if(s_npump[1].m_Level_on_off==0)
-							sprintf(levelbuf,"\r\n\"LV\":\"-,-\"");
-							 else
-							sprintf(levelbuf,"\r\n\"LV\":\"%03.01f,%02d\"",Act_level[1],level_percent);
-						
-							/*		if (s_npump[1].m_Sump_on_off == 0)
-						sprintf(sumpbuf, "\r\n\"FT\":\"-:-:");
-					else if (s_npump[1].m_no_of_tank_pins == 1)
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", s_npump[1].m_sump_pin_no[0]);
-					else
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", s_npump[1].m_sump_pin_no[0], s_npump[1].m_sump_pin_no[1]);
-
-					if (s_npump[1].m_Tank_on_off == 0)
-						sprintf(tankbuf, "-:-\"");
-					else if (s_npump[1].m_no_of_tank_pins == 1)
-						sprintf(tankbuf, "%01d:-\"", s_npump[1].m_tank_pin_no[0]);
-					else
-						sprintf(tankbuf, "%01d:%01d\"", s_npump[1].m_tank_pin_no[0], s_npump[1].m_tank_pin_no[1]); */
-					if (s_npump[1].m_Sump_on_off == 0)
-						sprintf(sumpbuf, "\r\n\"FT\":\"-:-:");
-					else if (s_npump[1].m_no_of_sump_pins == 1)
-						
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", actual_float_stat[1][0]);
-					//	sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", s_npump[0].m_sump_pin_no[0]);
-					else
-						
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", actual_float_stat[1][0], actual_float_stat[1][1]);
-					//	sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", s_npump[0].m_sump_pin_no[0], s_npump[0].m_sump_pin_no[1]);
-
-					if (s_npump[1].m_Tank_on_off == 0)
-						sprintf(tankbuf, "-:-\"");
-					else if (s_npump[1].m_no_of_tank_pins == 1)
-						sprintf(tankbuf, "-:%01d\"", actual_float_stat[1][2]);
-					//	sprintf(tankbuf, "%01d:-\"", s_npump[0].m_tank_pin_no[0]);
-					else
-						sprintf(tankbuf, "%01d:%01d\"", actual_float_stat[1][2], actual_float_stat[1][3]);
-					//	sprintf(tankbuf, "%01d:%01d\"", s_npump[0].m_tank_pin_no[0], s_npump[0].m_tank_pin_no[1]);
-					
-					sprintf(buf,"\n\r sumpbuf [%s]",sumpbuf);
-					sAPI_UartPrintf(buf);
-					sprintf(flotbuf,"%s",sumpbuf);
-					sprintf(buf,"\n\r tankbuf [%s]",tankbuf);
-					sAPI_UartPrintf(buf);
-					sprintf(flotbuf,"%s%s",flotbuf,tankbuf);
-					sprintf(buf,"\n\r flotbuf [%s]",flotbuf);
-					sAPI_UartPrintf(buf);
-					/* if(Motorreasonflag[1] ==1 || Motorreasonflag[1] ==0)
-					{								
-						set_value2=0,actual_value2=0;
-					} */	
-							//		sprintf(getbuff2,"\r\n{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%03.01f, \r\n\"WM\":%01d,\r\n\"CF\":%03.01f,\r\n\"PR\":%03.01f,\r\n\"LV\":%d,\r\n\"FT\":\"%01d:%01d:%01d:%01d\",\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\"\r\n},",Motoronflag[1],Motorreasonflag[1],actual_value2,set_value2,phase_number2,flowisthere[1],cumulative_flow2,Act_pressure[1],Act_level[1],actual_float_stat[1][0],actual_float_stat[1][1],actual_float_stat[1][2],actual_float_stat[1][3],act_POnMin[1],act_POnSec[1],act_del_comp_min[1],act_del_comp_sec[1],act_rem_delmin[1],act_rem_delsec[1]);
-							//		sprintf(getbuff2,"\r\n{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%03d,%s,%s,%s,\r\n\"FT\":\"%01d:%01d:%01d:%01d\",\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\"\r\n},",Motoronflag[1],Motorreasonflag[1],actual_value2,set_value2,phase_number2,flowbuf,presbuf,levelbuf,actual_float_stat[1][0],actual_float_stat[1][1],actual_float_stat[1][2],actual_float_stat[1][3],act_POnMin[1],act_POnSec[1],act_del_comp_min[1],act_del_comp_sec[1],act_rem_delmin[1],act_rem_delsec[1]);
-									//sprintf(getbuff2,"\r\n{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%01d,%s,%s,%s,%s,\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\",\r\n\"CFDL\":\"%02d:%02d:%02d\",\r\n\"CNDL\":\"%02d:%02d:%02d\"\r\n},",Motoronflag[1],Motorreasonflag[1],actual_value2,set_value2,phase_number2,flowbuf,presbuf,levelbuf,flotbuf,act_POnMin[1],act_POnSec[1],act_del_comp_min[1],act_del_comp_sec[1],act_rem_delmin[1],act_rem_delsec[1],act_rem_cyc_ofHr[1],act_rem_cyc_ofMin[1],act_rem_cyc_ofSec[1],act_rem_cyc_onHr[1],act_rem_cyc_onMin[1],act_rem_cyc_onSec[1]);	// \"MR\":\"%02d:%02d:%02d\"\r\n	//,act_rem_maxHr[1],act_rem_maxMin[1],act_rem_maxSec[1]							
-									//sprintf(getbuff2,"\r\n{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%01d,%s,%s,%s,%s,\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\",\r\n\"CFDL\":\"%02d:%02d:%02d\",\r\n\"CNDL\":\"%02d:%02d:%02d\",\r\n\"MR\":\"%02d:%02d:%02d\",\r\n\"DRST\":\"%02d:%02d:%02d\"\r\n},",Motoronflag[1],Motorreasonflag[1],actual_value2,set_value2,phase_number2,flowbuf,presbuf,levelbuf,flotbuf,act_POnMin[1],act_POnSec[1],act_del_comp_min[1],act_del_comp_sec[1],act_rem_delmin[1],act_rem_delsec[1],act_rem_cyc_ofHr[1],act_rem_cyc_ofMin[1],act_rem_cyc_ofSec[1],act_rem_cyc_onHr[1],act_rem_cyc_onMin[1],act_rem_cyc_onSec[1],act_rem_maxHr[1],act_rem_maxMin[1],act_rem_maxSec[1],nMSettings.act_rem_DrHr[1],nMSettings.act_rem_DrMin[1],nMSettings.act_rem_DrSec[1]);								
-
-									//sprintf(buf,"\n\r getbuff2 %s",getbuff2);
-									//sAPI_UartPrintf(buf);
-									/* size=strlen(getbuff2);
-									sprintf(buf,"\n\r size getbuff2 %d",size);
-									sAPI_UartPrintf(buf); */
-									
-								if(s_npump[2].m_flowonof == 0)
-							sprintf(flowbuf, "\r\n\"WM\":\"-\",\r\n\"CF\":\"-\"");
-							else 
-							sprintf(flowbuf, "\r\n\"WM\":\"%03.01f\",\r\n\"CF\":\"%07d\"", Act_lps1[2], cumulative_flow1[2]);
-						
-							if (s_npump[2].m_pressureonof == 0)
-							sprintf(presbuf, "\r\n\"PR\":\"-\"");
-							else
-							sprintf(presbuf, "\r\n\"PR\":\"%03.01f\"", Act_pressure[2]);
-							
-							if(s_npump[2].m_Level_on_off==0)
-							sprintf(levelbuf,"\r\n\"LV\":\"-,-\"");
-							 else
-							sprintf(levelbuf,"\r\n\"LV\":\"%03.01f,%02d\"",Act_level[2],level_percent);
-															
-															
-															
-					/*	if (s_npump[2].m_Sump_on_off == 0)
-						sprintf(sumpbuf, "\r\n\"FT\":\"-:-:");
-					else if (s_npump[2].m_no_of_tank_pins == 1)
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", s_npump[2].m_sump_pin_no[0]);
-					else
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", s_npump[2].m_sump_pin_no[0], s_npump[2].m_sump_pin_no[1]);
-
-					if (s_npump[2].m_Tank_on_off == 0)
-						sprintf(tankbuf, "-:-\"");
-					else if (s_npump[2].m_no_of_tank_pins == 1)
-						sprintf(tankbuf, "%01d:-\"", s_npump[2].m_tank_pin_no[0]);
-					else
-						sprintf(tankbuf, "%01d:%01d\"", s_npump[2].m_tank_pin_no[0], s_npump[2].m_tank_pin_no[1]);*/
-					
-						if (s_npump[2].m_Sump_on_off == 0)
-						sprintf(sumpbuf, "\r\n\"FT\":\"-:-:");
-					else if (s_npump[2].m_no_of_sump_pins == 1)
-						
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", actual_float_stat[2][0]);
-					//	sprintf(sumpbuf, "\r\n\"FT\":\"%01d:-:", s_npump[0].m_sump_pin_no[0]);
-					else
-						
-						sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", actual_float_stat[2][0], actual_float_stat[2][1]);
-					//	sprintf(sumpbuf, "\r\n\"FT\":\"%01d:%01d:", s_npump[0].m_sump_pin_no[0], s_npump[0].m_sump_pin_no[1]);
-
-					if (s_npump[2].m_Tank_on_off == 0)
-						sprintf(tankbuf, "-:-\"");
-					else if (s_npump[2].m_no_of_tank_pins == 1)
-						sprintf(tankbuf, "-:%01d\"", actual_float_stat[2][2]);
-					//	sprintf(tankbuf, "%01d:-\"", s_npump[0].m_tank_pin_no[0]);
-					else
-						sprintf(tankbuf, "%01d:%01d\"", actual_float_stat[2][2], actual_float_stat[2][3]);
-					//	sprintf(tankbuf, "%01d:%01d\"", s_npump[0].m_tank_pin_no[0], s_npump[0].m_tank_pin_no[1]);
-					
-					sprintf(buf,"\n\r sumpbuf [%s]",sumpbuf);
-					sAPI_UartPrintf(buf);
-					sprintf(flotbuf,"%s",sumpbuf);
-					sprintf(buf,"\n\r tankbuf [%s]",tankbuf);
-					sAPI_UartPrintf(buf);
-					sprintf(flotbuf,"%s%s",flotbuf,tankbuf);
-					sprintf(buf,"\n\r flotbuf [%s]",flotbuf);
-					sAPI_UartPrintf(buf);
-					if(Motorreasonflag[2] ==1 || Motorreasonflag[2] ==0)
-					{								
-						set_value3=0,actual_value3=0;
-					}			
-							//		sprintf(getbuff3,"\n\r{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%03d,%s,%s,%s,\r\n\"FT\":\"%01d:%01d:%01d:%01d\",\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\"\r\n},",Motoronflag[2],Motorreasonflag[2],actual_value3,set_value3,phase_number3,flowbuf,presbuf,levelbuf,actual_float_stat[2][0],actual_float_stat[2][1],actual_float_stat[2][2],actual_float_stat[2][3],act_POnMin[2],act_POnSec[2],act_del_comp_min[2],act_del_comp_sec[2],act_rem_delmin[2],act_rem_delsec[2]);
-									//sprintf(getbuff3,"\n\r{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%01d,%s,%s,%s,%s,\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\",\r\n\"CFDL\":\"%02d:%02d:%02d\",\r\n\"CNDL\":\"%02d:%02d:%02d\"\r\n},",Motoronflag[2],Motorreasonflag[2],actual_value3,set_value3,phase_number3,flowbuf,presbuf,levelbuf,flotbuf,act_POnMin[2],act_POnSec[2],act_del_comp_min[2],act_del_comp_sec[2],act_rem_delmin[2],act_rem_delsec[2],act_rem_cyc_ofHr[2],act_rem_cyc_ofMin[2],act_rem_cyc_ofSec[2],act_rem_cyc_onHr[2],act_rem_cyc_onMin[2],act_rem_cyc_onSec[2]);// \"MR\":\"%02d:%02d:%02d\"\r\n  //,act_rem_maxHr[2],act_rem_maxMin[2],act_rem_maxSec[2]
-									//sprintf(getbuff3,"\n\r{\r\n\"ST\":%01d,\r\n\"RN\":%01d,\r\n\"AT\":%03.01f,\r\n\"SE\":%03.01f,\r\n\"PH\":%01d,%s,%s,%s,%s,\r\n\"OD\":\"00:%02d:%02d\",\r\n\"ODC\":\"00:%02d:%02d\",\r\n\"ODL\":\"00:%02d:%02d\",\r\n\"CFDL\":\"%02d:%02d:%02d\",\r\n\"CNDL\":\"%02d:%02d:%02d\",\r\n\"MR\":\"%02d:%02d:%02d\",\r\n\"DRST\":\"%02d:%02d:%02d\"\r\n},",Motoronflag[2],Motorreasonflag[2],actual_value3,set_value3,phase_number3,flowbuf,presbuf,levelbuf,flotbuf,act_POnMin[2],act_POnSec[2],act_del_comp_min[2],act_del_comp_sec[2],act_rem_delmin[2],act_rem_delsec[2],act_rem_cyc_ofHr[2],act_rem_cyc_ofMin[2],act_rem_cyc_ofSec[2],act_rem_cyc_onHr[2],act_rem_cyc_onMin[2],act_rem_cyc_onSec[2],act_rem_maxHr[2],act_rem_maxMin[2],act_rem_maxSec[2],nMSettings.act_rem_DrHr[2],nMSettings.act_rem_DrMin[2],nMSettings.act_rem_DrSec[2]);  
-
-							//sprintf(buf,"\n\r getbuff3 %s",getbuff3);
-									/* sAPI_UartPrintf(buf);
-									size=strlen(getbuff3);
-									sprintf(buf,"\n\r size getbuff3 %d",size);
-									sAPI_UartPrintf(buf); */
-									
-									SignalStrength=(float)(CSQ*3.2258);
-							sstrength=SignalStrength;
-							if(sstrength>=99)
-								sstrength=99;
-							sprintf(buf,"vbat = %d\r\n",sAPI_ReadVbat());
-							sAPI_UartPrintf(buf);
-							if(PowerCurrentCondition == 1)
-							{
-								RVoltage1=0;
-								YVoltage1=0;
-								BVoltage1=0;
-								nCurretnCond.Rcurrent=0;
-								nCurretnCond.Ycurrent=0;
-								nCurretnCond.Bcurrent=0;
-								RemainingOnHr=0;RemainingOnMin=0;RemainingOnSec=0;
-								RecCyclicIntevelHr=0;RecCyclicIntevelMin=0;RecCyclicIntevelsec=0;
-								LightFlag=0;
-								for(int i=0;i<10;i++)
-								{
-									if(ValveStatus[i]==1)
-										ValveStatus[i]=0;
-								}
-							}
-							
-							for(int i=0;i<=50;i++)
-							 {
-								adc[i]=sAPI_ReadVbat();
-								avg_adc += adc[i];
-							 }
-							avg_adc=avg_adc/50;
-							BATPER=avg_adc*3.2;
-							avg_adc=0;
-							if(g_no_of_pumps>1)
-								g_no_of_pumps=1;
-						//	if(BATPER>=100) 
-							BATPER=100;
-							sAPI_UartPrintf("Battery Percentage:%d,%.0f cont_ver:G%d.%d\n\r",avg_adc,BATPER,nMSettings.CONT_VER[0],nMSettings.CONT_VER[1]);
-									memset(getbuff4,NULL,sizeof(getbuff4));
-									sprintf(getbuff4,"\r\n{\r\n\"V\":\"%03d,%03d,%03d\",\r\n\"C\":\"1:%03.1f,2:%03.01f,3:%03.01f\",\r\n\"SS\":%02d,\r\n\"B\":%02d,\r\n\"VS\":\"%d.%d.%d,%s\",\r\n\"NP\":\"%d\"\r\n}\r\n],\r\n\"cD\":\"%04d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"LD01\"\r\n}",RVoltage1,YVoltage1,BVoltage1,nCurretnCond.Rcurrent,nCurretnCond.Ycurrent,nCurretnCond.Bcurrent,sstrength,(int)BATPER,nMSettings.CONT_VER[0],nMSettings.CONT_VER[1],nMSettings.CONT_VER[2],Version,g_no_of_pumps,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-									
-									sprintf(buf,"\n\r getbuff4 [%s]",getbuff4);
-									sAPI_UartPrintf(buf);
-									size=strlen(getbuff4);
-									sprintf(buf,"\n\r size getbuff4 [%d]",size);
-									sAPI_UartPrintf(buf);
-									
-									//sprintf(getbuff5,"\r\n{\r\n\"VOM\":\"%01d\",\"V1\":\"%02d:%02d:00,%01d\",\"V2\":\"%02d:%02d:00,%01d\",\"V3\":\"%02d:%02d:00,%01d\",\"V4\":\"%02d:%02d:00,%01d\",\"V5\":\"%02d:%02d:00,%01d\",\"V6\":\"%02d:%02d:00,%01d\",\"V7\":\"%02d:%02d:00,%01d\",\"V8\":\"%02d:%02d:00,%01d\",\"V9\":\"%02d:%02d:00,%01d\",\"V10\":\"%02d:%02d:00,%01d\",\"RT\":\"%02d:%02d:%02d\",\"CRSF\":\"%01d\",\"CRST\":\"%02d:%02d:00\",\"CRM\":\"%02d:%02d:%02d\",\"CRSL\":\"%02d\",\"CNO\":\"%02d\",\"CCF\":\"%01d\",\"NVC\":\"%01d\",\"SS\":\"%01d,%01d\",\r\n\"MOS\":\"%03d,%03d,%03d,%03d\"\r\n},",ValveSetting,LiveValveTimerHr[0],LiveValveTimerMin[0],ValveStatus[0],LiveValveTimerHr[1],LiveValveTimerMin[1],ValveStatus[1],LiveValveTimerHr[2],LiveValveTimerMin[2],ValveStatus[2],LiveValveTimerHr[3],LiveValveTimerMin[3],ValveStatus[3],LiveValveTimerHr[4],LiveValveTimerMin[4],ValveStatus[4],LiveValveTimerHr[5],LiveValveTimerMin[5],ValveStatus[5],LiveValveTimerHr[6],LiveValveTimerMin[6],ValveStatus[6],LiveValveTimerHr[7],LiveValveTimerMin[7],ValveStatus[7],LiveValveTimerHr[8],LiveValveTimerMin[8],ValveStatus[8],LiveValveTimerHr[9],LiveValveTimerMin[9],ValveStatus[9],RemainingOnHr,RemainingOnMin,RemainingOnSec,CyclicIntevelFlag,CyclicIntevelHr,CyclicIntevelMin,RecCyclicIntevelHr,RecCyclicIntevelMin,RecCyclicIntevelsec,CyclicLimitRec,CycleNo,CyclicComplete,NoOfValveConfigRec,SetSerial[0],SetSerial[1],Mos[0],Mos[1],Mos[2],Mos[3]);
-									sprintf(getbuff5,"\r\n{\r\n\"VOM\":\"%01d\",\"V1\":\"%02d:%02d:00,%01d\",\"V2\":\"%02d:%02d:00,%01d\",\"V3\":\"%02d:%02d:00,%01d\",\"V4\":\"%02d:%02d:00,%01d\",\"V5\":\"%02d:%02d:00,%01d\",\"V6\":\"%02d:%02d:00,%01d\",\"V7\":\"%02d:%02d:00,%01d\",\"V8\":\"%02d:%02d:00,%01d\",\"V9\":\"%02d:%02d:00,%01d\",\"V10\":\"%02d:%02d:00,%01d\",\"RT\":\"%02d:%02d:%02d\",\"CRSF\":\"%01d\",\"CRST\":\"%02d:%02d:00\",\"CRM\":\"%02d:%02d:%02d\",",ValveSetting,LiveValveTimerHr[0],LiveValveTimerMin[0],ValveStatus[0],LiveValveTimerHr[1],LiveValveTimerMin[1],ValveStatus[1],LiveValveTimerHr[2],LiveValveTimerMin[2],ValveStatus[2],LiveValveTimerHr[3],LiveValveTimerMin[3],ValveStatus[3],LiveValveTimerHr[4],LiveValveTimerMin[4],ValveStatus[4],LiveValveTimerHr[5],LiveValveTimerMin[5],ValveStatus[5],LiveValveTimerHr[6],LiveValveTimerMin[6],ValveStatus[6],LiveValveTimerHr[7],LiveValveTimerMin[7],ValveStatus[7],LiveValveTimerHr[8],LiveValveTimerMin[8],ValveStatus[8],LiveValveTimerHr[9],LiveValveTimerMin[9],ValveStatus[9],RemainingOnHr,RemainingOnMin,RemainingOnSec,CyclicIntevelFlag,CyclicIntevelHr,CyclicIntevelMin,RecCyclicIntevelHr,RecCyclicIntevelMin,RecCyclicIntevelsec);
-									
-									sprintf(buf,"\n\r getbuff5 [%s]",getbuff5);
-									sAPI_UartPrintf(buf);
-									size=strlen(getbuff5);
-									sprintf(buf,"\n\r size getbuff5 [%d]",size);
-									sAPI_UartPrintf(buf);
-									
-									sprintf(getbuff3,"\"CNF\":\"%01d\",\"CRSL\":\"%02d\",\"CNO\":\"%02d\",\"CCF\":\"%01d\",\"NVC\":\"%01d\",\"SS\":\"%01d,%01d\",\r\n\"MOS\":\"%.01f,%.01f,%.01f,%.01f\",\r\n\"STM\":\"%.01f\",\r\n\"BAT\":\"%.01f,%.01f\",\r\n\"SOL\":\"%d,%d\"\r\n,\r\n\"LIT\":\"%d\"\r\n,\r\n\"LIS\":\"%d\"\r\n,\r\n\"SPF\":\"%d\"\r\n},",CycOnOf,CyclicLimitRec,CycleNo,CyclicComplete,NoOfValveConfigRec,SetSerial[0],SetSerial[1],Mos[0],Mos[1],Mos[2],Mos[3],SoilTemp,Battery[0],Battery[1],Solar[0],Solar[1],LightFlag,LightStandaloneFlag,AutoRstFlag);
-									
-									sprintf(buf,"\n\r getbuff3 [%s]",getbuff3);
-									sAPI_UartPrintf(buf);
-									size=strlen(getbuff3);
-									sprintf(buf,"\n\r size getbuff3 %d",size);
-									sAPI_UartPrintf(buf);
-									
-									sprintf(getbuff,"%s",getbuff1);
-									sprintf(buf,"\n\r line %d getbuff [%s]",__LINE__,getbuff);
-									sAPI_UartPrintf(buf);
-									size=strlen(getbuff);
-									sprintf(buf,"\n\r size getbuff %d",size);
-									sAPI_UartPrintf(buf);
-									/* sprintf(getbuff,"%s%s",getbuff,getbuff2);
-									sprintf(buf,"\n\r line %d getbuff %s",__LINE__,getbuff);
-									sAPI_UartPrintf(buf); */
-									sprintf(getbuff,"%s%s",getbuff,getbuff5);
-									size=strlen(getbuff);
-									sprintf(getbuff,"%s%s",getbuff,getbuff3);
-									sprintf(buf,"\n\r line %d getbuff [%s]",__LINE__,getbuff);
-									sAPI_UartPrintf(buf);
-									  /*  sprintf(buf,"\n\r line %d getbuff [%s]",__LINE__,getbuff);
-									sAPI_UartPrintf(buf); */
-								sprintf(buf,"\n\r size  %d",size);
-							sAPI_UartPrintf(buf);
-									sprintf(getbuff,"%s%s",getbuff,getbuff4);
-									   size=strlen(getbuff);
-									   sprintf(buf,"\n\r line %d getbuff %s",__LINE__,getbuff);
-									sAPI_UartPrintf(buf);
-								sprintf(buf,"\n\r size %d",size);
-							sAPI_UartPrintf(buf);
-							
-							
-							sprintf(TCPWifigprsstrBUFF,"%s",getbuff);
-                            sprintf(buf,"\n\rTCPWifigprsstrBUFF>>:[%s]",TCPWifigprsstrBUFF);
-							sAPI_UartPrintf(buf);
-							
-						    }
-							#endif
-						/* else if(getPsflag == 1) //oro_doubt
-						{
-							sprintf(TCPWifigprsstrBUFF,"{\"TS\":\"%s\"}",pumpsettingbuf);
-							sprintf(buf,"\n\rTCPWifigprsstrBUFF>>:%s",TCPWifigprsstrBUFF);
-							sAPI_UartPrintf(buf);
-						}  */
 						sgetflag = 1;
 						sgetflag_1 = 1;
 						sAPI_UartPrintf("\n\rSETFLAG_1:%d", sgetflag_1);
@@ -14825,7 +12075,7 @@ else if(s_nMSettings.m_settings_count==10)
 					// sAPI_UartPrintf("\n\r tday[0].Motor_Runtime is %ld \n tday[0].Motor_Idletime %ld \n tday[0].Power_off_time %ld \n tday[0].Dry_run_trip_time %ld \n tday[0].cyclic_trip_time %ld \n tday[0].other_trip_time %ld",tday[0].Motor_Runtime,tday[0].Motor_Idletime,tday[0].Power_off_time,tday[0].Dry_run_trip_time,tday[0].cyclic_trip_time,tday[0].other_trip_time);
 				}
 			}
-
+		#if 0
 			if (onehour_send_flag == 1)
 			{
 
@@ -15161,1166 +12411,7 @@ else if(s_nMSettings.m_settings_count==10)
 					Nooftcprecvd++;
 				}
 			}
-
-			/* if(onehour_send_flag==1)
-	{
-
-		if(Nooftcprecvd<=49)//150
-			{
-		s32 ret;
-		u8  *k = EAT_NULL;
-		char TpStr4[50] = "nimish";
-		char getbuff[500];
-		long TpHr,TpMin,TpSec,value;
-		long runvtim,runvflow;
-		long TpHr1,TpMin1,TpSec1,value1;
-		long TpHr2,TpMin2,TpSec2,value2;
-		float pervtim;
-		float pervflow;
-
-		sAPI_UartPrintf("\n entry to send onehour_send_flag line %d",__LINE__);
-		onehour_send_flag=0;
-
-		nCurretnCond.RYVoltage = CalculatePhToPh(RVoltage1,YVoltage1);
-		nCurretnCond.YBVoltage = CalculatePhToPh(YVoltage1,BVoltage1);
-		nCurretnCond.BRVoltage = CalculatePhToPh(BVoltage1,RVoltage1);
-
-		sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%03d,%03d,%03d,%03.0f,%03.0f,%03.0f,",IMEI,RVoltage1,YVoltage1,BVoltage1,nCurretnCond.RYVoltage,nCurretnCond.YBVoltage,nCurretnCond.BRVoltage);//,DIS_BUF,VAL_BUF,datetime.day,datetime.mon,datetime.year,datetime.hour,datetime.min,datetime.tm_sec);
-			if(nMSettings.ndebugonof==1)
-			sAPI_UartPrintf("\n\r load current nCurretnCond.Rcurrent is %f nCurretnCond.Ycurrent is %f nCurretnCond.Bcurrent is %f",nCurretnCond.Rcurrent,nCurretnCond.Ycurrent,nCurretnCond.Bcurrent);
-
-			FloatroString1Dig(TpStr4,nCurretnCond.Rcurrent);
-			sprintf(getbuff,"%s%s,",getbuff,TpStr4);
-			if(nMSettings.ndebugonof==1)
-			sAPI_UartPrintf("\n\r Rcurrent TpStr4 is %s",TpStr4);
-			FloatroString1Dig(TpStr4,nCurretnCond.Ycurrent);
-			sprintf(getbuff,"%s%s,",getbuff,TpStr4);
-			if(nMSettings.ndebugonof==1)
-			sAPI_UartPrintf("\n\r Ycurrent TpStr4 is %s",TpStr4);
-			FloatroString1Dig(TpStr4,nCurretnCond.Bcurrent);
-			if(nMSettings.ndebugonof==1)
-			sAPI_UartPrintf("\n\r Bcurrent TpStr4 is %s",TpStr4);
-			sprintf(getbuff,"%s%s-",getbuff,TpStr4);
-
-
-		value = nMoTr.Act2powerRunTimer;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		value = value%60;
-		TpSec = value;
-		value = nMoTr.Actl2powerRunTimer;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-		// sprintf(BigSMS,"%s2P PWR ON TIM\nC:%02ld:%02ld LPON TIM=%02ld:%02ld \n",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-		sprintf(BigSMS,"%sNP=%01d,2PPONTIM=%02d:%02d:00,2PLPONTIM=%02d:%02d:00,",getbuff,g_no_of_pumps,TpHr,TpMin,TpHr1,TpMin1);
-		value = nMoTr.Act3powerRunTimer;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		value = value%60;
-		TpSec = value;
-		value = nMoTr.Actl3powerRunTimer;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-		// sprintf(BigSMS,"%s3P PWR ON TIM\nC:%02ld:%02ld LPON TIM=%02ld:%02ld \n",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-		sprintf(BigSMS,"%s3PPONTIM=%02d:%02d:00,3PLPONTIM=%02d:%02d:00,",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-		value = nMoTr.ActnopowerRunTimer;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		value = value%60;
-		TpSec = value;
-		value = nMoTr.ActlnopowerRunTimer;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-		// sprintf(BigSMS,"%sPWR OFF TIM\nC:%02ld:%02ld LPOF TIM=%02ld:%02ld \n",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-		sprintf(BigSMS,"%sPOFFTIM=%02d:%02d:00,LPOFTIM=%02d:%02d:00,",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-
-
-
-
-
-		value = tday[6].Motor_Runtime+tday[6].Motor_Idletime+tday[6].Dry_run_trip_time+tday[6].cyclic_trip_time+tday[6].other_trip_time; //nMoTr.Act2powerRunTimer+nMoTr.Act3powerRunTimer;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		value = value%60;
-		TpSec = value;
-
-
-		value = tday[6].Power_off_time;  //nMoTr.ActnopowerRunTimer;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-
-		sprintf(BigSMS,"%sTPONTIM=%02d:%02d:00,TPOFTIM=%02d:%02d:00-",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-
-
-
-		value = ttday[0].m_M1_Runtime;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		value = value%60;
-		TpSec = value;
-
-		value = ttday[0].m_M2_Runtime;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-
-		value = ttday[0].m_M3_Runtime;
-		TpHr2 = value/3600;
-		value = value%3600;
-		TpMin2 = value/60;
-		value = value%60;
-		TpSec2 = value;
-
-
-		sprintf(BigSMS,"%sRTIM=%02d:%02d:%02d;%02d:%02d:%02d;%02d:%02d:%02d,RFLO=%d;0;0,LDRTIM=%02d:%02d:00;00:00:00;00:00:00,LDRFLO=%d;0;0,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1,TpHr2,TpMin2,TpSec2,Runflow1,Runflow2,Runflow3,TpHr1,TpMin1,LastDayRunflow);
-
-
-		value = ttday[0].m_M1_Idletime;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		TpSec = value;
-
-		value = ttday[0].m_M2_Idletime;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-
-		value = ttday[0].m_M3_Idletime;
-		TpHr2 = value/3600;
-		value = value%3600;
-		TpMin2 = value/60;
-		value = value%60;
-		TpSec2 = value;
-
-		sprintf(BigSMS,"%sMIDLEPTIM=%02d:%02d:%02d;%02d:%02d:%02d;%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1,TpHr2,TpMin2,TpSec2);
-
-
-
-		value = ttday[0].m_M1Dry_run_trip_time;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		TpSec = value;
-
-		value = ttday[0].m_M2Dry_run_trip_time;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-
-		value = ttday[0].m_M3Dry_run_trip_time;
-		TpHr2 = value/3600;
-		value = value%3600;
-		TpMin2 = value/60;
-		value = value%60;
-		TpSec2 = value;
-
-		sprintf(BigSMS,"%sDTRIPTIM=%02d:%02d:%02d;%02d:%02d:%02d;%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1,TpHr2,TpMin2,TpSec2);
-
-
-		value = ttday[0].m_M1cyclic_trip_time;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		TpSec = value;
-
-		value = ttday[0].m_M2cyclic_trip_time;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-
-		value = ttday[0].m_M3cyclic_trip_time;
-		TpHr2 = value/3600;
-		value = value%3600;
-		TpMin2 = value/60;
-		value = value%60;
-		TpSec2 = value;
-
-		sprintf(BigSMS,"%sCYCTRIPTIM=%02d:%02d:%02d;%02d:%02d:%02d;%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1,TpHr2,TpMin2,TpSec2);
-
-		value = ttday[0].m_M1other_trip_time;
-		TpHr = value/3600;
-		value = value%3600;
-		TpMin = value/60;
-		TpSec = value;
-
-		value = ttday[0].m_M2other_trip_time;
-		TpHr1 = value/3600;
-		value = value%3600;
-		TpMin1 = value/60;
-		value = value%60;
-		TpSec1 = value;
-
-		value = ttday[0].m_M3other_trip_time;
-		TpHr2 = value/3600;
-		value = value%3600;
-		TpMin2 = value/60;
-		value = value%60;
-		TpSec2 = value;
-
-
-
-		sprintf(BigSMS,"%sOTRIPTIM=%02d:%02d:%02d;%02d:%02d:%02d;%02d:%02d:%02d",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1,TpHr2,TpMin2,TpSec2);
-
-
-
-
-		sprintf(getbuff,"%s",BigSMS);
-		if(nMSettings.ndebugonof==1)
-			sAPI_UartPrintf("DIS_BUF copy =%s",DIS_BUF);
-		if(DIS_BUF[0] == '$')
-		{
-			k = DIS_BUF;
-			len=strlen(DIS_BUF);
-			for (i = 0; i <len; i++)
-			{
-				if(*k=='\n')
-					*k = ' ';
-				else if(*k=='\r')
-					*k = ' ';
-				k++;
-			}
-		}
-
-		else
-		{
-		strcpy(DIS_BUF,"$L,     NO DATA,    ");}
-		sAPI_UartPrintf("DIS_BUF copy =%s",DIS_BUF);
-
-		sprintf(getbuff,"%s\",\r\n\"cD\":\"%04d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"TMR\"\r\n}",getbuff,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-
-		sprintf(TCPwifiStrNumber[Nooftcprecvd].TCPWifigprsstr,"%s",getbuff);
-		Nooftcprecvd++;
-
-		}
-
-	 } */
-
-			/*		if(onehour_send_flag==1)
-					{
-
-						if(Nooftcprecvd<=49)//150
-							{
-						s32 ret;
-						u8  *k = EAT_NULL;
-						char TpStr4[50] = "nimish";
-						char getbuff[500];
-						long TpHr,TpMin,TpSec,value;
-						long runvtim,runvflow;
-						long TpHr1,TpMin1,TpSec1,value1;
-						float pervtim;
-						float pervflow;
-
-						sAPI_UartPrintf("\n entry to send onehour_send_flag line %d",__LINE__);
-						onehour_send_flag=0;
-
-						sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,",IMEI,nCurretnCond.RVoltage,nCurretnCond.YVoltage,nCurretnCond.BVoltage,nCurretnCond.RYVoltage,nCurretnCond.YBVoltage,nCurretnCond.BRVoltage);//,DIS_BUF,VAL_BUF,datetime.day,datetime.mon,datetime.year,datetime.hour,datetime.min,datetime.tm_sec);
-							if(nMSettings.ndebugonof==1)
-							sAPI_UartPrintf("\n\r load current nCurretnCond.Rcurrent is %f nCurretnCond.Ycurrent is %f nCurretnCond.Bcurrent is %f",nCurretnCond.Rcurrent,nCurretnCond.Ycurrent,nCurretnCond.Bcurrent);
-
-							FloatroString1Dig(TpStr4,nCurretnCond.Rcurrent);
-							sprintf(getbuff,"%s%s,",getbuff,TpStr4);
-							if(nMSettings.ndebugonof==1)
-							sAPI_UartPrintf("\n\r Rcurrent TpStr4 is %s",TpStr4);
-							FloatroString1Dig(TpStr4,nCurretnCond.Ycurrent);
-							sprintf(getbuff,"%s%s,",getbuff,TpStr4);
-							if(nMSettings.ndebugonof==1)
-							sAPI_UartPrintf("\n\r Ycurrent TpStr4 is %s",TpStr4);
-							FloatroString1Dig(TpStr4,nCurretnCond.Bcurrent);
-							if(nMSettings.ndebugonof==1)
-							sAPI_UartPrintf("\n\r Bcurrent TpStr4 is %s",TpStr4);
-							sprintf(getbuff,"%s%s-",getbuff,TpStr4);
-
-
-						value = nMoTr.Act2powerRunTimer;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value;
-						value = nMoTr.Actl2powerRunTimer;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;
-//						sprintf(BigSMS,"%s2P PWR ON TIM\nC:%02ld:%02ld LPON TIM=%02ld:%02ld \n",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-						sprintf(BigSMS,"%sNP=%01d,2PPONTIM=%02d:%02d:00,2PLPONTIM=%02d:%02d:00,",getbuff,g_no_of_pumps,TpHr,TpMin,TpHr1,TpMin1);
-						value = nMoTr.Act3powerRunTimer;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value;
-						value = nMoTr.Actl3powerRunTimer;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;
-//						sprintf(BigSMS,"%s3P PWR ON TIM\nC:%02ld:%02ld LPON TIM=%02ld:%02ld \n",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-						sprintf(BigSMS,"%s3PPONTIM=%02d:%02d:00,3PLPONTIM=%02d:%02d:00,",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-						value = nMoTr.ActnopowerRunTimer;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value;
-						value = nMoTr.ActlnopowerRunTimer;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;
-//						sprintf(BigSMS,"%sPWR OFF TIM\nC:%02ld:%02ld LPOF TIM=%02ld:%02ld \n",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-						sprintf(BigSMS,"%sPOFFTIM=%02d:%02d:00,LPOFTIM=%02d:%02d:00,",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-
-
-
-
-
-						value = tday[6].Motor_Runtime+tday[6].Motor_Idletime+tday[6].Dry_run_trip_time+tday[6].cyclic_trip_time+tday[6].other_trip_time; //nMoTr.Act2powerRunTimer+nMoTr.Act3powerRunTimer;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value;
-
-
-						value = tday[6].Power_off_time;  //nMoTr.ActnopowerRunTimer;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;
-
-						sprintf(BigSMS,"%sTPONTIM=%02d:%02d:00,TPOFTIM=%02d:%02d:00-",BigSMS,TpHr,TpMin,TpHr1,TpMin1);
-					//	sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%s,",IMEI,BigSMS);//,DIS_BUF,VAL_BUF,datetime.day,datetime.mon,datetime.year,datetime.hour,datetime.min,datetime.tm_sec);
-						value = tday[6].Motor_Runtime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-
-
-						value = RunTimer;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value;
-
-						value = LastDayRunTimer;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;
-//						sprintf(BigSMS,"RUN TIME\nC:%02ld:%02ld LM TIM=%02ld:%02ld \nLM FLO=%d\nFLO=%d\n",TpHr,TpMin,TpHr1,TpMin1,LastDayRunflow,Runflow);
-//						sprintf(BigSMS,"RUN TIME C:%02ld:%02ld LM TIM=%02ld:%02ld LM FLO=%d FLO=%d",TpHr,TpMin,TpHr1,TpMin1,LastDayRunflow,Runflow);
-						sprintf(BigSMS,"%sRTIM=%02d:%02d:00;00:00:00;00:00:00,RFLO=%d;0;0,LDRTIM=%02d:%02d:00;00:00:00;00:00:00,LDRFLO=%d;0;0,",BigSMS,TpHr,TpMin,Runflow,TpHr1,TpMin1,LastDayRunflow);
-						sprintf(BigSMS,"%sMRUNTIM=%02d:%02d:00;00:00:00;00:00:00,",BigSMS,TpHr1,TpMin1);
-
-
-
-						value = tday[6].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-
-						sprintf(BigSMS,"%sMIDLEPTIM=%02d:%02d:00;00:00:00;00:00:00,",BigSMS,TpHr1,TpMin1);
-
-
-
-						value = tday[6].Dry_run_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-
-						sprintf(BigSMS,"%sDTRIPTIM=%02d:%02d:00;00:00:00;00:00:00,",BigSMS,TpHr1,TpMin1);
-
-						value = tday[6].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-
-						sprintf(BigSMS,"%sCYCTRIPTIM=%02d:%02d:00;00:00:00;00:00:00,",BigSMS,TpHr1,TpMin1);
-
-						value = tday[6].other_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-
-						// sprintf(BigSMS,"%sOTRIPTIM=%02d:%02d,%ld,%ld,%3.1f,%3.1f,%3.1f",BigSMS,TpHr1,TpMin1,tday[6].day_flow,cum_flow,zone[nDripSettings.stp].runflowrate,zone[nDripSettings.stp].runpressure,zone[nDripSettings.stp].outpressure);
-						sprintf(BigSMS,"%sOTRIPTIM=%02d:%02d:00;00:00:00;00:00:00",BigSMS,TpHr1,TpMin1);
-
-						// sprintf(BigSMS,"%s%.02fF-%02d",BigSMS,leveltank,levelpercent);
-						//sprintf(BigSMS,"%s0.00F-00",BigSMS);
-
-
-						sprintf(getbuff,"%s",BigSMS);
-						if(nMSettings.ndebugonof==1)
-							sAPI_UartPrintf("DIS_BUF copy =%s",DIS_BUF);
-						if(DIS_BUF[0] == '$')
-						{
-							k = DIS_BUF;
-							len=strlen(DIS_BUF);
-							for (i = 0; i <len; i++)
-							{
-								if(*k=='\n')
-									*k = ' ';
-								else if(*k=='\r')
-									*k = ' ';
-								k++;
-							}
-						}
-
-						else
-						{
-						strcpy(DIS_BUF,"$L,     NO DATA,    ");}
-						sAPI_UartPrintf("DIS_BUF copy =%s",DIS_BUF);
-
-						sprintf(getbuff,"%s\",\r\n\"cD\":\"%04d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"TMR\"\r\n}",getbuff,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-
-						sprintf(TCPwifiStrNumber[Nooftcprecvd].TCPWifigprsstr,"%s",getbuff);
-						Nooftcprecvd++;
-
-						}
-
-					 }*/
-
-#if 0	
-					
-					 if(nMSettings.ndebugonof==1)
-					sAPI_UartPrintf("\nEntry day_send_flag:%d",day_send_flag);
-					if(day_send_flag==1 || day_send_flag==2) {
-					 
-						if(Nooftcprecvd<=49)//150
-						{
-						
-						UINT32 ret;
-						t_rtc Time={0};
-						UINT8  *k = NULL;
-						char TpStr4[50] = "nimish";
-						char getbuff[500];
-						long TpHr,TpMin,TpSec,value;
-						long runvtim,runvflow;
-						long TpHr1,TpMin1,TpSec1,value1;
-						float pervtim;
-						float pervflow;
-						
-						sAPI_UartPrintf("\n entry to send day_send_flag line %d",__LINE__);
-						 if(day_send_flag==1)
-						 {
-						  
-						sAPI_UartPrintf("\n entry to send day_send_flag line %d",__LINE__);					 
-						 
-
-					//	sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,%03.0f,",IMEI,nCurretnCond.RVoltage,nCurretnCond.YVoltage,nCurretnCond.BVoltage,nCurretnCond.RYVoltage,nCurretnCond.YBVoltage,nCurretnCond.BRVoltage);//,DIS_BUF,VAL_BUF,datetime.day,datetime.mon,datetime.year,datetime.hour,datetime.min,datetime.sec);
-							
-						memset(BigSMS,NULL,sizeof(BigSMS));
-						memset(getbuff,NULL,sizeof(getbuff)); 
-						
-						value=tday[6].Motor_Runtime;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[6].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"MRT1:%02d:%02d:%02d,MIT1:%02d:%02d:%02d,",TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						
-						value=tday[6].Dry_run_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[6].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sDRT1:%02d:%02d:%02d,CTT1:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						value=tday[6].other_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						 
-						
-						// sprintf(BigSMS,"%sOTT1:%02d:%02d:%02d,DF1:%ld,",BigSMS,TpHr,TpMin,TpSec,tday[6].day_flow);
-						sprintf(BigSMS,"%sOTT1:%02d:%02d:%02d,DF1:0,",BigSMS,TpHr,TpMin,TpSec);
-						
-						
-						value=tday[5].Motor_Runtime;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[5].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sMRT2:%02d:%02d:%02d,MIT2:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						
-						value=tday[5].Dry_run_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[5].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sDRT2:%02d:%02d:%02d,CTT2:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						value=tday[5].other_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						// sprintf(BigSMS,"%sOTT2:%02d:%02d:%02d,DF2:%ld,",BigSMS,TpHr,TpMin,TpSec,tday[5].day_flow);
-						sprintf(BigSMS,"%sOTT2:%02d:%02d:%02d,DF2:0,",BigSMS,TpHr,TpMin,TpSec);
-						
-						
-						value=tday[4].Motor_Runtime;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[4].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sMRT3:%02d:%02d:%02d,MIT3:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						
-						value=tday[4].Dry_run_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[4].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sDRT3:%02d:%02d:%02d,CTT3:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						value=tday[4].other_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						// sprintf(BigSMS,"%sOTT3:%02d:%02d:%02d,DF3:%ld,",BigSMS,TpHr,TpMin,TpSec,tday[4].day_flow);
-						sprintf(BigSMS,"%sOTT3:%02d:%02d:%02d,DF3:0,",BigSMS,TpHr,TpMin,TpSec);
-						memset(getbuff,NULL,sizeof(getbuff)+1);
-						sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\",%s",IMEI,BigSMS);//,DIS_BUF,VAL_BUF,datetime.day,datetime.mon,datetime.year,datetime.hour,datetime.min,datetime.sec);
-						
-						
-					}
-					else if(day_send_flag == 2)
-					{
-							
-							sAPI_UartPrintf("\n entry to send day_send_flag line %d",__LINE__);
-						memset(&BigSMS,'\0',sizeof(BigSMS));
-						
-						value=tday[3].Motor_Runtime;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[3].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sMRT4:%02d:%02d:%02d,MIT4:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						
-						value=tday[3].Dry_run_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[3].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sDRT4:%02d:%02d:%02d,CTT4:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						value=tday[3].other_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						// sprintf(BigSMS,"%sOTT3:%02d:%02d:%02d,DF4:%ld,",BigSMS,TpHr,TpMin,TpSec,tday[3].day_flow);
-						sprintf(BigSMS,"%sOTT3:%02d:%02d:%02d,DF4:0,",BigSMS,TpHr,TpMin,TpSec);
-						
-						
-						value=tday[2].Motor_Runtime;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[2].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sMRT5:%02d:%02d:%02d,MIT5:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						
-						value=tday[2].Dry_run_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[2].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sDRT5:%02d:%02d:%02d,CTT5:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						value=tday[2].other_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						// sprintf(BigSMS,"%sOTT2:%02d:%02d:%02d,DF5:%ld,",BigSMS,TpHr,TpMin,TpSec,tday[2].day_flow);
-						sprintf(BigSMS,"%sOTT2:%02d:%02d:%02d,DF5:0,",BigSMS,TpHr,TpMin,TpSec);
-						
-						
-						value=tday[1].Motor_Runtime;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[1].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sMRT6:%02d:%02d:%02d,MIT6:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						
-						value=tday[1].Dry_run_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[1].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sDRT6:%02d:%02d:%02d,CTT6:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						value=tday[1].other_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						// sprintf(BigSMS,"%sOTT1:%02d:%02d:%02d,DF6:%ld,",BigSMS,TpHr,TpMin,TpSec,tday[1].day_flow);
-						sprintf(BigSMS,"%sOTT1:%02d:%02d:%02d,DF6:0,",BigSMS,TpHr,TpMin,TpSec);
-						
-						
-						value=tday[0].Motor_Runtime;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[0].Motor_Idletime;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sMRT7:%02d:%02d:%02d,MIT7:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						
-						value=tday[0].Dry_run_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						
-						value = tday[0].cyclic_trip_time;
-						TpHr1 = value/3600;
-						value = value%3600;
-						TpMin1 = value/60;
-						value = value%60;
-						TpSec1 = value;	
-						sprintf(BigSMS,"%sDRT7:%02d:%02d:%02d,CTT7:%02d:%02d:%02d,",BigSMS,TpHr,TpMin,TpSec,TpHr1,TpMin1,TpSec1);
-						
-						
-						value=tday[0].other_trip_time;
-						TpHr = value/3600;
-						value = value%3600;
-						TpMin = value/60;
-						value = value%60;
-						TpSec = value; 
-						// sprintf(BigSMS,"%sOTT7:%02d:%02d:%02d,DF7:%ld,%ld",BigSMS,TpHr,TpMin,TpSec,tday[0].day_flow,cum_flow);
-						sprintf(BigSMS,"%sOTT7:%02d:%02d:%02d,DF7:0,0",BigSMS,TpHr,TpMin,TpSec);
-						
-						
-						memset(getbuff,NULL,sizeof(getbuff));
-						sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%s",IMEI,BigSMS);//,DIS_BUF,VAL_BUF,datetime.day,datetime.mon,datetime.year,datetime.hour,datetime.min,datetime.sec);
-						}
-						    
-						
-					//	sprintf(getbuff,"%s",BigSMS);		
-					
-						if(nMSettings.ndebugonof==1)
-							sAPI_UartPrintf("DIS_BUF copy =%s",DIS_BUF);
-						if(DIS_BUF[0] == '$')
-						{
-							k = DIS_BUF;
-							len=strlen(DIS_BUF);
-							for (i = 0; i <len; i++) 
-							{
-								if(*k=='\n')
-									*k = ' '; 
-								else if(*k=='\r')
-									*k = ' ';
-								k++;
-							}
-						}
-
-						else
-						{
-					    
-						strcpy(DIS_BUF,"$L,     NO DATA,    ");}
-						sAPI_UartPrintf("DIS_BUF copy =%s",DIS_BUF);
-						 
-						sAPI_GetRealTimeClock(&Time);
-						sprintf(getbuff,"%s\",\r\n\"cL\":\"%s\",\r\n\"cZ\":\"%s\",\r\n\"cD\":\"%02d/%02d/%04d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"REC\"\r\n}",getbuff,DIS_BUF,VAL_BUF,Time.tm_mday,Time.tm_mon,Time.tm_year,Time.tm_hour,Time.tm_min,Time.tm_sec);
- 
- 
-						// sprintf(TCPwifiStrNumber[Nooftcprecvd].TCPWifigprsstr,"%s",getbuff);
-						memcpy(TCPwifiStrNumber[Nooftcprecvd].TCPWifigprsstr,getbuff,sizeof(getbuff));						 
-						sAPI_UartPrintf(TCPwifiStrNumber[Nooftcprecvd].TCPWifigprsstr);
-						Nooftcprecvd++; 
-						
-						if(day_send_flag==1)
-						day_send_flag=2;
-						else if(day_send_flag==2)
-						day_send_flag=3;
-					}
-				}
-#endif
-#if 0		
-					    else if(f_Pump_Settings_view == 1 && Nooftcprecvd<=49)//150
-						{
-							
-						char getbuff[600];
-						char SignalStrength=0;	
-							
-						sAPI_UartPrintf("\n\r f_Pump_Settings_view = 1");
-						///////////////////////////// Delay Settings ///////////////////////////
-
-						sprintf(BigSMS,"%02d:%02d:%02d",nTimerSettings.POnHr,nTimerSettings.POnMin,nTimerSettings.POnSec);
-						if(nTimerSettings.ScrDlOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d:%02d",BigSMS,nTimerSettings.ScrDlHr,nTimerSettings.ScrDlMin,nTimerSettings.ScrDlSec);
-						sprintf(BigSMS,"%s,%02d:%02d:%02d",BigSMS,nTimerSettings.SDHr,nTimerSettings.SDMin,nTimerSettings.SDSec);
-
-						if(nMSettings.SfbOnOff == 1) 
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d:%02d",BigSMS,nTimerSettings.SfbHr,nTimerSettings.SfbMin,nTimerSettings.SfbSec);
-
-
-						///////////////////////////// Current Settings ///////////////////////////
-
-						if(nMSettings.DryRunOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d:%02d",BigSMS,nTimerSettings.DrScHr,nTimerSettings.DrScMin,nTimerSettings.DrScSec);
-						sprintf(BigSMS,"%s,%3.1f,%3.1f",BigSMS,nTimerSettings.DrAmpsII,nTimerSettings.DrAmpsIII);
-
-						if(nTimerSettings.DrReOnOf == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d:%02d",BigSMS,nTimerSettings.DrReHr,nTimerSettings.DrReMin,nTimerSettings.DrReSec);
-
-						if(nTimerSettings.DrOccurOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d:%02d,%d",BigSMS,nTimerSettings.DrOccurTimHr,nTimerSettings.DrOccurTimMin,nTimerSettings.DrOccurTimSec,nTimerSettings.DrOccurNum);
-
-
-
-						if(nTimerSettings.OlOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d:%02d,%3.1f,%3.1f",BigSMS,nTimerSettings.OlScanHr,nTimerSettings.OlScanMin,nTimerSettings.OlScanSec,nTimerSettings.OlAmpsII,nTimerSettings.OlAmpsIII);
-
-						if(nTimerSettings.OlOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS); 
-
-						if(nTimerSettings.AutoDrRunRstIIOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nTimerSettings.AutoOlDrRstIIOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nTimerSettings.AutoRstOn == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-						///////////////////////////// Voltage Settings ///////////////////////////
-
-
-						if(nTimerSettings.LowVoltOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%03d,%03d,%03d,%03d",BigSMS,nTimerSettings.LowVoltII,nTimerSettings.DiffVoltII,nTimerSettings.LowVoltIII,nTimerSettings.DiffVoltIII);
-
-						if(nTimerSettings.HighVoltOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%03d,%03d,%03d,%03d",BigSMS,nTimerSettings.HighVoltII,nTimerSettings.HiDiffVoltII,nTimerSettings.HighVoltIII,nTimerSettings.HiDiffVoltIII);
-
-						if(nTimerSettings.SppOnoff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-						sprintf(BigSMS,"%s,%03d",BigSMS,nTimerSettings.ImbVolt);
-
-
-						if(nTimerSettings.RvePhOnoff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-
-						///////////////////////////// timer Settings ///////////////////////////
-
-						if(nTimerSettings.CycLicOnOf == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d;%02d:%02d",BigSMS,nTimerSettings.CycLicOnHr,nTimerSettings.CycLicOnMin,nTimerSettings.CycLicOfHr,nTimerSettings.CycLicOfMin);
-
-
-						if(nTimerSettings.MaxRnOnOf == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-						sprintf(BigSMS,"%s,%02d:%02d:%02d",BigSMS,nTimerSettings.MaxRnHr,nTimerSettings.MaxRnMin,nTimerSettings.MaxRnSec);
-
-						if(zonecom.nightlightRTCOnOf == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%02d:%02d;%02d:%02d",BigSMS,zonecom.nightlightRTCOnHr,zonecom.nightlightRTCOnMin,zonecom.nightlightRTCOfHr,zonecom.nightlightRTCOfMin);
-
-						if(nTimerSettings.RTCOnOf == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-						sprintf(BigSMS,"%s,%02d:%02d;%02d:%02d",BigSMS,nTimerSettings.RTCOnHr[1],nTimerSettings.RTCOnMin[1],nTimerSettings.RTCOfHr[1],nTimerSettings.RTCOfMin[1]);
-
-						sprintf(BigSMS,"%s,%02d:%02d;%02d:%02d",BigSMS,nTimerSettings.RTCOnHr[2],nTimerSettings.RTCOnMin[2],nTimerSettings.RTCOfHr[2],nTimerSettings.RTCOfMin[2]);
-
-						sprintf(BigSMS,"%s,%02d:%02d;%02d:%02d",BigSMS,nTimerSettings.RTCOnHr[3],nTimerSettings.RTCOnMin[3],nTimerSettings.RTCOfHr[3],nTimerSettings.RTCOfMin[3]);
-
-						sprintf(BigSMS,"%s,%02d:%02d;%02d:%02d",BigSMS,nTimerSettings.RTCOnHr[3],nTimerSettings.RTCOnMin[3],nTimerSettings.RTCOfHr[4],nTimerSettings.RTCOfMin[4]);
-
-						///////////////////////////// SMS Settings ///////////////////////////
-
-						if(limitsmsonof == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%03d",BigSMS,limitsmsset);
-
-						if(Appmodeon == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nMSettings.sampleSMSOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nMSettings.dataSMSOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nMSettings.RelayControlOnCall == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nMSettings.SecOnOf == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nMSettings.staticSMSOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nMSettings.gethidesmsonoff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-						///////////////////////////// communication configuration ///////////////////////////
-
-						 SignalStrength = (CSQ*3.2258);
-						  if(SignalStrength>100)
-							  SignalStrength = 100;
-						  else if(SignalStrength<0)
-							  SignalStrength = 0;
-						sprintf(BigSMS,"%s,%3d",BigSMS,SignalStrength); 
-
-						if(MqttInitStatus == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(gprson == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-						if(nMSettings.SMSOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else if(DeviceConfig.interface==WIFI)
-						sprintf(BigSMS,"%s,2",BigSMS);
-						else
-						sprintf(BigSMS,"%s,3",BigSMS);
-
-					//	sprintf(BigSMS,"%s,%s,%s,%s,%s,%s,%s,%s,%s,%s",BigSMS,DeviceConfig.wifiSSID,DeviceConfig.wifiPassword,DeviceConfig.ApServerIP,DeviceConfig.DevicePort,DeviceConfig.ApSSID,DeviceConfig.ApPassword,DeviceConfig.DeviceIP,DeviceConfig.DevicePort,DeviceConfig.apnName);
-					
-						sprintf(BigSMS,"%s,%s",BigSMS,DeviceConfig.wifiSSID);
-						sprintf(BigSMS,"%s,%s",BigSMS,DeviceConfig.wifiPassword);
-						sprintf(BigSMS,"%s,%s",BigSMS,DeviceConfig.ApServerIP);
-						sprintf(BigSMS,"%s,%d",BigSMS,DeviceConfig.DevicePort);
-						 sprintf(BigSMS,"%s,%s",BigSMS,DeviceConfig.ApSSID);
-						sprintf(BigSMS,"%s,%s",BigSMS,DeviceConfig.ApPassword);
-						sprintf(BigSMS,"%s,%s",BigSMS,DeviceConfig.DeviceIP);
-						sprintf(BigSMS,"%s,%d",BigSMS,DeviceConfig.SocketPort);
-						sprintf(BigSMS,"%s,%s",BigSMS,DeviceConfig.apnName); 
-							 
-
-						///////////////////////////// other settings ///////////////////////////
-
-
-					//	sprintf(BigSMS,"%s,%3.1f:%3.1f:%3.1f,%3.1f:%3.1f:%3.1f",BigSMS,nTimerSettings.CalRVoltage,nTimerSettings.CalYVoltage,nTimerSettings.CalBVoltage,nTimerSettings.CalRCurrent,nTimerSettings.CalYCurrent,nTimerSettings.CalBCurrent);
-						sprintf(BigSMS,"%s,%1.3f:%1.3f:%1.3f,%1.3f:%1.3f:%1.3f",BigSMS,nTimerSettings.CalRVoltage,nTimerSettings.CalYVoltage,nTimerSettings.CalBVoltage,nTimerSettings.CalRCurrent,nTimerSettings.CalYCurrent,nTimerSettings.CalBCurrent);
-
-						if(nTimerSettings.PoScrDlOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						
-						sprintf(BigSMS,"%s,%02d:%02d:%02d",BigSMS,nTimerSettings.PoScrDlHr,nTimerSettings.PoScrDlMin,nTimerSettings.PoScrDlSec);
-
-
-
-						if(nTimerSettings.pfcOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,%03d",BigSMS,nTimerSettings.pfcvolt);  
-
-
-						if(nTimerSettings.CTRonoff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nTimerSettings.CTYonoff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						if(nTimerSettings.CTBonoff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-
-						if(nTimerSettings.CurSppOnOff == 1)
-						sprintf(BigSMS,"%s,1",BigSMS);
-						else
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						// if(xxxxxx == 1)
-						//sprintf(BigSMS,"%s,1",BigSMS);
-						//else 
-						sprintf(BigSMS,"%s,0",BigSMS);
-
-						sprintf(BigSMS,"%s,50:70",BigSMS);
-
-						sprintf(BigSMS,"%s,0",BigSMS); 
-
-
-						if(nMSettings.ndebugonof==1)
-						sAPI_UartPrintf("\n\r BigSMS is %s line %d",BigSMS,__LINE__);
-						sprintf(getbuff,"{\r\n\"cC\":\"%s\",\r\n\"cM\":\"%s",IMEI,BigSMS);					
-						sprintf(getbuff,"%s\",\r\n\"cD\":\"%d/%d/%04d\",\r\n\"cT\":\"%d:%d:%d\",\r\n\"mC\":\"V03\"\r\n}",getbuff,datetime.tm_mday,datetime.tm_mon,datetime.tm_year,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-						//	sprintf(TCPWifigprsstrBUFF,"%s",getbuff); 
-						//sprintf(TCPwifiStrNumber1[loaddata].TCPWifigprsstrBUFF,"%s",getbuff); 
-						
-						memcpy(TCPwifiStrNumber[Nooftcprecvd].TCPWifigprsstr,getbuff,sizeof(getbuff));						 
-						sAPI_UartPrintf(TCPwifiStrNumber[Nooftcprecvd].TCPWifigprsstr);
-						Nooftcprecvd++; 
-					//	loaddata++;
-						// if(nMSettings.ndebugonof==1)
-						// {
-						// sAPI_UartPrintf("TCPWifigprsstrBUFF =%s",TCPwifiStrNumber1[loaddata].TCPWifigprsstrBUFF);
-
-						// sAPI_UartPrintf("\n\r entry to loaddata line %d livedataflag %d livedataflag1 %d loaddata %d\n\r",__LINE__,livedataflag,livedataflag1,loaddata);
-						// }
-						//}
-						f_Pump_Settings_view=0;
-						//sgetflag_2=1;
-
-							
-						}
-
-#endif // dg_osdk
-
+			#endif
 			if (Nooftcpprocessed1 >= Nooftcprecvd1)
 				if (tcpdcounter2++ > 3)
 				{
@@ -16595,9 +12686,9 @@ else if(s_nMSettings.m_settings_count==10)
 									SendSmsToAll = 1;
 									SmsSendOntimer = 1;
 									PowerOnSms = 2;
-									Motoronflag[0] = 0, Motorreasonflag[0] = 30;
-									Motoronflag[1] = 0, Motorreasonflag[1] = 30;
-									Motoronflag[2] = 0, Motorreasonflag[2] = 30;
+									// Motoronflag[0] = 0, Motorreasonflag[0] = 30;
+									// Motoronflag[1] = 0, Motorreasonflag[1] = 30;
+									// Motoronflag[2] = 0, Motorreasonflag[2] = 30;
 									//	skipfbk=0;
 									PowerIsThere = 0;
 									NoAcceptSMS = 0;
@@ -16610,25 +12701,25 @@ else if(s_nMSettings.m_settings_count==10)
 									PingHighRecheckPinCounter = 0;
 									livedataflagcount1 = 0;
 									livedataflag1 = 1;
-									nCurretnCond.RVoltage = 0;
-									nCurretnCond.YVoltage = 0;
-									nCurretnCond.BVoltage = 0;
+									// nCurretnCond.RVoltage = 0;
+									// nCurretnCond.YVoltage = 0;
+									// nCurretnCond.BVoltage = 0;
 
-									nCurretnCond.RYVoltage = 0;
-									nCurretnCond.YBVoltage = 0;
-									nCurretnCond.BRVoltage = 0;
+									// nCurretnCond.RYVoltage = 0;
+									// nCurretnCond.YBVoltage = 0;
+									// nCurretnCond.BRVoltage = 0;
 
-									nCurretnCond.Rcurrent = 0;
-									nCurretnCond.Bcurrent = 0;
-									nCurretnCond.Ycurrent = 0;
-									prev_number_enu_data[0] = 0;
-									prev_number_enu_data[1] = 0;
-									prev_number_enu_data[2] = 0;
+									// nCurretnCond.Rcurrent = 0;
+									// nCurretnCond.Bcurrent = 0;
+									// nCurretnCond.Ycurrent = 0;
+									// prev_number_enu_data[0] = 0;
+									// prev_number_enu_data[1] = 0;
+									// prev_number_enu_data[2] = 0;
 									
-									ValveStatus[0]=0;ValveStatus[1]=0;ValveStatus[2]=0;
-									ValveStatus[3]=0;ValveStatus[4]=0;ValveStatus[5]=0;
-									ValveStatus[6]=0;ValveStatus[7]=0;ValveStatus[8]=0;
-									ValveStatus[9]=0;
+									// ValveStatus[0]=0;ValveStatus[1]=0;ValveStatus[2]=0;
+									// ValveStatus[3]=0;ValveStatus[4]=0;ValveStatus[5]=0;
+									// ValveStatus[6]=0;ValveStatus[7]=0;ValveStatus[8]=0;
+									// ValveStatus[9]=0;
 									
 									/* if(nVaTr.REMTIM<=180)   //dg_check  //dg_nsdk
 									{nVaTr.REMTIM=180;
@@ -16639,31 +12730,31 @@ else if(s_nMSettings.m_settings_count==10)
 									// dg_added
 									//	firstvalenlightsmsonof=1;	 //dg_added
 									sAPI_UartPrintf("\nPower off entry\n");
-									if (Motoronflag[0] == 1)
-									{
+									// if (Motoronflag[0] == 1)
+									// {
 
-										// sprintf(s_nlogtime[on_data_M1].Act_Mtr1_On,"%02d:%02d:%02d\n",datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-										// on_data_M1++;
+									// 	// sprintf(s_nlogtime[on_data_M1].Act_Mtr1_On,"%02d:%02d:%02d\n",datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
+									// 	// on_data_M1++;
 
-										// sprintf(buf,"\n on_data_M1 = %d line %d\n",on_data_M1,__LINE__);
-										// sAPI_UartPrintf(buf);
-									}
-									if (Motoronflag[1] == 1)
-									{
-										sprintf(s_nlogtime[on_data_M2].Act_Mtr2_On, "%02d:%02d:%02d\n", datetime.tm_hour, datetime.tm_min, datetime.tm_sec);
-										on_data_M2++;
+									// 	// sprintf(buf,"\n on_data_M1 = %d line %d\n",on_data_M1,__LINE__);
+									// 	// sAPI_UartPrintf(buf);
+									// }
+									// if (Motoronflag[1] == 1)
+									// {
+									// 	sprintf(s_nlogtime[on_data_M2].Act_Mtr2_On, "%02d:%02d:%02d\n", datetime.tm_hour, datetime.tm_min, datetime.tm_sec);
+									// 	on_data_M2++;
 
-										sprintf(buf, "\n on_data_M2 = %d line %d\n", on_data_M2, __LINE__);
-										sAPI_UartPrintf(buf);
-									}
-									if (Motoronflag[2] == 1)
-									{
-										sprintf(s_nlogtime[on_data_M3].Act_Mtr3_On, "%02d:%02d:%02d\n", datetime.tm_hour, datetime.tm_min, datetime.tm_sec);
-										on_data_M3++;
+									// 	sprintf(buf, "\n on_data_M2 = %d line %d\n", on_data_M2, __LINE__);
+									// 	sAPI_UartPrintf(buf);
+									// }
+									// if (Motoronflag[2] == 1)
+									// {
+									// 	sprintf(s_nlogtime[on_data_M3].Act_Mtr3_On, "%02d:%02d:%02d\n", datetime.tm_hour, datetime.tm_min, datetime.tm_sec);
+									// 	on_data_M3++;
 
-										sprintf(buf, "\n on_data_M3 = %d line %d\n", on_data_M3, __LINE__);
-										sAPI_UartPrintf(buf);
-									}
+									// 	sprintf(buf, "\n on_data_M3 = %d line %d\n", on_data_M3, __LINE__);
+									// 	sAPI_UartPrintf(buf);
+									// }
 								}
 							}
 						}
@@ -16699,9 +12790,9 @@ else if(s_nMSettings.m_settings_count==10)
 									PingHighSmsSendOntimer = 1;
 									SendSmsToAll = 1;
 									PowerOnSms = 1;
-									Motoronflag[0] = 0; Motorreasonflag[0] = 31;
-									Motoronflag[1] = 0; Motorreasonflag[1] = 31;
-									Motoronflag[2] = 0; Motorreasonflag[2] = 31;
+									// Motoronflag[0] = 0; Motorreasonflag[0] = 31;
+									// Motoronflag[1] = 0; Motorreasonflag[1] = 31;
+									// Motoronflag[2] = 0; Motorreasonflag[2] = 31;
 									PowerIsThere = 1;
 									NoAcceptSMS = 0;
 									//	nMoTr.ActonpowerRunTimer=0; //dg_nsdk
@@ -19803,6 +15894,8 @@ while(1)
 							sprintf(buf,"\n\r Prev_M1_state = %02d, Prev_autokey=%02d\n\r",Prev_M1_state,Prev_autokey);
 							sAPI_UartPrintf(buf);
 						} */
+
+						#if 0
 						 if(uart_read_buf[0] == '$' && uart_read_buf[1] == 'M' && uart_read_buf[2] == '1' && uart_read_buf[4] == 'N')
 						{
 							int StrTokStrVer = 0;
@@ -22119,7 +18212,7 @@ while(1)
 								onehour_send_flag=1;
 	
 						}
-						
+						#endif
 						
 				}
 				
