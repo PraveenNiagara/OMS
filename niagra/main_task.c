@@ -6361,35 +6361,33 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 			{
 				ZoneOnFlag=0;
 				memset(strBuf,0x00,sizeof(strBuf));
-				sprintf(strBuf,"{\r\n\"cC\":\"%s\",\r\n\"cM\":{",IMEI);
-
-							/***** Device details *****/
-							for(int i=0;i<NoOfZone;i++)
-							{
-								if(nProgramProcess.LogZone[i].IrrigationMethod==TimeBased)
-								{
-									sprintf(strBuf,"%s\r\n\"8301\": \"%d.%d,%d,%d:%d,%d:%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
-							nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActDuration[0],nProgramProcess.LogZone[i].ActDuration[1],
-							nProgramProcess.LogZone[i].SetDuration[0],nProgramProcess.LogZone[i].SetDuration[1]);
-								}
-								else if(nProgramProcess.LogZone[i].IrrigationMethod==FlowBased)
-								{
-									sprintf(strBuf,"%s\r\n\"8301\": \"%d.%d,%d,%d,%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
-							nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActFlowRate,nProgramProcess.LogZone[i].SetFlowRate);
-								
-								}
-							}
-							sprintf(strBuf,"%s\r\n\"WifiStrength\":%d,\r\n\"Version\":\"OSM_TEST\",\r\n\"PowerSupply\":%01d},\r\n\"cD\":\"%02d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"8300\"\r\n}",strBuf,sstrength,!PowerCurrentCondition,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-									
-							LogFlag=1;
-							
-							sprintf(TCPWifigprsstrBUFF,"%s",strBuf);
-                            sprintf(buf,"\n\rTCPWifigprsstrBUFF>>:[%s]",TCPWifigprsstrBUFF);
-							sAPI_UartPrintf(buf);
-							sgetflag = 1;
-							sgetflag_1 = 1;
-							sAPI_UartPrintf("\n\rSETFLAG_1:%d", sgetflag_1);
-							tcpdcounter = 0;
+				sprintf(strBuf,"{\r\n\"cC\":\"%s\",\r\n\"cM\":{\r\n\"8301\":",IMEI);
+				/***** Device details *****/
+				for(int i=0;i<NoOfZone;i++)
+				{
+					if(nProgramProcess.LogZone[i].IrrigationMethod==TimeBased)
+					{
+						sprintf(strBuf,"%s\"%d.%d,%d,%d:%d,%d:%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
+						nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActDuration[0],nProgramProcess.LogZone[i].ActDuration[1],
+						nProgramProcess.LogZone[i].SetDuration[0],nProgramProcess.LogZone[i].SetDuration[1]);
+					}
+					else if(nProgramProcess.LogZone[i].IrrigationMethod==FlowBased)
+					{
+						sprintf(strBuf,"%s\": \"%d.%d,%d,%d,%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
+						nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActFlowRate,nProgramProcess.LogZone[i].SetFlowRate);
+					
+					}
+				}
+				sprintf(strBuf,"%s\r\n\"WifiStrength\":%d,\r\n\"Version\":\"OSM_TEST\",\r\n\"PowerSupply\":%01d},\r\n\"cD\":\"%02d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"8300\"\r\n}",strBuf,sstrength,!PowerCurrentCondition,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);		
+				LogFlag=1;
+				
+				sprintf(TCPWifigprsstrBUFF,"%s",strBuf);
+				sprintf(buf,"\n\rTCPWifigprsstrBUFF>>:[%s]",TCPWifigprsstrBUFF);
+				sAPI_UartPrintf(buf);
+				sgetflag = 1;
+				sgetflag_1 = 1;
+				sAPI_UartPrintf("\n\rSETFLAG_1:%d", sgetflag_1);
+				tcpdcounter = 0;
 			}
 			//nProgram.SelectedDate[j]
 			//nProgram.Schedule
@@ -8575,7 +8573,7 @@ else if(s_nMSettings.m_settings_count==10)
 											}
 														
 							//			} //dg_delete
-
+										#if 0
 										 if(nSTATE_MOTOR2_SMS != STATE_NO_MOTOR2_SMS)
 											{
 																																			
@@ -10959,6 +10957,7 @@ else if(s_nMSettings.m_settings_count==10)
 														}
 														sprintf(Buffer3,"%s",Buffer6);
 										}
+										#endif
 										else if(PowerOnSms == 1)
 										{
 											sprintf(Buffer1,"POWER ON"); 
@@ -13046,7 +13045,7 @@ void sAPP_Timer2(void *argv)
 				livesendcount++;
 				if (nMSettings.ndebugonof == 1)
 					sAPI_UartPrintf("livesendcount:%d", livesendcount);
-				if (livesendcount > 60)
+				if (livesendcount > 15)
 				{
 					livedataflag = 1;
 					livesendcount = 0;

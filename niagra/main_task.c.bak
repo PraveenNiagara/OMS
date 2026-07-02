@@ -262,7 +262,7 @@ unsigned char ValveStatus[10]={0},PrvValveStatus[10]={0};
 unsigned char LogValveStatus,LogValveNo,ValveOnOffReason,Prvalve[10]={0},ValveOnTime[2],ValveOffTime[2],ValveOnDueTime[2],ReasonFlag=0,CyclicComplete=0,LiveUpdate=0,RecLiveUpdate=0,ValveSetting=0;
 ;
 
-
+char LogFlag=0;
 char Motoronflag[3] = {0}, prev_Motoronflag[3] = {0}, Motorreasonflag[3] = {0}, act_POnMin[3] = {0}, act_POnSec[3] = {0}, act_rem_delmin[3] = {0}, act_rem_delsec[3] = {0}, act_del_comp_min[3] = {0}, act_del_comp_sec[3] = {0}, prev_Motorreasonflag[3] = {0};
 char act_rem_cyc_ofHr[3] = {0}, act_rem_cyc_ofMin[3] = {0}, act_rem_cyc_ofSec[3] = {0}, act_rem_cyc_onHr[3] = {0}, act_rem_cyc_onMin[3] = {0}, act_rem_cyc_onSec[3] = {0};
 char act_rem_maxHr[3] = {0}, act_rem_maxMin[3] = {0}, act_rem_maxSec[3] = {0};
@@ -978,7 +978,60 @@ typedef enum
 	STATE_NLIGHT_RTCON_SMS,
 	STATE_MOTOR1_ON_DEFAULT
 } STATE_MOTOR1_ON_SMS;
-// STATE_MOTOR1_ON_SMS nSTATE_MOTOR1_ON_SMS;
+
+typedef enum
+{
+	STATE_PROGRAM_ON_SMS_ENUM=0,
+	STATE_PROGRAM_ON_MANUAL,
+	STATE_PROGRAM_ON_RTC1,
+	STATE_PROGRAM_ON_RTC2,
+	STATE_PROGRAM_ON_RTC3,
+	STATE_PROGRAM_ON_RTC4,
+	STATE_PROGRAM_ON_RTC5,
+	STATE_PROGRAM_ON_RTC6,
+} STATE_PROGRAM_ON_SMS;
+
+typedef enum
+{
+	STATE_PROGRAM_OFF_SMS_ENUM=0,
+	STATE_PROGRAM_OFF_MANUAL,
+	STATE_PROGRAM_OFF_RTC1,
+	STATE_PROGRAM_OFF_RTC2,
+	STATE_PROGRAM_OFF_RTC3,
+	STATE_PROGRAM_OFF_RTC4,
+	STATE_PROGRAM_OFF_RTC5,
+	STATE_PROGRAM_OFF_RTC6,
+} STATE_PROGRAM_OFF_SMS;
+
+typedef enum
+{
+	STATE_ZONE_ON_SMS_ENUM=0,
+	STATE_ZONE1_ON,
+	STATE_ZONE2_ON,
+	STATE_ZONE3_ON,
+	STATE_ZONE4_ON,
+	STATE_ZONE5_ON,
+	STATE_ZONE6_ON,
+	STATE_ZONE7_ON,
+	STATE_ZONE8_ON,
+} STATE_ZONE_ON_SMS;
+
+typedef enum
+{
+	STATE_ZONE_OFF_SMS_ENUM=0,
+	STATE_ZONE1_OFF,
+	STATE_ZONE2_OFF,
+	STATE_ZONE3_OFF,
+	STATE_ZONE4_OFF,
+	STATE_ZONE5_OFF,
+	STATE_ZONE6_OFF,
+	STATE_ZONE7_OFF,
+	STATE_ZONE8_OFF,
+} STATE_ZONE_OFF_SMS;
+ STATE_PROGRAM_ON_SMS nSTATE_PROGRAM_ON_SMS=STATE_PROGRAM_ON_SMS_ENUM;
+ STATE_PROGRAM_OFF_SMS nSTATE_PROGRAM_OFF_SMS=STATE_PROGRAM_OFF_SMS_ENUM;
+ STATE_ZONE_OFF_SMS nSTATE_ZONE_OFF_SMS=STATE_ZONE_OFF_SMS_ENUM;
+ STATE_ZONE_ON_SMS nSTATE_ZONE_ON_SMS=STATE_ZONE_ON_SMS_ENUM;
 
 typedef enum
 {
@@ -5963,7 +6016,8 @@ void sAPP_Timer1(void *data)
 			sAPI_UartPrintf(Buff);
 			if(nProgramProcess.Status != 0 && nProgramProcess.ProgramEnable != 0 && nProgramProcess.ZoneFlag == 1)
 			{
-				
+				nProgramProcess.LogZone[nProgramProcess.ZoneNo].Sno=nProgramProcess.ZoneNo+1;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].ProgramNo=nProgram.Sno;
 				if(nProgram.nZone[nProgramProcess.ZoneNo].IrrigationMethod == FlowBased)
 				{
 					nProgramProcess.IrrigationMethod=FlowBased;
@@ -6004,6 +6058,10 @@ void sAPP_Timer1(void *data)
 					
 					nProgramProcess.Duration[0]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[0];
 					nProgramProcess.Duration[1]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[1];
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].IrrigationMethod=TimeBased;
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].SetDuration[0]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[0];
+					nProgramProcess.LogZone[nProgramProcess.ZoneNo].SetDuration[1]=nProgram.nZone[nProgramProcess.ZoneNo].Duration[1];
+
 					if(nProgram.nZone[nProgramProcess.ZoneNo].Duration[0]==0 && 
 					nProgram.nZone[nProgramProcess.ZoneNo].Duration[1]==0 )
 					{
@@ -6119,7 +6177,7 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					{
 						nProgramProcess.StartSec=RecValveOnOff.Cummulative;
 						nProgramProcess.RemainingFlow=nProgramProcess.StopSec-nProgramProcess.StartSec;
-						//nProgramProcess.LogZone[nProgramProcess.ZoneNo].ActFlowRate=nProgramProcess.FlowRate-nProgramProcess.RemainingFlow;
+						nProgramProcess.LogZone[nProgramProcess.ZoneNo].ActFlowRate=nProgramProcess.FlowRate-nProgramProcess.RemainingFlow;
 						if(nProgramProcess.RemainingFlow<=0)
 						{
 							nProgramProcess.ZoneFlag=3;
@@ -6157,6 +6215,9 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 							nProgramProcess.RemaningTime[0]=nProgramProcess.RemaningSec/3600;
 							nProgramProcess.RemaningTime[1]=(nProgramProcess.RemaningSec%3600)/60;
 							nProgramProcess.RemaningTime[2]=(nProgramProcess.RemaningSec%60);
+							nProgramProcess.LogZone[nProgramProcess.ZoneNo].ActDuration[0]=nProgramProcess.StartSec/3600;
+							nProgramProcess.LogZone[nProgramProcess.ZoneNo].ActDuration[1]=(nProgramProcess.StartSec%3600)/60;
+							
 						}
 					}
 				}
@@ -6251,7 +6312,8 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					nProgramProcess.ZoneFlag=0;
 					nProgramProcess.Status=0;
 					nProgramProcess.ZoneNo=0;
-					//nProgramProcess.NoofZones=0;
+					NoOfZone=nProgramProcess.NoofZones;
+					nProgramProcess.NoofZones=0;
 					nProgramProcess.RemaningSec=0;
 					nProgramProcess.RemainingFlow=0;
 					nProgramProcess.RemaningTime[0]=0;
@@ -6348,36 +6410,38 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 				nProgramProcess.ZoneOnFlag=0;
 			}
 			
-			// if(ZoneOnFlag==1)
-			// {
-			// 	ZoneOnFlag=0;
-			// 	memset(Buffer1,0x00,sizeof(Buffer1));
-			// 	sprintf(Buffer1,"{\r\n\"cC\":\"%s\",\r\n\"cM\":{",IMEI);
-
-			// 				/***** Device details *****/
-			// 				for(int i=0;i<nProgramProcess.NoofZones;i++)
-			// 				{
-			// 					if(nProgramProcess.LogZone[i].IrrigationMethod==1)
-			// 					{
-			// 						sprintf(Buffer1,"%s\r\n\"8301\": \"%d.%d,%d,%d:%d,%d:%d\",",Buffer1,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
-			// 				nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActDuration[0],nProgramProcess.LogZone[i].ActDuration[1],
-			// 				nProgramProcess.LogZone[i].SetDuration[0],nProgramProcess.LogZone[i].SetDuration[1]);
-			// 					}
-			// 					else if(nProgramProcess.LogZone[i].IrrigationMethod==2)
-			// 					{
-			// 						sprintf(Buffer1,"%s\r\n\"8301\": \"%d.%d,%d,%d,%d\",",Buffer1,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
-			// 				nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActFlowRate,nProgramProcess.LogZone[i].SetFlowRate);
-								
-			// 					}
-			// 				}
-			// 				sprintf(Buffer1,"%s\r\n\"WifiStrength\":%d,\r\n\"Version\":\"OSM_TEST\",\r\n\"PowerSupply\":%01d},\r\n\"cD\":\"%02d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"8300\"\r\n}",Buffer1,sstrength,!PowerCurrentCondition,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);
-									
-							
-							
-			// 				sprintf(TCPWifigprsstrBUFF,"%s",Buffer1);
-            //                 sprintf(buf,"\n\rTCPWifigprsstrBUFF>>:[%s]",TCPWifigprsstrBUFF);
-			// 				sAPI_UartPrintf(buf);
-			// }
+			if(ZoneOnFlag==1)
+			{
+				ZoneOnFlag=0;
+				memset(strBuf,0x00,sizeof(strBuf));
+				sprintf(strBuf,"{\r\n\"cC\":\"%s\",\r\n\"cM\":{\r\n\"8301\":",IMEI);
+				/***** Device details *****/
+				for(int i=0;i<NoOfZone;i++)
+				{
+					if(nProgramProcess.LogZone[i].IrrigationMethod==TimeBased)
+					{
+						sprintf(strBuf,"%s\"%d.%d,%d,%d:%d,%d:%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
+						nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActDuration[0],nProgramProcess.LogZone[i].ActDuration[1],
+						nProgramProcess.LogZone[i].SetDuration[0],nProgramProcess.LogZone[i].SetDuration[1]);
+					}
+					else if(nProgramProcess.LogZone[i].IrrigationMethod==FlowBased)
+					{
+						sprintf(strBuf,"%s\": \"%d.%d,%d,%d,%d\",",strBuf,nProgramProcess.LogZone[i].ProgramNo,nProgramProcess.LogZone[i].Sno,
+						nProgramProcess.LogZone[i].IrrigationMethod,nProgramProcess.LogZone[i].ActFlowRate,nProgramProcess.LogZone[i].SetFlowRate);
+					
+					}
+				}
+				sprintf(strBuf,"%s\r\n\"WifiStrength\":%d,\r\n\"Version\":\"OSM_TEST\",\r\n\"PowerSupply\":%01d},\r\n\"cD\":\"%02d-%02d-%02d\",\r\n\"cT\":\"%02d:%02d:%02d\",\r\n\"mC\":\"8300\"\r\n}",strBuf,sstrength,!PowerCurrentCondition,datetime.tm_year,datetime.tm_mon,datetime.tm_mday,datetime.tm_hour,datetime.tm_min,datetime.tm_sec);		
+				LogFlag=1;
+				
+				sprintf(TCPWifigprsstrBUFF,"%s",strBuf);
+				sprintf(buf,"\n\rTCPWifigprsstrBUFF>>:[%s]",TCPWifigprsstrBUFF);
+				sAPI_UartPrintf(buf);
+				sgetflag = 1;
+				sgetflag_1 = 1;
+				sAPI_UartPrintf("\n\rSETFLAG_1:%d", sgetflag_1);
+				tcpdcounter = 0;
+			}
 			//nProgram.SelectedDate[j]
 			//nProgram.Schedule
 			//nProgram.DayCount
@@ -6392,11 +6456,10 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 				{
 					long StartDay=days_from_civil(nProgram.StartDate[2],nProgram.StartDate[1],nProgram.StartDate[0]);
 					long EndDay=days_from_civil(nProgram.EndDate[2],nProgram.EndDate[1],nProgram.EndDate[0]);
-					long PreDay=days_from_civil(datetime.tm_year,datetime.tm_mon,datetime.tm_mday);
-					int DaysInterval = 	EndDay-StartDay;
-					int PresentDay = 	PreDay-StartDay;
-					if(PresentDay>=0 && PresentDay<=DaysInterval)
+					if((EndDay>StartDay) || (nProgram.EndDate[2]==0 && nProgram.EndDate[1]==0 && nProgram.EndDate[0]==0))
 					{
+						long PreDay=days_from_civil(datetime.tm_year,datetime.tm_mon,datetime.tm_mday);
+						int PresentDay = 	((PreDay-StartDay)) % nProgram.DayCount;
 						if(nProgram.SelectedDate[PresentDay]==1)
 						{
 							Checkrtc=1;
@@ -6408,8 +6471,27 @@ sprintf(Buff,"nProgramProcess.ProgramEnable:%d nProgramProcess.Status:%d nProgra
 					}
 					else
 					{
-						Checkrtc=0;
+						
+						long PreDay=days_from_civil(datetime.tm_year,datetime.tm_mon,datetime.tm_mday);
+						int DaysInterval = 	EndDay-StartDay;
+						int PresentDay = 	PreDay-StartDay;
+						if(PresentDay>=0 && PresentDay<=DaysInterval)
+						{
+							if(nProgram.SelectedDate[PresentDay]==1)
+							{
+								Checkrtc=1;
+							}
+							else
+							{
+								Checkrtc=0;
+							}
+						}
+						else
+						{
+							Checkrtc=0;
+						}
 					}
+					
 				}
 				else
 				{
@@ -8544,7 +8626,7 @@ else if(s_nMSettings.m_settings_count==10)
 											}
 														
 							//			} //dg_delete
-
+										#if 0
 										 if(nSTATE_MOTOR2_SMS != STATE_NO_MOTOR2_SMS)
 											{
 																																			
@@ -10928,6 +11010,7 @@ else if(s_nMSettings.m_settings_count==10)
 														}
 														sprintf(Buffer3,"%s",Buffer6);
 										}
+										#endif
 										else if(PowerOnSms == 1)
 										{
 											sprintf(Buffer1,"POWER ON"); 
